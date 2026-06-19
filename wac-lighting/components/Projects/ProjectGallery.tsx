@@ -58,7 +58,7 @@ export function ProjectGallery() {
     <>
       <section
         ref={sectionRef}
-        className="relative py-section bg-[#060606] overflow-hidden"
+        className="relative py-section bg-gray-50 overflow-hidden"
         id="projects"
       >
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-DEFAULT/20 to-transparent" />
@@ -80,7 +80,7 @@ export function ProjectGallery() {
                 <div className="section-label mb-4">Project Portfolio</div>
               </RevealText>
               <RevealText delay={0.1}>
-                <h2 className="font-heading font-bold text-display-lg text-white">
+                <h2 className="font-heading font-bold text-display-lg text-gray-900">
                   Work That
                   <br />
                   <span className="text-gradient-gold">Defines Spaces</span>
@@ -97,7 +97,7 @@ export function ProjectGallery() {
                     className={`relative px-4 py-2 text-xs font-heading uppercase tracking-wider rounded-full transition-all duration-300 overflow-hidden ${
                       activeFilter === f.value
                         ? "text-black font-semibold"
-                        : "glass-panel text-white/50 hover:text-white border border-white/10"
+                        : "glass-panel text-gray-500 hover:text-gray-900 border border-gray-200"
                     }`}
                   >
                     {activeFilter === f.value && (

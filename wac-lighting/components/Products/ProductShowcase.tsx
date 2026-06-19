@@ -85,11 +85,11 @@ export function ProductShowcase() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-section bg-obsidian-DEFAULT overflow-hidden"
+      className="relative py-section bg-white overflow-hidden"
       id="products"
     >
       {/* Background accent */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gold-DEFAULT/[0.02] blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gold-DEFAULT/[0.05] blur-3xl pointer-events-none" />
 
       <div className="container-wide">
         {/* Header */}
@@ -99,7 +99,7 @@ export function ProductShowcase() {
               <div className="section-label mb-4">Interactive Product Experience</div>
             </RevealText>
             <RevealText delay={0.1}>
-              <h2 className="font-heading font-bold text-display-lg text-white">
+              <h2 className="font-heading font-bold text-display-lg text-gray-900">
                 Engineered for
                 <br />
                 <span className="text-gradient-gold">Perfection</span>
@@ -122,7 +122,7 @@ export function ProductShowcase() {
           <div className="relative">
             <div className="relative aspect-square max-w-lg mx-auto">
               {/* Canvas container */}
-              <div className="w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-white/[0.02] to-transparent border border-white/[0.06]">
+              <div className="w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-gray-50 to-white border border-gray-200">
                 <ProductShowcaseScene />
               </div>
 
@@ -135,7 +135,7 @@ export function ProductShowcase() {
                 ].map(({ icon: Icon, label }) => (
                   <button
                     key={label}
-                    className="w-9 h-9 glass-panel rounded-lg flex items-center justify-center text-white/40 hover:text-gold-DEFAULT transition-colors duration-200"
+                    className="w-9 h-9 glass-panel rounded-lg flex items-center justify-center text-gray-400 hover:text-gold-DEFAULT transition-colors duration-200"
                     aria-label={label}
                   >
                     <Icon size={14} />
@@ -166,7 +166,7 @@ export function ProductShowcase() {
 
             {/* Drag hint */}
             <div className="text-center mt-4">
-              <p className="text-xs text-white/30 font-heading uppercase tracking-widest">
+              <p className="text-xs text-gray-400 font-heading uppercase tracking-widest">
                 Drag to rotate · Scroll to zoom
               </p>
             </div>
@@ -183,7 +183,7 @@ export function ProductShowcase() {
                   className={`relative px-4 py-2 text-xs font-heading uppercase tracking-wider rounded-full transition-all duration-300 ${
                     activeProduct === i
                       ? "bg-gold-DEFAULT text-obsidian-DEFAULT font-semibold"
-                      : "glass-panel text-white/50 hover:text-white border border-white/10"
+                      : "glass-panel text-gray-500 hover:text-gray-900 border border-gray-200"
                   }`}
                 >
                   {p.category}
@@ -205,7 +205,7 @@ export function ProductShowcase() {
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               >
                 {/* Product name */}
-                <h3 className="font-heading font-bold text-2xl md:text-3xl text-white mb-2">
+                <h3 className="font-heading font-bold text-2xl md:text-3xl text-gray-900 mb-2">
                   {product.name}
                 </h3>
                 <div className="text-xs font-heading uppercase tracking-[0.2em] text-gold-DEFAULT mb-4">
@@ -213,14 +213,14 @@ export function ProductShowcase() {
                 </div>
 
                 {/* Description */}
-                <p className="text-white/60 leading-relaxed mb-6">
+                <p className="text-gray-600 leading-relaxed mb-6">
                   {product.description}
                 </p>
 
                 {/* Features */}
                 <div className="grid grid-cols-2 gap-2 mb-6">
                   {product.features.map((f) => (
-                    <div key={f} className="flex items-center gap-2 text-sm text-white/70">
+                    <div key={f} className="flex items-center gap-2 text-sm text-gray-700">
                       <div className="w-1 h-1 rounded-full bg-gold-DEFAULT shrink-0" />
                       {f}
                     </div>
@@ -229,8 +229,8 @@ export function ProductShowcase() {
 
                 {/* Finish selector */}
                 <div className="mb-8">
-                  <div className="text-xs font-heading uppercase tracking-[0.2em] text-white/40 mb-3">
-                    Finish: <span className="text-white/70">{product.finish[selectedFinish]}</span>
+                  <div className="text-xs font-heading uppercase tracking-[0.2em] text-gray-400 mb-3">
+                    Finish: <span className="text-gray-700">{product.finish[selectedFinish]}</span>
                   </div>
                   <div className="flex gap-3">
                     {product.finish.map((f, i) => (
@@ -240,7 +240,7 @@ export function ProductShowcase() {
                         className={`px-4 py-2 text-xs font-heading uppercase tracking-wider rounded-full border transition-all duration-200 ${
                           selectedFinish === i
                             ? "border-gold-DEFAULT/60 text-gold-DEFAULT bg-gold-DEFAULT/10"
-                            : "border-white/10 text-white/40 hover:border-white/30"
+                            : "border-gray-200 text-gray-400 hover:border-gray-300"
                         }`}
                       >
                         {f}
@@ -252,10 +252,10 @@ export function ProductShowcase() {
                 {/* Price & CTA */}
                 <div className="flex items-center gap-6">
                   <div>
-                    <div className="text-xs font-heading uppercase tracking-wider text-white/30 mb-1">
+                    <div className="text-xs font-heading uppercase tracking-wider text-gray-400 mb-1">
                       Starting at
                     </div>
-                    <div className="font-heading font-bold text-2xl text-white">
+                    <div className="font-heading font-bold text-2xl text-gray-900">
                       {product.price}
                     </div>
                   </div>

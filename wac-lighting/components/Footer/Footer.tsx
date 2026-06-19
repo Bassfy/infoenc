@@ -73,18 +73,18 @@ export function Footer() {
   return (
     <footer
       ref={footerRef}
-      className="relative bg-[#040404] border-t border-white/[0.04] overflow-hidden"
+      className="relative bg-gray-50 border-t border-gray-100 overflow-hidden"
     >
       {/* Top separator */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-DEFAULT/30 to-transparent" />
 
       {/* CTA strip */}
-      <div className="border-b border-white/[0.04]">
+      <div className="border-b border-gray-100">
         <div className="container-wide py-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
               <div className="section-label mb-3">Ready to Specify?</div>
-              <h3 className="font-heading font-bold text-3xl md:text-4xl text-white">
+              <h3 className="font-heading font-bold text-3xl md:text-4xl text-gray-900">
                 Start Your Project <span className="text-gradient-gold">Today</span>
               </h3>
             </div>
@@ -118,7 +118,7 @@ export function Footer() {
                 </svg>
               </div>
               <div>
-                <div className="font-heading font-bold text-white text-lg tracking-[0.15em] uppercase leading-none">
+                <div className="font-heading font-bold text-gray-900 text-lg tracking-[0.15em] uppercase leading-none">
                   WAC
                 </div>
                 <div className="font-heading text-[9px] tracking-[0.4em] uppercase text-gold-DEFAULT/70 leading-none mt-0.5">
@@ -127,7 +127,7 @@ export function Footer() {
               </div>
             </Link>
 
-            <p className="text-white/40 text-sm leading-relaxed mb-6 max-w-[220px]">
+            <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-[220px]">
               Pioneering architectural LED illumination since 1984. Engineering light that transforms the human experience.
             </p>
 
@@ -142,7 +142,7 @@ export function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg glass-panel border border-white/[0.06] flex items-center justify-center text-white/40 hover:text-gold-DEFAULT hover:border-gold-DEFAULT/30 transition-all duration-300"
+                  className="w-9 h-9 rounded-lg glass-panel border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gold-DEFAULT hover:border-gold-DEFAULT/30 transition-all duration-300"
                 >
                   <Icon size={15} />
                 </a>
@@ -161,7 +161,7 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-white/40 hover:text-white transition-colors duration-200 block"
+                      className="text-sm text-gray-500 hover:text-gray-900 transition-colors duration-200 block"
                     >
                       {link.label}
                     </Link>
@@ -173,15 +173,15 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-white/[0.04] flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-6 text-xs text-white/25">
+        <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-6 text-xs text-gray-400">
             <span>© 2024 WAC Lighting Co. All rights reserved.</span>
             <span className="hidden md:block">·</span>
             {["Privacy Policy", "Terms of Use", "Accessibility", "Sitemap"].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase().replace(/ /g, "-")}`}
-                className="hover:text-white/50 transition-colors"
+                className="hover:text-gray-700 transition-colors"
               >
                 {item}
               </Link>
@@ -189,12 +189,12 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="text-xs text-white/20 font-heading">
+            <div className="text-xs text-gray-400 font-heading">
               Engineered in the USA
             </div>
             <button
               onClick={scrollToTop}
-              className="w-10 h-10 rounded-full glass-panel border border-white/[0.06] flex items-center justify-center text-white/40 hover:text-gold-DEFAULT hover:border-gold-DEFAULT/30 transition-all duration-300"
+              className="w-10 h-10 rounded-full glass-panel border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gold-DEFAULT hover:border-gold-DEFAULT/30 transition-all duration-300"
               aria-label="Back to top"
             >
               <ChevronUp size={16} />

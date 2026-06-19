@@ -29,7 +29,7 @@ function StatCard({
 
   return (
     <motion.div
-      className="relative p-8 md:p-10 rounded-2xl border border-white/[0.06] bg-white/[0.02] group hover:border-gold-DEFAULT/20 transition-all duration-500 overflow-hidden"
+      className="relative p-8 md:p-10 rounded-2xl border border-gray-100 bg-gray-50 group hover:border-gold-DEFAULT/20 transition-all duration-500 overflow-hidden"
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       transition={{ duration: 0.8, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
@@ -57,10 +57,10 @@ function StatCard({
           />
         </div>
 
-        <h3 className="font-heading font-semibold text-lg text-white mb-2">
+        <h3 className="font-heading font-semibold text-lg text-gray-900 mb-2">
           {stat.label}
         </h3>
-        <p className="text-sm text-white/40 leading-relaxed">
+        <p className="text-sm text-gray-500 leading-relaxed">
           {stat.description}
         </p>
       </div>
@@ -94,7 +94,7 @@ export function StatsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-section bg-[#070707] overflow-hidden"
+      className="relative py-section bg-white overflow-hidden"
       id="stats"
     >
       {/* Background pattern */}
@@ -118,14 +118,14 @@ export function StatsSection() {
             <div className="section-label mb-4">By The Numbers</div>
           </RevealText>
           <RevealText delay={0.1}>
-            <h2 className="font-heading font-bold text-display-lg text-white mb-6">
+            <h2 className="font-heading font-bold text-display-lg text-gray-900 mb-6">
               Four Decades of
               <br />
               <span className="text-gradient-gold">Industry Leadership</span>
             </h2>
           </RevealText>
           <RevealText delay={0.2}>
-            <p className="text-white/50 max-w-xl mx-auto leading-relaxed">
+            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed">
               Metrics that reflect a relentless commitment to innovation,
               quality, and the partnerships that define the built environment.
             </p>
@@ -140,9 +140,9 @@ export function StatsSection() {
         </div>
 
         {/* Awards strip */}
-        <div className="mt-20 pt-12 border-t border-white/[0.06]">
+        <div className="mt-20 pt-12 border-t border-gray-100">
           <RevealText className="text-center mb-8">
-            <div className="text-xs font-heading uppercase tracking-[0.3em] text-white/30">
+            <div className="text-xs font-heading uppercase tracking-[0.3em] text-gray-400">
               Recognition & Certifications
             </div>
           </RevealText>
@@ -166,7 +166,7 @@ export function StatsSection() {
                 <div className="w-10 h-10 rounded-full border border-gold-DEFAULT/20 flex items-center justify-center">
                   <div className="w-3 h-3 rounded-full bg-gold-DEFAULT/30" />
                 </div>
-                <span className="text-[10px] font-heading uppercase tracking-wider text-white/30 text-center max-w-[80px]">
+                <span className="text-[10px] font-heading uppercase tracking-wider text-gray-400 text-center max-w-[80px]">
                   {award}
                 </span>
               </motion.div>

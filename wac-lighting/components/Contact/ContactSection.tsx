@@ -91,14 +91,14 @@ export function ContactSection() {
   };
 
   const fieldClasses = (name: string) => `
-    w-full bg-transparent border-b transition-all duration-300 py-4 text-white placeholder:text-white/20 text-sm font-sans outline-none
-    ${focusedField === name ? "border-gold-DEFAULT" : errors[name] ? "border-red-500/50" : "border-white/10"}
+    w-full bg-transparent border-b transition-all duration-300 py-4 text-gray-900 placeholder:text-gray-300 text-sm font-sans outline-none
+    ${focusedField === name ? "border-gold-DEFAULT" : errors[name] ? "border-red-500/50" : "border-gray-200"}
   `;
 
   return (
     <section
       ref={sectionRef}
-      className="relative py-section bg-[#060606] overflow-hidden"
+      className="relative py-section bg-gray-50 overflow-hidden"
       id="contact"
     >
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-DEFAULT/20 to-transparent" />
@@ -114,14 +114,14 @@ export function ContactSection() {
               <div className="section-label mb-4">Get in Touch</div>
             </RevealText>
             <RevealText delay={0.1}>
-              <h2 className="font-heading font-bold text-display-lg text-white mb-6">
+              <h2 className="font-heading font-bold text-display-lg text-gray-900 mb-6">
                 Let&apos;s Build
                 <br />
                 <span className="text-gradient-gold">Something Remarkable</span>
               </h2>
             </RevealText>
             <RevealText delay={0.2}>
-              <p className="text-white/50 leading-relaxed mb-12 max-w-md">
+              <p className="text-gray-500 leading-relaxed mb-12 max-w-md">
                 Whether you&apos;re specifying a luxury residential project or designing the lighting
                 for a world-class commercial development — our lighting design team is ready.
               </p>
@@ -153,18 +153,18 @@ export function ContactSection() {
                   <a
                     key={label}
                     href={href}
-                    className="group flex items-start gap-5"
+                    className="group flex items-start gap-5 no-underline"
                     target={href.startsWith("http") ? "_blank" : undefined}
                     rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
                   >
-                    <div className="w-12 h-12 rounded-xl glass-panel border border-white/[0.06] flex items-center justify-center shrink-0 group-hover:border-gold-DEFAULT/30 transition-colors duration-300">
+                    <div className="w-12 h-12 rounded-xl glass-panel border border-gray-100 flex items-center justify-center shrink-0 group-hover:border-gold-DEFAULT/30 transition-colors duration-300">
                       <Icon size={16} className="text-gold-DEFAULT" />
                     </div>
                     <div>
-                      <div className="text-xs font-heading uppercase tracking-wider text-white/40 mb-1">
+                      <div className="text-xs font-heading uppercase tracking-wider text-gray-400 mb-1">
                         {label}
                       </div>
-                      <div className="text-white/80 group-hover:text-white transition-colors duration-200">
+                      <div className="text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
                         {value}
                       </div>
                     </div>
@@ -176,7 +176,7 @@ export function ContactSection() {
             {/* Social */}
             <RevealText delay={0.4}>
               <div>
-                <div className="text-xs font-heading uppercase tracking-[0.3em] text-white/30 mb-4">
+                <div className="text-xs font-heading uppercase tracking-[0.3em] text-gray-400 mb-4">
                   Follow Our Work
                 </div>
                 <div className="flex gap-3">
@@ -184,7 +184,7 @@ export function ContactSection() {
                     <a
                       key={social}
                       href="#"
-                      className="px-4 py-2 text-xs font-heading uppercase tracking-wider rounded-full glass-panel border border-white/[0.06] text-white/40 hover:text-gold-DEFAULT hover:border-gold-DEFAULT/30 transition-all duration-300"
+                      className="px-4 py-2 text-xs font-heading uppercase tracking-wider rounded-full glass-panel border border-gray-100 text-gray-400 hover:text-gold-DEFAULT hover:border-gold-DEFAULT/30 transition-all duration-300"
                     >
                       {social}
                     </a>
@@ -213,10 +213,10 @@ export function ContactSection() {
                   >
                     <Check size={32} className="text-black" />
                   </motion.div>
-                  <h3 className="font-heading font-bold text-2xl text-white mb-3">
+                  <h3 className="font-heading font-bold text-2xl text-gray-900 mb-3">
                     Message Received
                   </h3>
-                  <p className="text-white/50 mb-8">
+                  <p className="text-gray-500 mb-8">
                     Our specification team will be in touch within 24 hours.
                   </p>
                   <button
@@ -244,7 +244,7 @@ export function ContactSection() {
                       { name: "phone", label: "Phone Number", type: "tel", placeholder: "+1 (555) 000-0000" },
                     ].map((field) => (
                       <div key={field.name} className="contact-field">
-                        <label className="text-[10px] font-heading uppercase tracking-[0.3em] text-white/40 mb-2 block">
+                        <label className="text-[10px] font-heading uppercase tracking-[0.3em] text-gray-400 mb-2 block">
                           {field.label}
                         </label>
                         <input
@@ -266,7 +266,7 @@ export function ContactSection() {
 
                   {/* Project type */}
                   <div className="contact-field">
-                    <label className="text-[10px] font-heading uppercase tracking-[0.3em] text-white/40 mb-3 block">
+                    <label className="text-[10px] font-heading uppercase tracking-[0.3em] text-gray-400 mb-3 block">
                       Project Type
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -278,7 +278,7 @@ export function ContactSection() {
                           className={`px-4 py-2 text-xs font-heading uppercase tracking-wider rounded-full border transition-all duration-200 ${
                             formData.projectType === type
                               ? "bg-gold-DEFAULT text-black border-gold-DEFAULT font-semibold"
-                              : "border-white/10 text-white/40 hover:border-white/30 hover:text-white/60"
+                              : "border-gray-200 text-gray-400 hover:border-gray-300 hover:text-gray-600"
                           }`}
                         >
                           {type}
@@ -289,7 +289,7 @@ export function ContactSection() {
 
                   {/* Budget */}
                   <div className="contact-field">
-                    <label className="text-[10px] font-heading uppercase tracking-[0.3em] text-white/40 mb-2 block">
+                    <label className="text-[10px] font-heading uppercase tracking-[0.3em] text-gray-400 mb-2 block">
                       Estimated Budget
                     </label>
                     <select
@@ -300,16 +300,16 @@ export function ContactSection() {
                       className={`${fieldClasses("budget")} appearance-none cursor-pointer`}
                       disabled={formState === "submitting"}
                     >
-                      <option value="" className="bg-zinc-900">Select range</option>
+                      <option value="" className="bg-white">Select range</option>
                       {["Under $10K", "$10K–$50K", "$50K–$250K", "$250K–$1M", "$1M+", "TBD"].map((b) => (
-                        <option key={b} value={b} className="bg-zinc-900">{b}</option>
+                        <option key={b} value={b} className="bg-white">{b}</option>
                       ))}
                     </select>
                   </div>
 
                   {/* Message */}
                   <div className="contact-field">
-                    <label className="text-[10px] font-heading uppercase tracking-[0.3em] text-white/40 mb-2 block">
+                    <label className="text-[10px] font-heading uppercase tracking-[0.3em] text-gray-400 mb-2 block">
                       Project Brief *
                     </label>
                     <textarea
@@ -348,7 +348,7 @@ export function ContactSection() {
                     </button>
                   </MagneticButton>
 
-                  <p className="text-center text-xs text-white/20">
+                  <p className="text-center text-xs text-gray-400">
                     By submitting, you agree to our Privacy Policy. We never share your information.
                   </p>
                 </motion.form>

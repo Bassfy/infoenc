@@ -64,7 +64,7 @@ export function AboutSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-section bg-obsidian-DEFAULT overflow-hidden"
+      className="relative py-section bg-white overflow-hidden"
       id="about"
     >
       {/* Ambient light blob */}
@@ -113,19 +113,19 @@ export function AboutSection() {
               <div className="section-label mb-4">Our Story</div>
             </RevealText>
             <RevealText delay={0.1}>
-              <h2 className="font-heading font-bold text-display-lg text-white mb-6">
+              <h2 className="font-heading font-bold text-display-lg text-gray-900 mb-6">
                 Illuminating the
                 <br />
                 <span className="text-gradient-gold">Human Experience</span>
               </h2>
             </RevealText>
             <RevealText delay={0.2}>
-              <p className="text-white/60 text-lg leading-relaxed mb-6">
+              <p className="text-gray-600 text-lg leading-relaxed mb-6">
                 Founded in 1984 in New Jersey, WAC Lighting was born from a singular belief: light is not a utility — it is an art form that shapes human experience, emotions, and wellbeing.
               </p>
             </RevealText>
             <RevealText delay={0.3}>
-              <p className="text-white/50 leading-relaxed mb-8">
+              <p className="text-gray-500 leading-relaxed mb-8">
                 Today, after four decades of pioneering innovation, we remain a family-owned company with the same founding obsession: creating the finest luminaires ever made. From our first halogen track head to our latest Matter-native smart systems, every product begins and ends with one question — does this change how people experience their world?
               </p>
             </RevealText>
@@ -137,9 +137,9 @@ export function AboutSection() {
                   { value: "Union-Made", label: "IBEW Certified" },
                   { value: "US + Global", label: "120+ Countries" },
                 ].map((item) => (
-                  <div key={item.label} className="px-5 py-3 glass-panel rounded-xl border border-white/[0.06]">
-                    <div className="font-heading font-bold text-sm text-white">{item.value}</div>
-                    <div className="text-xs text-white/40 font-heading uppercase tracking-wider mt-0.5">{item.label}</div>
+                  <div key={item.label} className="px-5 py-3 glass-panel rounded-xl border border-gray-100">
+                    <div className="font-heading font-bold text-sm text-gray-900">{item.value}</div>
+                    <div className="text-xs text-gray-400 font-heading uppercase tracking-wider mt-0.5">{item.label}</div>
                   </div>
                 ))}
               </div>
@@ -157,7 +157,7 @@ export function AboutSection() {
         {/* Timeline */}
         <div>
           <RevealText className="text-center mb-16">
-            <h3 className="font-heading font-bold text-display-md text-white">
+            <h3 className="font-heading font-bold text-display-md text-gray-900">
               A Legacy Built
               <br />
               <span className="text-gradient-gold">One Innovation at a Time</span>
@@ -166,7 +166,7 @@ export function AboutSection() {
 
           <div ref={timelineRef} className="relative">
             {/* Vertical line */}
-            <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-white/[0.06]">
+            <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gray-100">
               <div className="timeline-line-fill absolute inset-0 bg-gradient-to-b from-gold-DEFAULT via-gold-DEFAULT to-transparent" />
             </div>
 
@@ -185,17 +185,17 @@ export function AboutSection() {
                         {event.year}
                       </span>
                     </div>
-                    <h4 className="font-heading font-bold text-xl text-white mb-3">
+                    <h4 className="font-heading font-bold text-xl text-gray-900 mb-3">
                       {event.title}
                     </h4>
-                    <p className="text-white/50 leading-relaxed">
+                    <p className="text-gray-500 leading-relaxed">
                       {event.description}
                     </p>
                   </div>
 
                   {/* Center dot */}
                   <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                    <div className="w-4 h-4 rounded-full bg-gold-DEFAULT border-2 border-obsidian-DEFAULT shadow-gold" />
+                    <div className="w-4 h-4 rounded-full bg-gold-DEFAULT border-2 border-white shadow-gold" />
                   </div>
 
                   {/* Image */}

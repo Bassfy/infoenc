@@ -56,7 +56,7 @@ export function CollectionGrid() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-section bg-[#060606] overflow-hidden"
+      className="relative py-section bg-gray-50 overflow-hidden"
       id="collections"
     >
       {/* Accent lines */}
@@ -71,7 +71,7 @@ export function CollectionGrid() {
               <div className="section-label mb-4">Collections</div>
             </RevealText>
             <RevealText delay={0.1}>
-              <h2 className="font-heading font-bold text-display-lg text-white">
+              <h2 className="font-heading font-bold text-display-lg text-gray-900">
                 Curated for Every
                 <br />
                 <span className="text-gradient-gold">Vision</span>
@@ -89,7 +89,7 @@ export function CollectionGrid() {
                   className={`relative px-5 py-2.5 text-xs font-heading uppercase tracking-wider rounded-full transition-all duration-300 overflow-hidden ${
                     activeFilter === filter.value
                       ? "text-obsidian-DEFAULT font-semibold"
-                      : "glass-panel text-white/50 hover:text-white border border-white/10"
+                      : "glass-panel text-gray-500 hover:text-gray-900 border border-gray-200"
                   }`}
                   whileTap={{ scale: 0.97 }}
                 >

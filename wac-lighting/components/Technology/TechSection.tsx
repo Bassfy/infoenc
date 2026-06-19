@@ -83,7 +83,7 @@ export function TechSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-section bg-obsidian-DEFAULT overflow-hidden"
+      className="relative py-section bg-white overflow-hidden"
       id="technology"
     >
       {/* Background mesh gradient */}
@@ -119,14 +119,14 @@ export function TechSection() {
             <div className="section-label mb-4">Innovation Platform</div>
           </RevealText>
           <RevealText delay={0.1}>
-            <h2 className="font-heading font-bold text-display-lg text-white mb-6">
+            <h2 className="font-heading font-bold text-display-lg text-gray-900 mb-6">
               The Science of
               <br />
               <span className="text-gradient-gold">Perfect Light</span>
             </h2>
           </RevealText>
           <RevealText delay={0.2}>
-            <p className="text-white/50 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed">
               Six breakthrough technologies converge in every WAC luminaire, delivering
               performance that redefines what LED illumination can achieve.
             </p>
@@ -145,28 +145,28 @@ export function TechSection() {
                   className={`tech-feature w-full text-left p-5 rounded-xl transition-all duration-300 group ${
                     activeFeature === i
                       ? "bg-gold-DEFAULT/10 border border-gold-DEFAULT/30"
-                      : "hover:bg-white/[0.03] border border-transparent"
+                      : "hover:bg-gray-50 border border-transparent"
                   }`}
                 >
                   <div className="flex items-start gap-4">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
                       activeFeature === i
                         ? "bg-gold-DEFAULT text-black"
-                        : "bg-white/[0.05] text-white/40 group-hover:text-gold-DEFAULT"
+                        : "bg-gray-100 text-gray-400 group-hover:text-gold-DEFAULT"
                     }`}>
                       <Icon size={16} />
                     </div>
                     <div>
-                      <div className="font-heading font-semibold text-sm text-white mb-1">
+                      <div className="font-heading font-semibold text-sm text-gray-900 mb-1">
                         {f.title}
                       </div>
-                      <div className="text-xs text-white/40 leading-relaxed line-clamp-2">
+                      <div className="text-xs text-gray-500 leading-relaxed line-clamp-2">
                         {f.description}
                       </div>
                     </div>
                     {f.metric && (
                       <div className="ml-auto shrink-0 text-right">
-                        <div className={`font-heading font-bold text-lg ${activeFeature === i ? "text-gold-DEFAULT" : "text-white/20"}`}>
+                        <div className={`font-heading font-bold text-lg ${activeFeature === i ? "text-gold-DEFAULT" : "text-gray-300"}`}>
                           {f.metric}
                         </div>
                         <div className="text-[9px] font-heading uppercase tracking-wider text-white/30">
@@ -226,12 +226,12 @@ export function TechSection() {
                     <div className="w-10 h-10 rounded-xl bg-gold-DEFAULT flex items-center justify-center">
                       <IconComponent size={16} className="text-black" />
                     </div>
-                    <h3 className="font-heading font-bold text-2xl text-white">
+                    <h3 className="font-heading font-bold text-2xl text-gray-900">
                       {feature.title}
                     </h3>
                   </div>
 
-                  <p className="text-white/70 leading-relaxed mb-6">
+                  <p className="text-gray-600 leading-relaxed mb-6">
                     {feature.detail}
                   </p>
 
@@ -243,11 +243,11 @@ export function TechSection() {
                       { label: "Longevity", value: 99 },
                     ].map((bar) => (
                       <div key={bar.label}>
-                        <div className="flex justify-between text-xs font-heading uppercase tracking-wider text-white/40 mb-1.5">
+                        <div className="flex justify-between text-xs font-heading uppercase tracking-wider text-gray-400 mb-1.5">
                           <span>{bar.label}</span>
                           <span className="text-gold-DEFAULT">{bar.value}%</span>
                         </div>
-                        <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                        <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
                           <motion.div
                             className="h-full bg-gradient-to-r from-gold-dark to-gold-light rounded-full"
                             initial={{ width: 0 }}
