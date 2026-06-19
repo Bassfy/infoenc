@@ -1,174 +1,123 @@
 "use client";
 
-import { useRef, useMemo, Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
 
-function NetworkParticles() {
-  const count = 200;
-  const meshRef = useRef<THREE.Points>(null);
-  const lineRef = useRef<THREE.LineSegments>(null);
+export function TechScene() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { positions, linePositions } = useMemo(() => {
-    const positions = new Float32Array(count * 3);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+    camera.position.set(0, 0, 5);
+
+    scene.add(new THREE.AmbientLight(0x111111, 2));
+    const pLight = new THREE.PointLight(0xC9A84C, 6, 10);
+    pLight.position.set(0, 0, 3);
+    scene.add(pLight);
+
+    // ── Network particles ─────────────────────────────────────────────
+    const count = 150;
     const pts: THREE.Vector3[] = [];
-
     for (let i = 0; i < count; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
       const r = 1.5 + Math.random() * 2;
-      const x = r * Math.sin(phi) * Math.cos(theta);
-      const y = r * Math.sin(phi) * Math.sin(theta) * 0.5;
-      const z = r * Math.cos(phi);
-
-      positions[i * 3] = x;
-      positions[i * 3 + 1] = y;
-      positions[i * 3 + 2] = z;
-      pts.push(new THREE.Vector3(x, y, z));
+      pts.push(new THREE.Vector3(
+        r * Math.sin(phi) * Math.cos(theta),
+        r * Math.sin(phi) * Math.sin(theta) * 0.5,
+        r * Math.cos(phi)
+      ));
     }
 
+    // Point cloud
+    const pGeo = new THREE.BufferGeometry().setFromPoints(pts);
+    const pMat = new THREE.PointsMaterial({ color: 0xC9A84C, size: 0.05, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false });
+    const pointCloud = new THREE.Points(pGeo, pMat);
+    scene.add(pointCloud);
+
+    // Edges
     const linePositions: number[] = [];
     for (let i = 0; i < pts.length; i++) {
       for (let j = i + 1; j < pts.length; j++) {
-        const dist = pts[i].distanceTo(pts[j]);
-        if (dist < 1.2) {
-          linePositions.push(pts[i].x, pts[i].y, pts[i].z);
-          linePositions.push(pts[j].x, pts[j].y, pts[j].z);
+        if (pts[i].distanceTo(pts[j]) < 1.2) {
+          linePositions.push(pts[i].x, pts[i].y, pts[i].z, pts[j].x, pts[j].y, pts[j].z);
         }
       }
     }
+    const lGeo = new THREE.BufferGeometry();
+    lGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(linePositions), 3));
+    const lMat = new THREE.LineBasicMaterial({ color: 0xC9A84C, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending });
+    const lines = new THREE.LineSegments(lGeo, lMat);
+    scene.add(lines);
 
-    return { positions, linePositions: new Float32Array(linePositions) };
+    // ── Core sphere ───────────────────────────────────────────────────
+    const coreMat = new THREE.MeshStandardMaterial({ color: 0xC9A84C, emissive: new THREE.Color(0xC9A84C), emissiveIntensity: 0.4, metalness: 0.9, roughness: 0.1, wireframe: true });
+    const core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.5, 2), coreMat);
+    scene.add(core);
+
+    // ── Energy rings ──────────────────────────────────────────────────
+    const rings = [1.2, 1.8, 2.4].map((r, i) => {
+      const mat = new THREE.MeshBasicMaterial({ color: i === 1 ? 0xE4C76B : 0xA0832E, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false });
+      const mesh = new THREE.Mesh(new THREE.TorusGeometry(r, 0.008, 16, 100), mat);
+      scene.add(mesh);
+      return mesh;
+    });
+
+    const onResize = () => {
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    };
+    window.addEventListener("resize", onResize);
+
+    let animId = 0;
+    const startTime = Date.now();
+    const rotSpeeds = [0.5, -0.3, 0.2];
+
+    const animate = () => {
+      animId = requestAnimationFrame(animate);
+      const t = (Date.now() - startTime) / 1000;
+
+      pointCloud.rotation.y = t * 0.1;
+      pointCloud.rotation.x = Math.sin(t * 0.07) * 0.3;
+      lines.rotation.y = t * 0.1;
+      lines.rotation.x = Math.sin(t * 0.07) * 0.3;
+
+      core.rotation.y = t * 0.2;
+      core.rotation.x = t * 0.1;
+
+      rings.forEach((ring, i) => {
+        ring.rotation.z = t * rotSpeeds[i];
+        ring.rotation.x = Math.sin(t * 0.3 + i) * 0.2;
+      });
+
+      pLight.intensity = 5 + Math.sin(t * 2) * 2;
+
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", onResize);
+      renderer.dispose();
+    };
   }, []);
 
-  useFrame(({ clock }) => {
-    if (!meshRef.current) return;
-    const t = clock.getElapsedTime();
-    meshRef.current.rotation.y = t * 0.1;
-    meshRef.current.rotation.x = Math.sin(t * 0.07) * 0.3;
-    if (lineRef.current) {
-      lineRef.current.rotation.y = t * 0.1;
-      lineRef.current.rotation.x = Math.sin(t * 0.07) * 0.3;
-    }
-  });
-
   return (
-    <group>
-      <lineSegments ref={lineRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[linePositions, 3]}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial color="#C9A84C" transparent opacity={0.08} />
-      </lineSegments>
-
-      <points ref={meshRef}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-        </bufferGeometry>
-        <pointsMaterial
-          size={0.04}
-          color="#C9A84C"
-          transparent
-          opacity={0.8}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          sizeAttenuation
-        />
-      </points>
-    </group>
-  );
-}
-
-function EnergyRing({ radius, speed, color }: { radius: number; speed: number; color: string }) {
-  const ref = useRef<THREE.Mesh>(null);
-
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    ref.current.rotation.z = clock.getElapsedTime() * speed;
-    ref.current.rotation.x = Math.sin(clock.getElapsedTime() * 0.3) * 0.2;
-  });
-
-  return (
-    <mesh ref={ref}>
-      <torusGeometry args={[radius, 0.008, 16, 100]} />
-      <meshBasicMaterial
-        color={color}
-        transparent
-        opacity={0.4}
-        blending={THREE.AdditiveBlending}
-        depthWrite={false}
-      />
-    </mesh>
-  );
-}
-
-function CoreSphere() {
-  const ref = useRef<THREE.Mesh>(null);
-
-  useFrame(({ clock }) => {
-    if (!ref.current) return;
-    const t = clock.getElapsedTime();
-    ref.current.rotation.y = t * 0.2;
-    ref.current.rotation.x = t * 0.1;
-  });
-
-  return (
-    <mesh ref={ref}>
-      <icosahedronGeometry args={[0.5, 2]} />
-      <meshStandardMaterial
-        color="#C9A84C"
-        emissive="#C9A84C"
-        emissiveIntensity={0.5}
-        metalness={0.9}
-        roughness={0.1}
-        wireframe
-      />
-    </mesh>
-  );
-}
-
-function TechSceneContent() {
-  return (
-    <>
-      <ambientLight intensity={0.1} />
-      <pointLight position={[0, 0, 3]} intensity={2} color="#C9A84C" />
-      <pointLight position={[3, 3, 0]} intensity={0.5} color="#4060ff" />
-      <pointLight position={[-3, -3, 0]} intensity={0.5} color="#ff4060" />
-
-      <NetworkParticles />
-      <CoreSphere />
-
-      <EnergyRing radius={1.2} speed={0.5} color="#C9A84C" />
-      <EnergyRing radius={1.8} speed={-0.3} color="#E4C76B" />
-      <EnergyRing radius={2.4} speed={0.2} color="#A0832E" />
-
-      <EffectComposer>
-        <Bloom
-          luminanceThreshold={0.3}
-          luminanceSmoothing={0.4}
-          intensity={2}
-          blendFunction={BlendFunction.ADD}
-        />
-      </EffectComposer>
-    </>
-  );
-}
-
-export function TechScene() {
-  return (
-    <Canvas
-      camera={{ position: [0, 0, 5], fov: 60 }}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      dpr={[1, 1.5]}
-    >
-      <Suspense fallback={null}>
-        <TechSceneContent />
-      </Suspense>
-    </Canvas>
+    <canvas
+      ref={canvasRef}
+      className="w-full h-full"
+      style={{ display: "block" }}
+    />
   );
 }

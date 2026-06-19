@@ -252,7 +252,7 @@ export function TechSection() {
                             className="h-full bg-gradient-to-r from-gold-dark to-gold-light rounded-full"
                             initial={{ width: 0 }}
                             animate={{ width: `${bar.value}%` }}
-                            transition={{ duration: 1, delay: 0.3, ease: "expo.out" }}
+                            transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                           />
                         </div>
                       </div>
