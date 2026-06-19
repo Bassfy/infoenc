@@ -1,76 +1,111 @@
-# InfoEnc Academy — Cybersecurity Learning Platform
+# LED Profile Decorations — E-Commerce Platform
 
-A full-stack cybersecurity learning platform with courses, hacking labs, CTF challenges, leaderboards, and more.
+A full-stack e-commerce platform for architectural LED aluminum profiles and linear lighting.
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React 18 + Vite + Tailwind CSS |
+| Frontend | Next.js 14 (App Router) + TypeScript + Tailwind CSS + Framer Motion |
 | Backend | Node.js + Express |
-| Database | MySQL 8+ |
+| Database | PostgreSQL 16 |
 | Auth | JWT (access + refresh tokens) + bcrypt |
-| Security | Helmet, CORS, Rate Limiting, input validation |
+| State | Zustand (cart + wishlist, persisted to localStorage) |
+| Payments | Stripe + PayPal + Cash on Delivery |
 
 ## Features
 
-- **Authentication** — Register/login with JWT access + refresh tokens, bcrypt password hashing
-- **Courses** — Browse, filter, enroll, lesson progress tracking, certificates
-- **Hacking Labs** — CTF-style challenges with flag submission, point system, hints
-- **In-browser Terminal** — Simulated terminal for lab interaction
-- **Leaderboard** — All-time and weekly rankings
-- **Achievements** — Automatic badge system tied to progress
-- **Dashboard** — Personal stats, progress tracking, recent activity
-- **Notifications** — In-app notification system
-- **Admin-ready** — Role-based access (student / instructor / admin)
+- Cinematic hero, featured products, shop by application/profile type
+- Advanced 5-step product configurator with live wattage + pricing
+- Cart, wishlist, checkout (multi-step wizard)
+- Product gallery with masonry layout and lightbox
+- Admin dashboard with Recharts analytics
+- JWT authentication (register/login/refresh)
+- Coupon validation, free-shipping threshold, tax calculation
+- PostgreSQL schema with full-text search, UUID keys, triggers
 
 ## Quick Start
 
-### 1. Database
+### Option A — Docker (recommended, includes PostgreSQL)
 
 ```bash
-mysql -u root -p < database/schema.sql
+docker-compose up
 ```
 
-### 2. Backend
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
+- PostgreSQL: localhost:5432
+
+### Option B — Manual
+
+#### 1. Database (PostgreSQL)
+
+**Mac / Linux / WSL:**
+```bash
+psql -U postgres -c "CREATE DATABASE ledprofiledecorations;"
+psql -U postgres -d ledprofiledecorations -f database/schema.sql
+```
+
+**Windows PowerShell** (use `Get-Content` — PowerShell does not support `<` redirection):
+```powershell
+Get-Content database\schema.sql | psql -U postgres -d ledprofiledecorations
+```
+
+#### 2. Backend
 
 ```bash
 cd backend
-cp .env.example .env
-# Edit .env with your DB credentials and JWT secrets
+copy .env.example .env        # Windows
+# cp .env.example .env        # Mac/Linux
+# Edit .env — set DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET
 npm install
 npm run dev
 ```
 
-### 3. Frontend
+#### 3. Frontend
 
 ```bash
 cd frontend
+copy .env.example .env        # Windows
+# cp .env.example .env        # Mac/Linux
 npm install
 npm run dev
 ```
 
-The app runs at `http://localhost:5173`, API at `http://localhost:5000`.
+- Frontend: http://localhost:3000
+- API: http://localhost:5000
 
 ## Project Structure
 
 ```
 infoenc/
+├── docker-compose.yml
 ├── database/
-│   └── schema.sql          # Full MySQL schema + seed data
+│   └── schema.sql              # PostgreSQL schema + seed data
 ├── backend/
-│   ├── server.js            # Express app entry
+│   ├── server.js
 │   └── src/
-│       ├── config/          # DB connection
-│       ├── middleware/       # Auth, validation
-│       ├── routes/           # Route definitions
-│       └── controllers/      # Business logic
+│       ├── config/database.js  # PostgreSQL (pg) connection
+│       ├── middleware/          # Auth (JWT), validation
+│       ├── data/products.js    # Mock product data
+│       └── routes/             # products, orders, auth, coupons…
 └── frontend/
-    └── src/
-        ├── api/              # Axios API client w/ token refresh
-        ├── components/       # Reusable UI components
-        ├── context/          # Auth context
-        └── pages/            # Route pages
+    ├── app/                    # Next.js App Router pages
+    │   ├── page.tsx            # Homepage
+    │   ├── shop/               # Shop listing + product detail
+    │   ├── cart/               # Cart page
+    │   ├── wishlist/           # Wishlist page
+    │   ├── checkout/           # 3-step checkout
+    │   ├── configurator/       # Product configurator
+    │   ├── gallery/            # Project gallery
+    │   ├── auth/               # Login + register
+    │   └── admin/              # Admin dashboard
+    ├── components/
+    │   ├── home/               # Hero, FeaturedProducts, Gallery…
+    │   ├── layout/             # Header, Footer
+    │   └── shop/               # ProductCard, CartDrawer
+    ├── lib/                    # types.ts, utils.ts, constants.ts
+    └── store/                  # cartStore.ts, wishlistStore.ts
 ```
 
 ## API Endpoints
@@ -78,49 +113,50 @@ infoenc/
 ### Auth
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/register` | Register (firstName, lastName, email, password) |
 | POST | `/api/auth/login` | Login |
 | POST | `/api/auth/refresh` | Refresh access token |
 | POST | `/api/auth/logout` | Logout |
 | GET | `/api/auth/me` | Get current user |
 
-### Courses
+### Products
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/courses` | List courses (filter/search/paginate) |
-| GET | `/api/courses/:slug` | Get course detail |
-| POST | `/api/courses/:id/enroll` | Enroll in course |
-| GET | `/api/courses/lesson/:id` | Get lesson |
-| POST | `/api/courses/lesson/:id/complete` | Mark lesson complete |
+| GET | `/api/products` | List (filter by category, price, search, sort, paginate) |
+| GET | `/api/products/featured` | Featured products |
+| GET | `/api/products/:slug` | Product detail |
+| POST | `/api/products` | Create product (admin) |
+| PUT | `/api/products/:id` | Update product (admin) |
+| DELETE | `/api/products/:id` | Delete product (admin) |
 
-### Labs
+### Orders
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/labs` | List labs (filter/search/paginate) |
-| GET | `/api/labs/:slug` | Get lab detail |
-| POST | `/api/labs/:slug/submit` | Submit flag |
-| GET | `/api/labs/:slug/hint` | Get hint |
-| GET | `/api/labs/leaderboard` | Get leaderboard |
+| GET | `/api/orders` | List orders |
+| POST | `/api/orders` | Create order |
+| GET | `/api/orders/:id` | Order detail |
+| PUT | `/api/orders/:id/status` | Update order status |
 
-### Users
+### Coupons
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/users/dashboard` | Get dashboard data |
-| GET | `/api/users/:id` | Get user profile |
-| PUT | `/api/users/profile` | Update profile |
-| PUT | `/api/users/password` | Change password |
+| POST | `/api/coupons/validate` | Validate coupon code |
+| GET | `/api/coupons` | List coupons (admin) |
 
-## Security Features
-
-- JWT with short-lived access tokens (15m) + rotating refresh tokens (7d)
-- bcrypt password hashing (cost factor 12)
-- Rate limiting: 200 req/15min global, 10/15min for auth, 15/min for flag submission
-- Helmet.js security headers
-- CORS restricted to frontend origin
-- Input validation via express-validator
-- SQL injection protection via parameterized queries (mysql2)
-- XSS prevention via input sanitization
+### Reviews
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/reviews` | List reviews (filter by productId) |
+| POST | `/api/reviews` | Submit review |
+| POST | `/api/reviews/:id/helpful` | Mark review helpful |
 
 ## Environment Variables
 
-See `backend/.env.example` for required configuration.
+See `backend/.env.example` and `frontend/.env.example` for required configuration.
+
+### Key backend variables
+```
+DATABASE_URL=postgresql://user:password@localhost:5432/ledprofiledecorations
+JWT_SECRET=your_secret_min_32_chars
+JWT_REFRESH_SECRET=your_refresh_secret_min_32_chars
+```
