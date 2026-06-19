@@ -5,9 +5,10 @@ const { authenticate } = require('../middleware/auth');
 const ctrl = require('../controllers/authController');
 
 router.post('/register',
-  body('username').trim().isLength({ min: 3, max: 30 }).matches(/^[a-zA-Z0-9_]+$/),
   body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 8 }).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/),
+  body('password').isLength({ min: 8 }),
+  body('firstName').trim().notEmpty(),
+  body('lastName').trim().notEmpty(),
   validate,
   ctrl.register
 );

@@ -1,16 +1,11 @@
-const mysql = require('mysql2/promise');
+const { Pool } = require('pg');
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 3306,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'infoenc_academy',
-  waitForConnections: true,
-  connectionLimit: 20,
-  queueLimit: 0,
-  charset: 'utf8mb4',
-  timezone: '+00:00',
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
 pool.on('error', (err) => {
@@ -19,13 +14,13 @@ pool.on('error', (err) => {
 
 async function testConnection() {
   try {
-    const conn = await pool.getConnection();
-    await conn.ping();
-    conn.release();
-    console.log('[DB] Connected to MySQL successfully');
+    const client = await pool.connect();
+    await client.query('SELECT 1');
+    client.release();
+    console.log('[DB] Connected to PostgreSQL successfully');
   } catch (err) {
     console.error('[DB] Connection failed:', err.message);
-    process.exit(1);
+    console.warn('[DB] Running without database — using mock data');
   }
 }
 

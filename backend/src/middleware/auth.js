@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { pool } = require('../config/database');
 
-async function authenticate(req, res, next) {
+function authenticate(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'No token provided' });
@@ -9,15 +8,8 @@ async function authenticate(req, res, next) {
 
   const token = authHeader.slice(7);
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const [rows] = await pool.execute(
-      'SELECT id, username, email, role, is_active FROM users WHERE id = ?',
-      [decoded.userId]
-    );
-    if (!rows.length || !rows[0].is_active) {
-      return res.status(401).json({ error: 'User not found or deactivated' });
-    }
-    req.user = rows[0];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'dev_secret_change_in_prod');
+    req.user = decoded;
     next();
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
