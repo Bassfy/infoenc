@@ -1,316 +1,343 @@
--- InfoEnc Academy - Cybersecurity Learning Platform
--- MySQL Schema
+-- LED Profile Decorations — PostgreSQL Database Schema
+-- Production-ready e-commerce schema
 
-CREATE DATABASE IF NOT EXISTS infoenc_academy CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE infoenc_academy;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
--- Users
+-- ─── USERS ────────────────────────────────────────────────────────────────────
+
 CREATE TABLE users (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(50) UNIQUE NOT NULL,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   email VARCHAR(255) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  role ENUM('student','instructor','admin') DEFAULT 'student',
-  avatar_url VARCHAR(500),
-  bio TEXT,
-  points INT UNSIGNED DEFAULT 0,
-  level INT UNSIGNED DEFAULT 1,
-  email_verified BOOLEAN DEFAULT FALSE,
-  verification_token VARCHAR(255),
-  reset_token VARCHAR(255),
-  reset_token_expires DATETIME,
-  last_login DATETIME,
-  is_active BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  password_hash TEXT NOT NULL,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  phone VARCHAR(30),
+  avatar TEXT,
+  role VARCHAR(20) NOT NULL DEFAULT 'customer' CHECK (role IN ('customer', 'admin', 'manager')),
+  email_verified BOOLEAN NOT NULL DEFAULT false,
+  email_verify_token TEXT,
+  reset_password_token TEXT,
+  reset_password_expires TIMESTAMPTZ,
+  last_login_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Refresh tokens
+CREATE TABLE user_addresses (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  label VARCHAR(50) DEFAULT 'Home',
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  company VARCHAR(200),
+  street TEXT NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  state VARCHAR(100),
+  postal_code VARCHAR(20) NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  phone VARCHAR(30),
+  is_default BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE refresh_tokens (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  token VARCHAR(500) UNIQUE NOT NULL,
-  expires_at DATETIME NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token TEXT UNIQUE NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Categories
-CREATE TABLE categories (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+-- ─── PRODUCTS ─────────────────────────────────────────────────────────────────
+
+CREATE TABLE product_categories (
+  id VARCHAR(100) PRIMARY KEY,
+  label VARCHAR(200) NOT NULL,
+  description TEXT,
+  parent_id VARCHAR(100) REFERENCES product_categories(id),
+  image TEXT,
+  sort_order INT DEFAULT 0,
+  is_featured BOOLEAN DEFAULT false,
+  meta_title VARCHAR(200),
+  meta_description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE products (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  slug VARCHAR(300) UNIQUE NOT NULL,
+  name VARCHAR(300) NOT NULL,
+  short_description TEXT,
+  description TEXT NOT NULL,
+  price DECIMAL(12,2) NOT NULL CHECK (price >= 0),
+  compare_at_price DECIMAL(12,2),
+  cost_price DECIMAL(12,2),
+  category_id VARCHAR(100) REFERENCES product_categories(id),
+  sku VARCHAR(100) UNIQUE,
+  barcode VARCHAR(100),
+  weight_grams INT,
+  in_stock BOOLEAN NOT NULL DEFAULT true,
+  stock_quantity INT NOT NULL DEFAULT 0,
+  low_stock_threshold INT DEFAULT 10,
+  rating DECIMAL(3,2) DEFAULT 0,
+  review_count INT DEFAULT 0,
+  sales_count INT DEFAULT 0,
+  is_featured BOOLEAN DEFAULT false,
+  is_bestseller BOOLEAN DEFAULT false,
+  is_new BOOLEAN DEFAULT false,
+  is_active BOOLEAN DEFAULT true,
+  warranty VARCHAR(100),
+  installation_method TEXT,
+  tags TEXT[],
+  meta_title VARCHAR(200),
+  meta_description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_products_category ON products(category_id);
+CREATE INDEX idx_products_slug ON products(slug);
+CREATE INDEX idx_products_featured ON products(is_featured, is_active);
+CREATE INDEX idx_products_price ON products(price);
+CREATE INDEX idx_products_rating ON products(rating DESC);
+CREATE INDEX idx_products_search ON products USING gin(to_tsvector('english', name || ' ' || COALESCE(short_description, '')));
+
+CREATE TABLE product_images (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  url TEXT NOT NULL,
+  alt TEXT,
+  sort_order INT DEFAULT 0,
+  is_primary BOOLEAN DEFAULT false
+);
+
+CREATE TABLE product_specifications (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  label VARCHAR(200) NOT NULL,
+  value TEXT NOT NULL,
+  sort_order INT DEFAULT 0
+);
+
+CREATE TABLE product_finishes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  finish_id VARCHAR(100) NOT NULL,
   name VARCHAR(100) NOT NULL,
-  slug VARCHAR(100) UNIQUE NOT NULL,
+  color_hex VARCHAR(7),
+  image TEXT,
+  sort_order INT DEFAULT 0
+);
+
+CREATE TABLE product_length_options (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  value_mm INT NOT NULL,
+  label VARCHAR(50) NOT NULL,
+  price DECIMAL(12,2) NOT NULL,
+  sort_order INT DEFAULT 0
+);
+
+CREATE TABLE product_downloads (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  type VARCHAR(20) NOT NULL CHECK (type IN ('CAD', 'IES', 'PDF', 'DXF')),
+  label VARCHAR(200) NOT NULL,
+  url TEXT NOT NULL,
+  file_size VARCHAR(50),
+  sort_order INT DEFAULT 0
+);
+
+CREATE TABLE related_products (
+  product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+  related_product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+  PRIMARY KEY (product_id, related_product_id)
+);
+
+-- ─── REVIEWS ──────────────────────────────────────────────────────────────────
+
+CREATE TABLE reviews (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  user_name VARCHAR(200) NOT NULL,
+  user_avatar TEXT,
+  rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  title VARCHAR(200) NOT NULL,
+  body TEXT NOT NULL,
+  verified BOOLEAN DEFAULT false,
+  helpful_count INT DEFAULT 0,
+  is_approved BOOLEAN DEFAULT false,
+  project_note TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_reviews_product ON reviews(product_id, is_approved);
+CREATE INDEX idx_reviews_user ON reviews(user_id);
+
+-- ─── ORDERS ───────────────────────────────────────────────────────────────────
+
+CREATE TABLE orders (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  order_number VARCHAR(50) UNIQUE NOT NULL,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  guest_email VARCHAR(255),
+  status VARCHAR(30) NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded')),
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'pending'
+    CHECK (payment_status IN ('pending', 'paid', 'failed', 'refunded', 'partially_refunded')),
+  payment_method VARCHAR(20) NOT NULL CHECK (payment_method IN ('stripe', 'paypal', 'cod')),
+  payment_intent_id TEXT,
+  subtotal DECIMAL(12,2) NOT NULL,
+  shipping_cost DECIMAL(12,2) DEFAULT 0,
+  tax_amount DECIMAL(12,2) DEFAULT 0,
+  discount_amount DECIMAL(12,2) DEFAULT 0,
+  total DECIMAL(12,2) NOT NULL,
+  currency VARCHAR(3) DEFAULT 'USD',
+  coupon_code VARCHAR(100),
+  shipping_address JSONB NOT NULL,
+  billing_address JSONB,
+  tracking_number VARCHAR(200),
+  shipping_carrier VARCHAR(100),
+  estimated_delivery DATE,
+  notes TEXT,
+  internal_notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_orders_user ON orders(user_id);
+CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_orders_created ON orders(created_at DESC);
+CREATE INDEX idx_orders_number ON orders(order_number);
+
+CREATE TABLE order_items (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  product_id UUID REFERENCES products(id) ON DELETE SET NULL,
+  product_name VARCHAR(300) NOT NULL,
+  product_image TEXT,
+  sku VARCHAR(100),
+  quantity INT NOT NULL CHECK (quantity > 0),
+  unit_price DECIMAL(12,2) NOT NULL,
+  total_price DECIMAL(12,2) NOT NULL,
+  selected_finish VARCHAR(200),
+  selected_length VARCHAR(50),
+  configuration JSONB
+);
+
+-- ─── COUPONS ──────────────────────────────────────────────────────────────────
+
+CREATE TABLE coupons (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  code VARCHAR(50) UNIQUE NOT NULL,
   description TEXT,
-  icon VARCHAR(100),
-  color VARCHAR(20) DEFAULT '#00ff88',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  type VARCHAR(20) NOT NULL CHECK (type IN ('percentage', 'fixed')),
+  value DECIMAL(12,2) NOT NULL CHECK (value > 0),
+  min_order_amount DECIMAL(12,2),
+  max_discount_amount DECIMAL(12,2),
+  max_uses INT,
+  used_count INT DEFAULT 0,
+  per_user_limit INT DEFAULT 1,
+  is_active BOOLEAN DEFAULT true,
+  valid_from TIMESTAMPTZ,
+  valid_until TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Courses
-CREATE TABLE courses (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  slug VARCHAR(255) UNIQUE NOT NULL,
+-- ─── WISHLIST ─────────────────────────────────────────────────────────────────
+
+CREATE TABLE wishlists (
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  added_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, product_id)
+);
+
+-- ─── GALLERY / PROJECTS ───────────────────────────────────────────────────────
+
+CREATE TABLE gallery_projects (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  slug VARCHAR(300) UNIQUE NOT NULL,
+  title VARCHAR(300) NOT NULL,
   description TEXT,
-  short_description VARCHAR(500),
-  category_id INT UNSIGNED,
-  instructor_id INT UNSIGNED NOT NULL,
-  thumbnail_url VARCHAR(500),
-  difficulty ENUM('beginner','intermediate','advanced','expert') DEFAULT 'beginner',
-  duration_minutes INT UNSIGNED DEFAULT 0,
-  price DECIMAL(10,2) DEFAULT 0.00,
-  is_free BOOLEAN DEFAULT TRUE,
-  is_published BOOLEAN DEFAULT FALSE,
-  enrolled_count INT UNSIGNED DEFAULT 0,
-  rating DECIMAL(3,2) DEFAULT 0.00,
-  rating_count INT UNSIGNED DEFAULT 0,
-  tags JSON,
-  requirements JSON,
-  what_you_learn JSON,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
-  FOREIGN KEY (instructor_id) REFERENCES users(id) ON DELETE CASCADE
+  location VARCHAR(200),
+  category VARCHAR(50) NOT NULL CHECK (category IN ('residential', 'commercial', 'retail', 'hospitality', 'office', 'outdoor')),
+  cover_image TEXT NOT NULL,
+  images TEXT[],
+  products_used TEXT[],
+  is_featured BOOLEAN DEFAULT false,
+  is_active BOOLEAN DEFAULT true,
+  completed_at DATE,
+  meta_title VARCHAR(200),
+  meta_description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Modules (sections within a course)
-CREATE TABLE modules (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  course_id INT UNSIGNED NOT NULL,
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
-  order_index INT UNSIGNED DEFAULT 0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+-- ─── NEWSLETTER ───────────────────────────────────────────────────────────────
+
+CREATE TABLE newsletter_subscribers (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  source VARCHAR(100),
+  subscribed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  unsubscribed_at TIMESTAMPTZ
 );
 
--- Lessons
-CREATE TABLE lessons (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  module_id INT UNSIGNED NOT NULL,
-  title VARCHAR(255) NOT NULL,
-  slug VARCHAR(255) NOT NULL,
-  content LONGTEXT,
-  video_url VARCHAR(500),
-  video_duration_seconds INT UNSIGNED DEFAULT 0,
-  lesson_type ENUM('video','text','quiz','lab') DEFAULT 'video',
-  order_index INT UNSIGNED DEFAULT 0,
-  is_preview BOOLEAN DEFAULT FALSE,
-  resources JSON,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (module_id) REFERENCES modules(id) ON DELETE CASCADE
-);
+-- ─── CONTENT ──────────────────────────────────────────────────────────────────
 
--- Enrollments
-CREATE TABLE enrollments (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  course_id INT UNSIGNED NOT NULL,
-  enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  completed_at DATETIME,
-  progress_percent TINYINT UNSIGNED DEFAULT 0,
-  is_completed BOOLEAN DEFAULT FALSE,
-  UNIQUE KEY unique_enrollment (user_id, course_id),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
-);
-
--- Lesson Progress
-CREATE TABLE lesson_progress (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  lesson_id INT UNSIGNED NOT NULL,
-  is_completed BOOLEAN DEFAULT FALSE,
-  watch_seconds INT UNSIGNED DEFAULT 0,
-  completed_at DATETIME,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_progress (user_id, lesson_id),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
-);
-
--- Hacking Labs
-CREATE TABLE labs (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  slug VARCHAR(255) UNIQUE NOT NULL,
-  description TEXT,
-  short_description VARCHAR(500),
-  category_id INT UNSIGNED,
-  difficulty ENUM('easy','medium','hard','insane') DEFAULT 'easy',
-  points INT UNSIGNED DEFAULT 100,
-  flag VARCHAR(255),
-  flag_format VARCHAR(100) DEFAULT 'FLAG{...}',
-  lab_type ENUM('web','network','crypto','forensics','reversing','pwn','osint','steganography','misc') DEFAULT 'misc',
-  docker_image VARCHAR(255),
-  docker_port INT UNSIGNED,
-  hints JSON,
-  tools_needed JSON,
-  writeup_url VARCHAR(500),
-  is_published BOOLEAN DEFAULT FALSE,
-  solve_count INT UNSIGNED DEFAULT 0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
-);
-
--- Lab Submissions
-CREATE TABLE lab_submissions (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  lab_id INT UNSIGNED NOT NULL,
-  submitted_flag VARCHAR(255) NOT NULL,
-  is_correct BOOLEAN DEFAULT FALSE,
-  points_earned INT UNSIGNED DEFAULT 0,
-  submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE CASCADE
-);
-
--- Lab Completions (one per user/lab)
-CREATE TABLE lab_completions (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  lab_id INT UNSIGNED NOT NULL,
-  completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  points_earned INT UNSIGNED DEFAULT 0,
-  UNIQUE KEY unique_completion (user_id, lab_id),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE CASCADE
-);
-
--- Quizzes
-CREATE TABLE quizzes (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  lesson_id INT UNSIGNED NOT NULL,
-  title VARCHAR(255) NOT NULL,
-  pass_score TINYINT UNSIGNED DEFAULT 70,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
-);
-
--- Quiz Questions
-CREATE TABLE quiz_questions (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  quiz_id INT UNSIGNED NOT NULL,
-  question TEXT NOT NULL,
-  question_type ENUM('single','multiple','text') DEFAULT 'single',
-  options JSON,
-  correct_answer JSON,
-  explanation TEXT,
-  points INT UNSIGNED DEFAULT 10,
-  order_index INT UNSIGNED DEFAULT 0,
-  FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
-);
-
--- Quiz Attempts
-CREATE TABLE quiz_attempts (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  quiz_id INT UNSIGNED NOT NULL,
-  answers JSON,
-  score TINYINT UNSIGNED DEFAULT 0,
-  passed BOOLEAN DEFAULT FALSE,
-  completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
-);
-
--- Certificates
-CREATE TABLE certificates (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  course_id INT UNSIGNED,
-  certificate_number VARCHAR(100) UNIQUE NOT NULL,
-  issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
-);
-
--- Achievements
-CREATE TABLE achievements (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  description TEXT,
-  icon VARCHAR(100),
-  badge_color VARCHAR(20),
-  points INT UNSIGNED DEFAULT 0,
-  condition_type VARCHAR(50),
-  condition_value INT UNSIGNED,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- User Achievements
-CREATE TABLE user_achievements (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  achievement_id INT UNSIGNED NOT NULL,
-  earned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY unique_achievement (user_id, achievement_id),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (achievement_id) REFERENCES achievements(id) ON DELETE CASCADE
-);
-
--- Forum Posts
-CREATE TABLE forum_posts (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  course_id INT UNSIGNED,
-  lab_id INT UNSIGNED,
-  title VARCHAR(255),
+CREATE TABLE blog_posts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  slug VARCHAR(300) UNIQUE NOT NULL,
+  title VARCHAR(300) NOT NULL,
+  excerpt TEXT,
   content TEXT NOT NULL,
-  parent_id INT UNSIGNED,
-  is_pinned BOOLEAN DEFAULT FALSE,
-  upvotes INT UNSIGNED DEFAULT 0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-  FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE CASCADE,
-  FOREIGN KEY (parent_id) REFERENCES forum_posts(id) ON DELETE CASCADE
+  cover_image TEXT,
+  author_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  tags TEXT[],
+  is_published BOOLEAN DEFAULT false,
+  published_at TIMESTAMPTZ,
+  meta_title VARCHAR(200),
+  meta_description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Notifications
-CREATE TABLE notifications (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT UNSIGNED NOT NULL,
-  type VARCHAR(50) NOT NULL,
-  title VARCHAR(255) NOT NULL,
-  message TEXT,
-  is_read BOOLEAN DEFAULT FALSE,
-  metadata JSON,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+-- ─── TRIGGERS ─────────────────────────────────────────────────────────────────
 
--- Indexes
-CREATE INDEX idx_courses_category ON courses(category_id);
-CREATE INDEX idx_courses_instructor ON courses(instructor_id);
-CREATE INDEX idx_enrollments_user ON enrollments(user_id);
-CREATE INDEX idx_enrollments_course ON enrollments(course_id);
-CREATE INDEX idx_lesson_progress_user ON lesson_progress(user_id);
-CREATE INDEX idx_lab_completions_user ON lab_completions(user_id);
-CREATE INDEX idx_users_points ON users(points DESC);
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN NEW.updated_at = NOW(); RETURN NEW; END;
+$$ LANGUAGE plpgsql;
 
--- Seed: Categories
-INSERT INTO categories (name, slug, description, icon, color) VALUES
-('Web Security', 'web-security', 'XSS, SQL Injection, CSRF, and web application attacks', 'globe', '#00ff88'),
-('Network Security', 'network-security', 'Packet analysis, network protocols, and intrusion detection', 'network', '#0088ff'),
-('Cryptography', 'cryptography', 'Encryption, hashing, and cryptographic attacks', 'lock', '#ff8800'),
-('Malware Analysis', 'malware-analysis', 'Reverse engineering and malware behavior analysis', 'bug', '#ff0044'),
-('Forensics', 'forensics', 'Digital forensics, log analysis, and evidence recovery', 'search', '#8800ff'),
-('Penetration Testing', 'penetration-testing', 'Ethical hacking, exploitation, and post-exploitation', 'shield', '#ff0088'),
-('OSINT', 'osint', 'Open source intelligence gathering and reconnaissance', 'eye', '#00ffff'),
-('Cloud Security', 'cloud-security', 'AWS, GCP, Azure security misconfigurations and attacks', 'cloud', '#ffff00');
+CREATE TRIGGER tr_products_updated BEFORE UPDATE ON products FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER tr_orders_updated BEFORE UPDATE ON orders FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER tr_users_updated BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
--- Seed: Achievements
-INSERT INTO achievements (name, description, icon, badge_color, points, condition_type, condition_value) VALUES
-('First Blood', 'Complete your first lab challenge', 'trophy', '#ff4444', 50, 'labs_completed', 1),
-('Course Completer', 'Complete your first course', 'graduation-cap', '#4444ff', 100, 'courses_completed', 1),
-('Hacker Elite', 'Complete 10 lab challenges', 'skull', '#ff8800', 200, 'labs_completed', 10),
-('Knowledge Seeker', 'Enroll in 5 courses', 'book', '#00ff88', 50, 'courses_enrolled', 5),
-('CTF Champion', 'Earn 1000 points total', 'crown', '#ffff00', 500, 'total_points', 1000),
-('Speed Runner', 'Complete a lab in under 30 minutes', 'zap', '#00ffff', 75, 'fast_solve', 30),
-('Veteran', 'Complete 50 lessons', 'star', '#ff44ff', 150, 'lessons_completed', 50);
+-- ─── SEED DATA ────────────────────────────────────────────────────────────────
+
+INSERT INTO product_categories (id, label, description, sort_order, is_featured) VALUES
+('recessed', 'Recessed Profiles', 'Seamless flush integration into ceilings and walls', 1, true),
+('surface-mounted', 'Surface Mounted Profiles', 'Clean surface application for any environment', 2, true),
+('corner', 'Corner Profiles', 'Precision 90° and custom angle solutions', 3, true),
+('suspended', 'Suspended Profiles', 'Dramatic floating light installations', 4, true),
+('trimless', 'Trimless Profiles', 'Invisible integration for purist aesthetics', 5, true),
+('flexible', 'Flexible Profiles', 'Curved and custom shape applications', 6, false),
+('led-strips', 'LED Strips', 'Premium SMD and COB LED strips', 7, true),
+('cob-strips', 'COB LED Strips', 'Continuous filament-like COB strips', 8, true),
+('drivers', 'Drivers', 'Constant voltage and constant current drivers', 9, false),
+('controllers', 'Controllers', 'DALI, Bluetooth, KNX, DMX controllers', 10, false),
+('power-supplies', 'Power Supplies', 'Professional-grade power solutions', 11, false),
+('diffusers', 'Diffusers', 'Clear, opal, frosted, and prismatic diffusers', 12, false),
+('accessories', 'Accessories', 'All accessories for complete installations', 13, false),
+('connectors', 'Connectors', 'Strip-to-strip and strip-to-driver connectors', 14, false),
+('end-caps', 'End Caps', 'Precision machined aluminum end caps', 15, false),
+('mounting-clips', 'Mounting Clips', 'Tool-free spring mounting clips', 16, false);
+
+INSERT INTO coupons (code, description, type, value, min_order_amount, max_uses, is_active) VALUES
+('WELCOME15', '15% off your first order', 'percentage', 15, 200, 1000, true),
+('ARCH50', '$50 off orders over $500', 'fixed', 50, 500, 500, true),
+('PROF20', '20% off for professional accounts', 'percentage', 20, 1000, 200, true);
