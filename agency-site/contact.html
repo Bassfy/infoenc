@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — VOREX Digital Studio</title>
+  <meta name="description" content="Start a project with VOREX. Get in touch via our contact form, book a discovery call, or email us directly." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7/dist/barba.umd.min.js"></script>
+
+  <style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: var(--sp-16);
+      align-items: start;
+    }
+
+    .contact-sticky {
+      position: sticky;
+      top: 120px;
+    }
+
+    .calendly-embed {
+      width: 100%;
+      height: 500px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid var(--clr-border);
+      background: var(--clr-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--sp-8);
+    }
+
+    .social-links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-3);
+    }
+
+    .social-link-card {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      padding: var(--sp-4) var(--sp-5);
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-medium);
+      color: var(--clr-off-white);
+      transition: all var(--transition-fast);
+    }
+
+    .social-link-card:hover {
+      border-color: var(--clr-accent);
+      color: var(--clr-accent);
+      transform: translateY(-3px);
+    }
+
+    .social-link-card__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(124, 92, 252, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-form-wrap {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-xl);
+      padding: var(--sp-10);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-6);
+    }
+
+    .service-checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-6);
+    }
+
+    .service-checkbox {
+      display: none;
+    }
+
+    .service-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      padding: var(--sp-3) var(--sp-4);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-medium);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--clr-muted);
+      cursor: none;
+      transition: all var(--transition-fast);
+      user-select: none;
+    }
+
+    .service-checkbox:checked + .service-checkbox-label {
+      border-color: var(--clr-accent);
+      background: rgba(124, 92, 252, 0.1);
+      color: var(--clr-white);
+    }
+
+    .service-checkbox-label:hover {
+      border-color: var(--clr-border-2);
+      color: var(--clr-white);
+    }
+
+    .service-checkbox-label::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--clr-border-2);
+      flex-shrink: 0;
+      transition: all var(--transition-fast);
+    }
+
+    .service-checkbox:checked + .service-checkbox-label::before {
+      background: var(--clr-accent);
+      border-color: var(--clr-accent);
+      box-shadow: 0 0 12px rgba(124, 92, 252, 0.5);
+    }
+
+    .budget-slider {
+      width: 100%;
+      margin-top: var(--sp-3);
+      accent-color: var(--clr-accent);
+    }
+
+    @media (max-width: 1023px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+      .contact-sticky {
+        position: static;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .service-checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+      .social-links-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .contact-form-wrap {
+        padding: var(--sp-6);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <div id="cursor-dot"  aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <div id="page-transition" aria-hidden="true">
+    <div class="transition-panel"></div>
+    <div class="transition-panel"></div>
+  </div>
+  <div id="preloader" role="status" aria-label="Loading">
+    <div class="preloader__logo">VOR<span>EX</span></div>
+    <div class="preloader__counter" id="preloader-counter">0</div>
+    <div class="preloader__bar-wrap"><div class="preloader__bar" id="preloader-bar"></div></div>
+    <div class="preloader__label">Loading Experience</div>
+  </div>
+
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">VOR<span>EX</span></a>
+        <ul class="nav-links" role="list">
+          <li><a href="index.html"    class="nav-link">Home</a></li>
+          <li><a href="work.html"     class="nav-link">Work</a></li>
+          <li><a href="services.html" class="nav-link">Services</a></li>
+          <li><a href="studio.html"   class="nav-link">Studio</a></li>
+          <li><a href="contact.html"  class="nav-link active" aria-current="page">Contact</a></li>
+        </ul>
+        <div class="nav-right">
+          <button class="sound-toggle" aria-label="Toggle sound">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </button>
+          <a href="#contact-form" class="nav-cta">Get In Touch</a>
+          <button class="nav-hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <nav class="mobile-menu__links">
+      <a href="index.html"    class="mobile-menu__link"><span>Home</span></a>
+      <a href="work.html"     class="mobile-menu__link"><span>Work</span></a>
+      <a href="services.html" class="mobile-menu__link"><span>Services</span></a>
+      <a href="studio.html"   class="mobile-menu__link"><span>Studio</span></a>
+      <a href="contact.html"  class="mobile-menu__link"><span>Contact</span></a>
+    </nav>
+    <div class="mobile-menu__footer">
+      <span>© 2025 VOREX</span>
+      <a href="mailto:hello@vorex.studio">hello@vorex.studio</a>
+    </div>
+  </div>
+
+  <main id="main-content" data-barba="container" data-barba-namespace="contact">
+
+    <!-- Page Hero -->
+    <section class="page-hero section section--lg" style="position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:var(--gradient-glow);opacity:0.6;" aria-hidden="true"></div>
+      <div class="glow-bg glow-bg--pink" style="top:-10%;right:-5%;" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:2;">
+        <p class="page-hero__number fade-up">005</p>
+        <h1 class="page-hero__title" data-split="lines">
+          Let's Build<br>Together.
+        </h1>
+        <p class="page-hero__desc fade-up">
+          Tell us about your project and we'll respond within 24 hours with a tailored proposal.
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Contact Section -->
+    <section class="section">
+      <div class="container">
+        <div class="contact-grid">
+
+          <!-- Left — info -->
+          <div class="contact-sticky">
+            <div class="section-label">Contact Info</div>
+            <h2 class="t-subheading fade-up" style="margin-bottom:var(--sp-8);">
+              Get in touch
+            </h2>
+
+            <!-- Contact Info Items -->
+            <div style="margin-bottom:var(--sp-8);">
+              <div class="contact-info-item">
+                <span class="contact-info-item__label">Email</span>
+                <a href="mailto:hello@vorex.studio" class="contact-info-item__value">hello@vorex.studio</a>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-item__label">Phone</span>
+                <a href="tel:+15551234567" class="contact-info-item__value">+1 (555) 123-4567</a>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-item__label">Headquarters</span>
+                <span class="contact-info-item__value">San Francisco, CA 94105</span>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-item__label">Response Time</span>
+                <span class="contact-info-item__value">Within 24 hours</span>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-item__label">Availability</span>
+                <span class="contact-info-item__value" style="display:flex;align-items:center;gap:var(--sp-2);">
+                  <span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;box-shadow:0 0 10px rgba(16,185,129,0.5);"></span>
+                  Open for new projects
+                </span>
+              </div>
+            </div>
+
+            <!-- Calendly Embed Placeholder -->
+            <div style="margin-bottom:var(--sp-8);">
+              <p class="t-label" style="margin-bottom:var(--sp-4);">Or book a discovery call</p>
+              <div class="calendly-embed" role="region" aria-label="Schedule a meeting">
+                <div>
+                  <div style="font-size:2rem;margin-bottom:var(--sp-4);">📅</div>
+                  <p class="t-body" style="margin-bottom:var(--sp-5);">
+                    Schedule a 30-minute discovery call to discuss your project scope, timeline, and budget.
+                  </p>
+                  <a href="https://calendly.com/vorexstudio" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+                    Book a Call
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Links -->
+            <p class="t-label" style="margin-bottom:var(--sp-4);">Follow Us</p>
+            <div class="social-links-grid">
+              <a href="#" class="social-link-card" target="_blank" rel="noopener noreferrer">
+                <div class="social-link-card__icon">𝕏</div>
+                <span>Twitter / X</span>
+              </a>
+              <a href="#" class="social-link-card" target="_blank" rel="noopener noreferrer">
+                <div class="social-link-card__icon">in</div>
+                <span>LinkedIn</span>
+              </a>
+              <a href="#" class="social-link-card" target="_blank" rel="noopener noreferrer">
+                <div class="social-link-card__icon">●</div>
+                <span>Dribbble</span>
+              </a>
+              <a href="#" class="social-link-card" target="_blank" rel="noopener noreferrer">
+                <div class="social-link-card__icon">⌥</div>
+                <span>GitHub</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right — form -->
+          <div class="contact-form-wrap fade-up">
+            <h2 class="t-subheading" style="margin-bottom:var(--sp-2);">Tell us about<br>your project.</h2>
+            <p class="t-body" style="margin-bottom:var(--sp-8);">Fill in the details below and we'll put together a tailored proposal.</p>
+
+            <form id="contact-form" novalidate>
+              <!-- Name + Email -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="name">Your Name *</label>
+                  <input type="text" id="name" name="name" class="form-input" placeholder="Alex Johnson" required autocomplete="name" />
+                  <div class="form-underline" aria-hidden="true"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email">Email Address *</label>
+                  <input type="email" id="email" name="email" class="form-input" placeholder="alex@company.com" required autocomplete="email" />
+                  <div class="form-underline" aria-hidden="true"></div>
+                </div>
+              </div>
+
+              <!-- Company + Role -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="company">Company / Startup</label>
+                  <input type="text" id="company" name="company" class="form-input" placeholder="Your Company Name" autocomplete="organization" />
+                  <div class="form-underline" aria-hidden="true"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="role">Your Role</label>
+                  <input type="text" id="role" name="role" class="form-input" placeholder="Founder, CTO, Head of Design…" />
+                  <div class="form-underline" aria-hidden="true"></div>
+                </div>
+              </div>
+
+              <!-- Services -->
+              <div class="form-group">
+                <label class="form-label">Services You Need</label>
+                <div class="service-checkbox-grid">
+                  <label>
+                    <input type="checkbox" name="services" value="web" class="service-checkbox" />
+                    <span class="service-checkbox-label">Web Development</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="mobile" class="service-checkbox" />
+                    <span class="service-checkbox-label">Mobile Development</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="saas" class="service-checkbox" />
+                    <span class="service-checkbox-label">SaaS Development</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="ai" class="service-checkbox" />
+                    <span class="service-checkbox-label">AI & Automation</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="design" class="service-checkbox" />
+                    <span class="service-checkbox-label">UI/UX Design</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="services" value="it" class="service-checkbox" />
+                    <span class="service-checkbox-label">IT Consultancy</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Budget -->
+              <div class="form-group">
+                <label class="form-label" for="budget-range">Project Budget</label>
+                <select id="budget-range" name="budget" class="form-input form-select" style="color:var(--clr-off-white);">
+                  <option value="" disabled selected style="color:rgba(255,255,255,0.3);">Select budget range</option>
+                  <option value="5k-15k">$5k – $15k</option>
+                  <option value="15k-30k">$15k – $30k</option>
+                  <option value="30k-75k">$30k – $75k</option>
+                  <option value="75k-150k">$75k – $150k</option>
+                  <option value="150k+">$150k+</option>
+                  <option value="discuss">Prefer to discuss</option>
+                </select>
+                <div class="form-underline" aria-hidden="true"></div>
+              </div>
+
+              <!-- Timeline -->
+              <div class="form-group">
+                <label class="form-label" for="timeline">Desired Timeline</label>
+                <select id="timeline" name="timeline" class="form-input form-select" style="color:var(--clr-off-white);">
+                  <option value="" disabled selected style="color:rgba(255,255,255,0.3);">When do you want to launch?</option>
+                  <option value="asap">ASAP (within 1 month)</option>
+                  <option value="1-3m">1 – 3 months</option>
+                  <option value="3-6m">3 – 6 months</option>
+                  <option value="6m+">6+ months</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+                <div class="form-underline" aria-hidden="true"></div>
+              </div>
+
+              <!-- Message -->
+              <div class="form-group">
+                <label class="form-label" for="message">Project Description *</label>
+                <textarea id="message" name="message" class="form-textarea" placeholder="Tell us about your project — what are you building, who's it for, and what's the dream outcome?" required rows="5"></textarea>
+                <div class="form-underline" aria-hidden="true"></div>
+              </div>
+
+              <!-- How did you find us -->
+              <div class="form-group">
+                <label class="form-label" for="referral">How did you find us?</label>
+                <select id="referral" name="referral" class="form-input form-select" style="color:var(--clr-off-white);">
+                  <option value="" disabled selected style="color:rgba(255,255,255,0.3);">Select an option</option>
+                  <option value="google">Google Search</option>
+                  <option value="awwwards">Awwwards</option>
+                  <option value="dribbble">Dribbble / Behance</option>
+                  <option value="twitter">Twitter / X</option>
+                  <option value="linkedin">LinkedIn</option>
+                  <option value="referral">Referral from a friend</option>
+                  <option value="other">Other</option>
+                </select>
+                <div class="form-underline" aria-hidden="true"></div>
+              </div>
+
+              <!-- Submit -->
+              <div style="margin-top:var(--sp-8);">
+                <div class="magnetic" style="display:block;">
+                  <div class="magnetic-inner">
+                    <button type="submit" class="btn btn--primary btn--large" style="width:100%;justify-content:center;">
+                      Send Message
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <p class="t-label" style="text-align:center;margin-top:var(--sp-4);">
+                  We respect your privacy. No spam, ever.
+                </p>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Map / Location -->
+    <section class="section section--sm">
+      <div class="container">
+        <div class="section-label">Our Locations</div>
+        <h2 class="t-subheading fade-up" style="margin-bottom:var(--sp-8);">Find us around<br>the world.</h2>
+
+        <div class="map-container fade-up" role="img" aria-label="World map showing VOREX office locations">
+          <div class="map-grid" aria-hidden="true"></div>
+
+          <!-- Location dots -->
+          <div class="map-dot" style="top:42%;left:20%;" aria-label="San Francisco office"></div>
+          <div class="map-dot" style="top:30%;left:50%;animation-delay:0.5s;" aria-label="London office"></div>
+          <div class="map-dot" style="top:55%;left:78%;animation-delay:1s;" aria-label="Singapore office"></div>
+
+          <div class="map-container__inner" style="position:relative;z-index:1;pointer-events:none;">
+            <p class="t-label" style="margin-top:220px;">SF &nbsp;|&nbsp; London &nbsp;|&nbsp; Singapore</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" style="background:var(--clr-surface);">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-16);" class="faq-grid">
+          <div>
+            <div class="section-label">FAQ</div>
+            <h2 class="t-title" data-split="lines">
+              Common<br>questions.
+            </h2>
+          </div>
+          <div class="fade-up" style="display:flex;flex-direction:column;gap:0;">
+            <div style="padding:var(--sp-6) 0;border-bottom:1px solid var(--clr-border);">
+              <h3 style="font-size:var(--fs-md);font-weight:var(--fw-semibold);margin-bottom:var(--sp-3);">How long does a typical project take?</h3>
+              <p class="t-body">Most web projects take 6–12 weeks. Mobile apps typically run 12–20 weeks. SaaS platforms vary widely based on complexity — we'll scope this during the discovery phase.</p>
+            </div>
+            <div style="padding:var(--sp-6) 0;border-bottom:1px solid var(--clr-border);">
+              <h3 style="font-size:var(--fs-md);font-weight:var(--fw-semibold);margin-bottom:var(--sp-3);">What's your minimum project budget?</h3>
+              <p class="t-body">Our minimum engagement starts at $10,000 for focused work like landing pages or design systems. Most full projects run between $25k–$150k+.</p>
+            </div>
+            <div style="padding:var(--sp-6) 0;border-bottom:1px solid var(--clr-border);">
+              <h3 style="font-size:var(--fs-md);font-weight:var(--fw-semibold);margin-bottom:var(--sp-3);">Do you work with early-stage startups?</h3>
+              <p class="t-body">Absolutely. Some of our best work has been for pre-seed and seed-stage founders. We can help you move from idea to MVP faster than you'd expect.</p>
+            </div>
+            <div style="padding:var(--sp-6) 0;border-bottom:1px solid var(--clr-border);">
+              <h3 style="font-size:var(--fs-md);font-weight:var(--fw-semibold);margin-bottom:var(--sp-3);">Do you offer ongoing retainer support?</h3>
+              <p class="t-body">Yes. After project delivery, we offer monthly retainer packages for continuous development, feature additions, and performance optimization.</p>
+            </div>
+            <div style="padding:var(--sp-6) 0;">
+              <h3 style="font-size:var(--fs-md);font-weight:var(--fw-semibold);margin-bottom:var(--sp-3);">Who owns the code at the end?</h3>
+              <p class="t-body">You do. 100%. Full IP transfer is included in every contract. Your code, your product.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer" role="contentinfo">
+      <div class="footer__glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="footer__cta">
+          <p class="footer__cta-eyebrow">Ready to start?</p>
+          <h2 class="footer__cta-title" data-split="lines">
+            hello@<br>vorex.studio
+          </h2>
+          <a href="mailto:hello@vorex.studio" class="btn btn--outline btn--large fade-up" style="margin-top:var(--sp-8);">Send an Email</a>
+        </div>
+
+        <div class="footer__grid">
+          <div>
+            <div class="footer__brand">VOREX</div>
+            <p class="footer__tagline">An independent digital product studio obsessed with craft and quality.</p>
+          </div>
+          <div>
+            <p class="footer__col-title">Navigation</p>
+            <ul class="footer__links">
+              <li><a href="index.html"    class="footer__link">Home</a></li>
+              <li><a href="work.html"     class="footer__link">Work</a></li>
+              <li><a href="services.html" class="footer__link">Services</a></li>
+              <li><a href="studio.html"   class="footer__link">Studio</a></li>
+              <li><a href="contact.html"  class="footer__link">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer__col-title">Services</p>
+            <ul class="footer__links">
+              <li><a href="services.html" class="footer__link">Web Development</a></li>
+              <li><a href="services.html" class="footer__link">Mobile Apps</a></li>
+              <li><a href="services.html" class="footer__link">SaaS Products</a></li>
+              <li><a href="services.html" class="footer__link">AI & Automation</a></li>
+              <li><a href="services.html" class="footer__link">UI/UX Design</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer__col-title">Reach Us</p>
+            <ul class="footer__links">
+              <li><a href="mailto:hello@vorex.studio" class="footer__link">hello@vorex.studio</a></li>
+              <li><a href="tel:+15551234567"          class="footer__link">+1 (555) 123-4567</a></li>
+              <li><span class="footer__link">SF · London · Singapore</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer__bottom">
+          <p class="footer__copy">© 2025 VOREX Studio. All rights reserved.</p>
+          <div class="footer__social" aria-label="Social media links">
+            <a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="footer__social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="footer__social-link" aria-label="Dribbble">●</a>
+            <a href="#" class="footer__social-link" aria-label="GitHub">⌥</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

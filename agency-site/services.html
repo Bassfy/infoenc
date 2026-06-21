@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — VOREX Digital Studio</title>
+  <meta name="description" content="Comprehensive digital services including web development, mobile apps, SaaS, AI automation, UI/UX design, and IT consultancy." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7/dist/barba.umd.min.js"></script>
+
+  <style>
+    .service-detail {
+      padding: var(--sp-12) 0;
+      border-bottom: 1px solid var(--clr-border);
+      position: relative;
+      overflow: hidden;
+    }
+    .service-detail:last-child { border-bottom: none; }
+
+    .service-detail-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-16);
+      align-items: center;
+    }
+
+    .service-detail:nth-child(even) .service-detail-inner {
+      direction: rtl;
+    }
+    .service-detail:nth-child(even) .service-detail-inner > * {
+      direction: ltr;
+    }
+
+    .service-detail__num {
+      font-size: clamp(8rem, 20vw, 20rem);
+      font-weight: var(--fw-black);
+      letter-spacing: -0.06em;
+      line-height: 1;
+      color: rgba(255,255,255,0.025);
+      position: absolute;
+      right: -2%;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .service-detail__tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--clr-border-2);
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-medium);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--clr-muted);
+      margin-bottom: var(--sp-5);
+    }
+
+    .service-detail__title {
+      font-size: var(--fs-3xl);
+      font-weight: var(--fw-black);
+      letter-spacing: -0.035em;
+      line-height: 1.0;
+      margin-bottom: var(--sp-5);
+    }
+
+    .service-detail__desc {
+      font-size: var(--fs-base);
+      color: var(--clr-muted);
+      line-height: 1.8;
+      margin-bottom: var(--sp-8);
+    }
+
+    .service-tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+    }
+
+    .service-tech-item {
+      padding: 6px 14px;
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-medium);
+      color: var(--clr-off-white);
+      letter-spacing: 0.05em;
+      transition: all var(--transition-fast);
+    }
+
+    .service-tech-item:hover {
+      border-color: var(--clr-accent);
+      color: var(--clr-accent);
+    }
+
+    .service-visual {
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      position: relative;
+    }
+
+    @media (max-width: 1023px) {
+      .service-detail-inner {
+        grid-template-columns: 1fr;
+      }
+      .service-detail:nth-child(even) .service-detail-inner {
+        direction: ltr;
+      }
+      .service-detail__num {
+        font-size: 8rem;
+        right: -1%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <div id="cursor-dot"  aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <div id="page-transition" aria-hidden="true">
+    <div class="transition-panel"></div>
+    <div class="transition-panel"></div>
+  </div>
+  <div id="preloader" role="status" aria-label="Loading">
+    <div class="preloader__logo">VOR<span>EX</span></div>
+    <div class="preloader__counter" id="preloader-counter">0</div>
+    <div class="preloader__bar-wrap"><div class="preloader__bar" id="preloader-bar"></div></div>
+    <div class="preloader__label">Loading Experience</div>
+  </div>
+
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">VOR<span>EX</span></a>
+        <ul class="nav-links" role="list">
+          <li><a href="index.html"    class="nav-link">Home</a></li>
+          <li><a href="work.html"     class="nav-link">Work</a></li>
+          <li><a href="services.html" class="nav-link active" aria-current="page">Services</a></li>
+          <li><a href="studio.html"   class="nav-link">Studio</a></li>
+          <li><a href="contact.html"  class="nav-link">Contact</a></li>
+        </ul>
+        <div class="nav-right">
+          <button class="sound-toggle" aria-label="Toggle sound">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </button>
+          <a href="contact.html" class="nav-cta">Start a Project</a>
+          <button class="nav-hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <nav class="mobile-menu__links">
+      <a href="index.html"    class="mobile-menu__link"><span>Home</span></a>
+      <a href="work.html"     class="mobile-menu__link"><span>Work</span></a>
+      <a href="services.html" class="mobile-menu__link"><span>Services</span></a>
+      <a href="studio.html"   class="mobile-menu__link"><span>Studio</span></a>
+      <a href="contact.html"  class="mobile-menu__link"><span>Contact</span></a>
+    </nav>
+    <div class="mobile-menu__footer">
+      <span>© 2025 VOREX</span>
+      <a href="mailto:hello@vorex.studio">hello@vorex.studio</a>
+    </div>
+  </div>
+
+  <main id="main-content" data-barba="container" data-barba-namespace="services">
+
+    <!-- Page Hero -->
+    <section class="page-hero section section--lg" style="position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:var(--gradient-glow);opacity:0.7;" aria-hidden="true"></div>
+      <div class="glow-bg glow-bg--accent" style="top:-30%;right:-5%;" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:2;">
+        <p class="page-hero__number fade-up">003</p>
+        <h1 class="page-hero__title" data-split="lines">
+          What We<br>Deliver.
+        </h1>
+        <p class="page-hero__desc fade-up" style="max-width:560px;">
+          Six core disciplines. One obsessive standard of quality. Whether you need a website, a mobile app, or a full AI-powered platform — we build it to perfection.
+        </p>
+      </div>
+    </section>
+
+    <!-- Marquee overview -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__inner">
+        <div class="marquee__item">Web Development<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Mobile Apps<span class="marquee__separator"></span></div>
+        <div class="marquee__item">SaaS Platforms<span class="marquee__separator"></span></div>
+        <div class="marquee__item">AI Automation<span class="marquee__separator"></span></div>
+        <div class="marquee__item">UI/UX Design<span class="marquee__separator"></span></div>
+        <div class="marquee__item">IT Consultancy<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Web Development<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Mobile Apps<span class="marquee__separator"></span></div>
+        <div class="marquee__item">SaaS Platforms<span class="marquee__separator"></span></div>
+        <div class="marquee__item">AI Automation<span class="marquee__separator"></span></div>
+        <div class="marquee__item">UI/UX Design<span class="marquee__separator"></span></div>
+        <div class="marquee__item">IT Consultancy<span class="marquee__separator"></span></div>
+      </div>
+    </div>
+
+    <!-- Services Detail -->
+    <section class="section">
+      <div class="container">
+
+        <!-- 01 Web Development -->
+        <article class="service-detail" id="web-development">
+          <div class="service-detail__num" aria-hidden="true">01</div>
+          <div class="service-detail-inner">
+            <div class="fade-up">
+              <div class="service-detail__tag">Service 01</div>
+              <h2 class="service-detail__title" data-split="lines">Web<br>Development</h2>
+              <p class="service-detail__desc">
+                From marketing sites to complex web applications, we engineer experiences that are fast, accessible, and beautiful. We obsess over Core Web Vitals, WCAG compliance, and pixel-perfect design implementation.
+              </p>
+              <div class="service-tech-list" style="margin-bottom:var(--sp-8);">
+                <span class="service-tech-item">Next.js</span>
+                <span class="service-tech-item">React</span>
+                <span class="service-tech-item">TypeScript</span>
+                <span class="service-tech-item">Three.js</span>
+                <span class="service-tech-item">GSAP</span>
+                <span class="service-tech-item">Tailwind CSS</span>
+                <span class="service-tech-item">Node.js</span>
+                <span class="service-tech-item">PostgreSQL</span>
+              </div>
+              <a href="contact.html" class="btn btn--primary">Get a Quote</a>
+            </div>
+            <div class="service-visual img-reveal-wrap" style="background:linear-gradient(135deg,#0a0820,#1a1060);">
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:40px;" aria-hidden="true">
+                <div style="width:100%;height:12px;background:rgba(124,92,252,0.2);border-radius:6px;"></div>
+                <div style="width:100%;height:8px;background:rgba(124,92,252,0.12);border-radius:4px;"></div>
+                <div style="width:70%;height:8px;background:rgba(124,92,252,0.08);border-radius:4px;align-self:flex-start;"></div>
+                <div style="width:100%;height:120px;background:linear-gradient(135deg,rgba(124,92,252,0.1),rgba(0,240,255,0.05));border-radius:12px;border:1px solid rgba(124,92,252,0.15);margin:8px 0;"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;">
+                  <div style="height:60px;background:rgba(124,92,252,0.08);border-radius:8px;border:1px solid rgba(124,92,252,0.1);"></div>
+                  <div style="height:60px;background:rgba(124,92,252,0.08);border-radius:8px;border:1px solid rgba(124,92,252,0.1);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 02 Mobile Development -->
+        <article class="service-detail" id="mobile-development">
+          <div class="service-detail__num" aria-hidden="true">02</div>
+          <div class="service-detail-inner">
+            <div class="fade-up">
+              <div class="service-detail__tag">Service 02</div>
+              <h2 class="service-detail__title" data-split="lines">Mobile<br>Development</h2>
+              <p class="service-detail__desc">
+                Native iOS and Android applications, plus cross-platform React Native solutions that feel indistinguishable from native. We handle everything from architecture to App Store submission.
+              </p>
+              <div class="service-tech-list" style="margin-bottom:var(--sp-8);">
+                <span class="service-tech-item">React Native</span>
+                <span class="service-tech-item">Swift</span>
+                <span class="service-tech-item">Kotlin</span>
+                <span class="service-tech-item">Expo</span>
+                <span class="service-tech-item">Firebase</span>
+                <span class="service-tech-item">Redux</span>
+                <span class="service-tech-item">GraphQL</span>
+              </div>
+              <a href="contact.html" class="btn btn--primary">Get a Quote</a>
+            </div>
+            <div class="service-visual img-reveal-wrap" style="background:linear-gradient(135deg,#1a0520,#601050);">
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:20px;" aria-hidden="true">
+                <div style="width:100px;height:180px;border-radius:24px;border:2px solid rgba(255,60,172,0.3);background:rgba(255,60,172,0.04);padding:12px;display:flex;flex-direction:column;gap:8px;">
+                  <div style="height:4px;width:40px;background:rgba(255,60,172,0.3);border-radius:2px;margin:0 auto;"></div>
+                  <div style="flex:1;background:rgba(255,60,172,0.08);border-radius:8px;"></div>
+                  <div style="height:24px;background:rgba(255,60,172,0.2);border-radius:6px;"></div>
+                </div>
+                <div style="width:100px;height:180px;border-radius:24px;border:2px solid rgba(124,92,252,0.3);background:rgba(124,92,252,0.04);padding:12px;display:flex;flex-direction:column;gap:8px;transform:translateY(-20px);">
+                  <div style="height:4px;width:40px;background:rgba(124,92,252,0.3);border-radius:2px;margin:0 auto;"></div>
+                  <div style="flex:1;background:rgba(124,92,252,0.08);border-radius:8px;"></div>
+                  <div style="height:24px;background:rgba(124,92,252,0.2);border-radius:6px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 03 SaaS -->
+        <article class="service-detail" id="saas-development">
+          <div class="service-detail__num" aria-hidden="true">03</div>
+          <div class="service-detail-inner">
+            <div class="fade-up">
+              <div class="service-detail__tag">Service 03</div>
+              <h2 class="service-detail__title" data-split="lines">SaaS<br>Development</h2>
+              <p class="service-detail__desc">
+                End-to-end product engineering for scalable SaaS platforms. Multi-tenant architectures, subscription billing, role-based access, analytics dashboards — we build products that scale from 10 to 10 million users.
+              </p>
+              <div class="service-tech-list" style="margin-bottom:var(--sp-8);">
+                <span class="service-tech-item">Next.js</span>
+                <span class="service-tech-item">Prisma</span>
+                <span class="service-tech-item">Stripe</span>
+                <span class="service-tech-item">Supabase</span>
+                <span class="service-tech-item">tRPC</span>
+                <span class="service-tech-item">Docker</span>
+                <span class="service-tech-item">AWS</span>
+                <span class="service-tech-item">Redis</span>
+              </div>
+              <a href="contact.html" class="btn btn--primary">Get a Quote</a>
+            </div>
+            <div class="service-visual img-reveal-wrap" style="background:linear-gradient(135deg,#030e14,#0a3840);">
+              <div style="position:absolute;inset:0;padding:30px;display:flex;flex-direction:column;gap:16px;" aria-hidden="true">
+                <div style="display:flex;gap:12px;align-items:center;">
+                  <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,240,255,0.15);border:1px solid rgba(0,240,255,0.2);"></div>
+                  <div style="flex:1;">
+                    <div style="height:6px;background:rgba(0,240,255,0.2);border-radius:3px;margin-bottom:6px;width:60%;"></div>
+                    <div style="height:4px;background:rgba(0,240,255,0.1);border-radius:2px;width:40%;"></div>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;flex:1;">
+                  <div style="background:rgba(0,240,255,0.06);border:1px solid rgba(0,240,255,0.1);border-radius:10px;padding:12px;">
+                    <div style="height:4px;background:rgba(0,240,255,0.25);border-radius:2px;margin-bottom:10px;width:50%;"></div>
+                    <div style="font-size:1.5rem;font-weight:900;color:rgba(0,240,255,0.4);">$24k</div>
+                  </div>
+                  <div style="background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.2);border-radius:10px;padding:12px;">
+                    <div style="height:4px;background:rgba(0,240,255,0.3);border-radius:2px;margin-bottom:10px;width:50%;"></div>
+                    <div style="font-size:1.5rem;font-weight:900;color:rgba(0,240,255,0.5);">4.9k</div>
+                  </div>
+                  <div style="background:rgba(0,240,255,0.06);border:1px solid rgba(0,240,255,0.1);border-radius:10px;padding:12px;">
+                    <div style="height:4px;background:rgba(0,240,255,0.2);border-radius:2px;margin-bottom:10px;width:50%;"></div>
+                    <div style="font-size:1.5rem;font-weight:900;color:rgba(0,240,255,0.35);">98%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 04 AI & Automation -->
+        <article class="service-detail" id="ai-automation">
+          <div class="service-detail__num" aria-hidden="true">04</div>
+          <div class="service-detail-inner">
+            <div class="fade-up">
+              <div class="service-detail__tag">Service 04</div>
+              <h2 class="service-detail__title" data-split="lines">AI &amp;<br>Automation</h2>
+              <p class="service-detail__desc">
+                Custom LLM integrations, RAG pipelines, AI agents, and intelligent automation workflows. We leverage the latest models from Anthropic, OpenAI, and open-source to build AI features that actually work in production.
+              </p>
+              <div class="service-tech-list" style="margin-bottom:var(--sp-8);">
+                <span class="service-tech-item">Anthropic Claude</span>
+                <span class="service-tech-item">OpenAI GPT-4</span>
+                <span class="service-tech-item">LangChain</span>
+                <span class="service-tech-item">Pinecone</span>
+                <span class="service-tech-item">Python</span>
+                <span class="service-tech-item">FastAPI</span>
+                <span class="service-tech-item">n8n</span>
+              </div>
+              <a href="contact.html" class="btn btn--primary">Get a Quote</a>
+            </div>
+            <div class="service-visual img-reveal-wrap" style="background:linear-gradient(135deg,#0a0820,#201060);">
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;" aria-hidden="true">
+                <div style="position:relative;width:200px;height:200px;">
+                  <div style="position:absolute;inset:0;border-radius:50%;border:1px solid rgba(124,92,252,0.15);animation:map-ring 3s infinite;"></div>
+                  <div style="position:absolute;inset:20px;border-radius:50%;border:1px solid rgba(124,92,252,0.25);animation:map-ring 3s infinite 0.5s;"></div>
+                  <div style="position:absolute;inset:40px;border-radius:50%;border:1px solid rgba(124,92,252,0.4);animation:map-ring 3s infinite 1s;"></div>
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+                    <div style="width:60px;height:60px;border-radius:50%;background:rgba(124,92,252,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🤖</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 05 UI/UX Design -->
+        <article class="service-detail" id="uiux-design">
+          <div class="service-detail__num" aria-hidden="true">05</div>
+          <div class="service-detail-inner">
+            <div class="fade-up">
+              <div class="service-detail__tag">Service 05</div>
+              <h2 class="service-detail__title" data-split="lines">UI/UX<br>Design</h2>
+              <p class="service-detail__desc">
+                Research-driven design that converts. We craft design systems, prototypes, and final interfaces that balance breathtaking aesthetics with conversion-focused UX — no unnecessary decoration, every element earns its place.
+              </p>
+              <div class="service-tech-list" style="margin-bottom:var(--sp-8);">
+                <span class="service-tech-item">Figma</span>
+                <span class="service-tech-item">Framer</span>
+                <span class="service-tech-item">Principle</span>
+                <span class="service-tech-item">Spline</span>
+                <span class="service-tech-item">ProtoPie</span>
+                <span class="service-tech-item">Lottie</span>
+              </div>
+              <a href="contact.html" class="btn btn--primary">Get a Quote</a>
+            </div>
+            <div class="service-visual img-reveal-wrap" style="background:linear-gradient(135deg,#100520,#300a50);">
+              <div style="position:absolute;inset:0;padding:30px;display:flex;flex-direction:column;justify-content:center;gap:16px;" aria-hidden="true">
+                <div style="display:flex;gap:12px;">
+                  <div style="width:60px;height:60px;border-radius:12px;background:rgba(124,92,252,0.2);border:1px solid rgba(124,92,252,0.3);"></div>
+                  <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,60,172,0.15);border:1px solid rgba(255,60,172,0.25);"></div>
+                  <div style="width:60px;height:60px;border-radius:4px;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.2);transform:rotate(45deg);"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:3fr 1fr;gap:12px;flex:1;">
+                  <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;">
+                    <div style="height:6px;background:rgba(124,92,252,0.3);border-radius:3px;margin-bottom:10px;width:70%;"></div>
+                    <div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-bottom:6px;"></div>
+                    <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;width:80%;"></div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="flex:1;background:rgba(124,92,252,0.15);border-radius:8px;border:1px solid rgba(124,92,252,0.2);"></div>
+                    <div style="flex:1;background:rgba(255,60,172,0.1);border-radius:8px;border:1px solid rgba(255,60,172,0.15);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 06 IT Consultancy -->
+        <article class="service-detail" id="it-consultancy">
+          <div class="service-detail__num" aria-hidden="true">06</div>
+          <div class="service-detail-inner">
+            <div class="fade-up">
+              <div class="service-detail__tag">Service 06</div>
+              <h2 class="service-detail__title" data-split="lines">IT<br>Consultancy</h2>
+              <p class="service-detail__desc">
+                Strategic technology advisory to modernise your infrastructure, audit security vulnerabilities, optimise developer workflows, and define a technology roadmap aligned with your business objectives.
+              </p>
+              <div class="service-tech-list" style="margin-bottom:var(--sp-8);">
+                <span class="service-tech-item">AWS</span>
+                <span class="service-tech-item">GCP</span>
+                <span class="service-tech-item">Terraform</span>
+                <span class="service-tech-item">Kubernetes</span>
+                <span class="service-tech-item">CI/CD</span>
+                <span class="service-tech-item">Security Audits</span>
+                <span class="service-tech-item">Architecture Review</span>
+              </div>
+              <a href="contact.html" class="btn btn--primary">Get a Quote</a>
+            </div>
+            <div class="service-visual img-reveal-wrap" style="background:linear-gradient(135deg,#040d10,#0a2530);">
+              <div style="position:absolute;inset:0;padding:30px;display:flex;align-items:center;justify-content:center;" aria-hidden="true">
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;">
+                  <div style="text-align:center;padding:16px;background:rgba(0,240,255,0.04);border:1px solid rgba(0,240,255,0.08);border-radius:10px;">
+                    <div style="font-size:1.8rem;font-weight:900;color:rgba(0,240,255,0.4);margin-bottom:4px;">99.9%</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;text-transform:uppercase;">Uptime</div>
+                  </div>
+                  <div style="text-align:center;padding:16px;background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.15);border-radius:10px;">
+                    <div style="font-size:1.8rem;font-weight:900;color:rgba(0,240,255,0.6);margin-bottom:4px;">A+</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;text-transform:uppercase;">Security</div>
+                  </div>
+                  <div style="text-align:center;padding:16px;background:rgba(0,240,255,0.04);border:1px solid rgba(0,240,255,0.08);border-radius:10px;">
+                    <div style="font-size:1.8rem;font-weight:900;color:rgba(0,240,255,0.4);margin-bottom:4px;">&lt;50ms</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;text-transform:uppercase;">Latency</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Why Us -->
+    <section class="section" style="background:var(--clr-surface);position:relative;">
+      <div class="container">
+        <div class="section-label">Why VOREX</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-12);">
+          Built different,<br>built to last.
+        </h2>
+        <div class="grid grid-4 stagger-children">
+          <div class="value-card">
+            <div class="value-card__icon">⚡</div>
+            <h3 class="value-card__title">Brutal Speed</h3>
+            <p class="value-card__desc">2-week kickoffs. No discovery hell. We move fast without breaking quality.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-card__icon">🎯</div>
+            <h3 class="value-card__title">Zero Compromise</h3>
+            <p class="value-card__desc">Every pixel, every API response, every interaction — designed to perfection.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-card__icon">🔮</div>
+            <h3 class="value-card__title">Future-Proof</h3>
+            <p class="value-card__desc">Clean architectures and documented codebases that your team can own and scale.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-card__icon">🛡️</div>
+            <h3 class="value-card__title">Post-Launch Support</h3>
+            <p class="value-card__desc">3 months of included support after every project. We don't disappear at delivery.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="position:relative;">
+      <div style="position:absolute;inset:0;background:var(--gradient-glow);opacity:0.5;" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:1;text-align:center;">
+        <div class="section-label" style="justify-content:center;">Ready?</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-8);">Let's build<br>something epic.</h2>
+        <p class="t-body fade-up" style="margin:0 auto var(--sp-10);max-width:420px;">Tell us about your project and we'll have a proposal in your inbox within 48 hours.</p>
+        <div class="fade-up" style="display:flex;gap:var(--sp-4);justify-content:center;flex-wrap:wrap;">
+          <div class="magnetic">
+            <div class="magnetic-inner">
+              <a href="contact.html" class="btn btn--gradient btn--large">Start a Project</a>
+            </div>
+          </div>
+          <a href="work.html" class="btn btn--glass btn--large">See Our Work</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer" role="contentinfo">
+      <div class="footer__glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="footer__grid">
+          <div>
+            <div class="footer__brand">VOREX</div>
+            <p class="footer__tagline">An independent digital product studio obsessed with craft and quality.</p>
+          </div>
+          <div>
+            <p class="footer__col-title">Navigation</p>
+            <ul class="footer__links">
+              <li><a href="index.html"    class="footer__link">Home</a></li>
+              <li><a href="work.html"     class="footer__link">Work</a></li>
+              <li><a href="services.html" class="footer__link">Services</a></li>
+              <li><a href="studio.html"   class="footer__link">Studio</a></li>
+              <li><a href="contact.html"  class="footer__link">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer__col-title">Services</p>
+            <ul class="footer__links">
+              <li><a href="#web-development"  class="footer__link">Web Development</a></li>
+              <li><a href="#mobile-development" class="footer__link">Mobile Apps</a></li>
+              <li><a href="#saas-development"  class="footer__link">SaaS Products</a></li>
+              <li><a href="#ai-automation"     class="footer__link">AI & Automation</a></li>
+              <li><a href="#uiux-design"       class="footer__link">UI/UX Design</a></li>
+              <li><a href="#it-consultancy"    class="footer__link">IT Consultancy</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer__col-title">Contact</p>
+            <ul class="footer__links">
+              <li><a href="mailto:hello@vorex.studio" class="footer__link">hello@vorex.studio</a></li>
+              <li><a href="tel:+15551234567"          class="footer__link">+1 (555) 123-4567</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <p class="footer__copy">© 2025 VOREX Studio. All rights reserved.</p>
+          <div class="footer__social">
+            <a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="footer__social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="footer__social-link" aria-label="Dribbble">●</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+/* ============================================================
+   ANIMATIONS.CSS — GSAP targets, reveal classes, transitions
+   ============================================================ */
+
+/* ── Clip Reveal ── */
+.clip-reveal {
+  clip-path: inset(0 100% 0 0);
+}
+
+.clip-reveal.revealed {
+  clip-path: inset(0 0% 0 0);
+}
+
+/* ── Word / Char Split Targets ── */
+.split-words .word,
+.split-chars .char {
+  display: inline-block;
+  overflow: hidden;
+}
+
+/* SplitType generated classes */
+.split-line .line {
+  overflow: hidden;
+  display: block;
+}
+
+/* ── Fade In Up ── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+.fade-in {
+  opacity: 0;
+}
+
+.fade-left {
+  opacity: 0;
+  transform: translateX(-60px);
+}
+
+.fade-right {
+  opacity: 0;
+  transform: translateX(60px);
+}
+
+.scale-in {
+  opacity: 0;
+  transform: scale(0.85);
+}
+
+/* ── Stagger Containers ── */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* ── Reveal on scroll ── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: none; /* GSAP handles this */
+}
+
+[data-reveal="left"] {
+  transform: translateX(-50px);
+}
+
+[data-reveal="right"] {
+  transform: translateX(50px);
+}
+
+[data-reveal="scale"] {
+  transform: scale(0.9);
+}
+
+/* ── Image Reveal ── */
+.img-reveal-wrap {
+  overflow: hidden;
+  position: relative;
+}
+
+.img-reveal-wrap img,
+.img-reveal-wrap .img-inner {
+  transform: scale(1.2);
+}
+
+/* ── Horizontal Scroll Gallery ── */
+.h-scroll-section {
+  overflow: hidden;
+}
+
+.h-scroll-inner {
+  display: flex;
+  gap: var(--sp-6);
+  will-change: transform;
+}
+
+.h-scroll-item {
+  flex-shrink: 0;
+  width: clamp(300px, 35vw, 520px);
+}
+
+/* ── Hero Text ── */
+.hero-word {
+  overflow: hidden;
+  display: inline-block;
+}
+
+.hero-word span {
+  display: inline-block;
+  transform: translateY(110%);
+}
+
+/* ── Floating Elements ── */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-20px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-12px) rotate(5deg); }
+  66%       { transform: translateY(8px) rotate(-3deg); }
+}
+
+.float-anim {
+  animation: float-y 4s ease-in-out infinite;
+}
+
+.float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+/* ── Gradient Animation ── */
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient {
+  background: linear-gradient(-45deg, #7c5cfc, #ff3cac, #00f0ff, #7c5cfc);
+  background-size: 400% 400%;
+  animation: gradient-shift 6s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glow Pulse ── */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(124,92,252,0.3); }
+  50%       { box-shadow: 0 0 60px rgba(124,92,252,0.7); }
+}
+
+.glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* ── Scroll Indicator ── */
+.scroll-indicator {
+  position: absolute;
+  bottom: var(--sp-8);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  color: var(--clr-muted);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.scroll-indicator__line {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--clr-accent), transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-indicator__line::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--clr-white);
+  animation: scroll-line 1.5s ease-in-out infinite;
+}
+
+@keyframes scroll-line {
+  0%   { top: -100%; }
+  100% { top: 200%; }
+}
+
+/* ── Counter ── */
+.counter-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Page Transition Overlay ── */
+#page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.transition-panel {
+  position: absolute;
+  inset: 0;
+  background: var(--clr-accent);
+  transform-origin: bottom;
+  transform: scaleY(0);
+}
+
+.transition-panel:nth-child(2) {
+  background: var(--clr-accent-2);
+  transition-delay: 0.05s;
+}
+
+/* ── Cursor Trail ── */
+.cursor-trail {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--clr-accent);
+  pointer-events: none;
+  z-index: calc(var(--z-cursor) - 1);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Text Stroke Hover ── */
+.text-stroke-hover {
+  position: relative;
+  display: inline-block;
+}
+
+.text-stroke-hover::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  -webkit-text-stroke: 1px var(--clr-white);
+  color: transparent;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.5s var(--ease-out-expo);
+}
+
+.text-stroke-hover:hover::after {
+  clip-path: inset(0 0% 0 0);
+}
+
+/* ── Number Rolling ── */
+@keyframes roll-up {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-100%); }
+}
+
+/* ── Particle Canvas ── */
+#particle-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ── Ripple Effect ── */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple-expand 0.6s linear;
+  background: rgba(124,92,252,0.2);
+  pointer-events: none;
+}
+
+@keyframes ripple-expand {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ── Stats Number ── */
+.stat-number-wrap {
+  overflow: hidden;
+  display: inline-block;
+}
+
+/* ── Loading state skeleton ── */
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--clr-surface) 25%,
+    rgba(255,255,255,0.04) 50%,
+    var(--clr-surface) 75%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* ── Section transition accent line ── */
+.accent-line {
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: var(--gradient-primary);
+  margin-bottom: var(--sp-6);
+}
+
+/* ── Stagger delay utilities ── */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.5s; }
+
+/* ── Underline draw ── */
+.underline-draw {
+  position: relative;
+  display: inline-block;
+}
+
+.underline-draw::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--gradient-primary);
+  transition: width 0.6s var(--ease-out-expo);
+}
+
+.underline-draw:hover::after,
+.underline-draw.active::after {
+  width: 100%;
+}
+
+/* ── Service card number (large) ── */
+.service-num-bg {
+  position: absolute;
+  top: var(--sp-4);
+  right: var(--sp-6);
+  font-size: 8rem;
+  font-weight: var(--fw-black);
+  letter-spacing: -0.05em;
+  color: rgba(255,255,255,0.02);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Magnetic hover wrapper offset ── */
+.magnetic-inner {
+  display: block;
+  transition: transform 0.4s var(--ease-out-expo);
+  will-change: transform;
+}

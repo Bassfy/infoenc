@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>VOREX — Digital Product Studio</title>
+  <meta name="description" content="We craft extraordinary digital experiences that define the future of brands. Award-winning web development, design, and AI solutions." />
+  <meta name="keywords" content="digital agency, web development, UI/UX design, SaaS, AI automation, Three.js, WebGL" />
+  <meta name="author" content="VOREX Studio" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://vorex.studio/" />
+  <meta property="og:title"       content="VOREX — Digital Product Studio" />
+  <meta property="og:description" content="Award-winning digital product studio crafting extraordinary web experiences." />
+  <meta property="og:image"       content="assets/images/og-image.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="VOREX — Digital Product Studio" />
+  <meta name="twitter:description" content="Award-winning digital product studio." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "VOREX Studio",
+    "url": "https://vorex.studio",
+    "logo": "https://vorex.studio/assets/images/logo.svg",
+    "description": "Award-winning digital product studio",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "hello@vorex.studio",
+      "contactType": "customer service"
+    },
+    "sameAs": [
+      "https://twitter.com/vorexstudio",
+      "https://linkedin.com/company/vorexstudio"
+    ]
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+
+  <!-- CDN Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7/dist/barba.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Skip link -->
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <!-- Noise texture -->
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- Scroll progress -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div id="cursor-dot"  aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Page transition overlay -->
+  <div id="page-transition" aria-hidden="true">
+    <div class="transition-panel"></div>
+    <div class="transition-panel"></div>
+  </div>
+
+  <!-- Preloader -->
+  <div id="preloader" role="status" aria-label="Loading">
+    <div class="preloader__logo">VOR<span>EX</span></div>
+    <div class="preloader__counter" id="preloader-counter">0</div>
+    <div class="preloader__bar-wrap">
+      <div class="preloader__bar" id="preloader-bar"></div>
+    </div>
+    <div class="preloader__label">Loading Experience</div>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo" aria-label="VOREX Home">VOR<span>EX</span></a>
+
+        <ul class="nav-links" role="list">
+          <li><a href="index.html"    class="nav-link active" aria-current="page">Home</a></li>
+          <li><a href="work.html"     class="nav-link">Work</a></li>
+          <li><a href="services.html" class="nav-link">Services</a></li>
+          <li><a href="studio.html"   class="nav-link">Studio</a></li>
+          <li><a href="contact.html"  class="nav-link">Contact</a></li>
+        </ul>
+
+        <div class="nav-right">
+          <button class="sound-toggle" aria-label="Toggle sound">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 18V5l12-2v13"/>
+              <circle cx="6" cy="18" r="3"/>
+              <circle cx="18" cy="16" r="3"/>
+            </svg>
+          </button>
+          <a href="contact.html" class="nav-cta">Start a Project</a>
+          <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <nav class="mobile-menu__links">
+      <a href="index.html"    class="mobile-menu__link"><span>Home</span></a>
+      <a href="work.html"     class="mobile-menu__link"><span>Work</span></a>
+      <a href="services.html" class="mobile-menu__link"><span>Services</span></a>
+      <a href="studio.html"   class="mobile-menu__link"><span>Studio</span></a>
+      <a href="contact.html"  class="mobile-menu__link"><span>Contact</span></a>
+    </nav>
+    <div class="mobile-menu__footer">
+      <span>© 2025 VOREX</span>
+      <a href="mailto:hello@vorex.studio">hello@vorex.studio</a>
+    </div>
+  </div>
+
+  <!-- Barba container -->
+  <main id="main-content" data-barba="container" data-barba-namespace="home">
+
+    <!-- ═══════════════════════════════════════════════════
+         HERO SECTION
+    ═══════════════════════════════════════════════════ -->
+    <section id="hero" class="section section--lg" style="min-height:100vh; display:flex; flex-direction:column; justify-content:flex-end; padding-top:0; position:relative; overflow:hidden;">
+
+      <!-- WebGL canvas -->
+      <div id="hero-webgl" style="position:absolute;inset:0;z-index:0;" aria-hidden="true"></div>
+
+      <!-- Dark gradient overlay -->
+      <div style="position:absolute;inset:0;background:linear-gradient(to right, rgba(6,6,8,0.85) 40%, rgba(6,6,8,0.2) 100%);z-index:1;" aria-hidden="true"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:300px;background:linear-gradient(to top, var(--clr-bg) 0%, transparent 100%);z-index:1;" aria-hidden="true"></div>
+
+      <div class="container" style="position:relative;z-index:2;padding-bottom:var(--sp-16);">
+        <!-- Badge -->
+        <div class="hero-badge" style="display:inline-flex;align-items:center;gap:var(--sp-3);padding:8px 16px;border-radius:var(--radius-full);border:1px solid var(--clr-border-2);background:rgba(124,92,252,0.08);margin-bottom:var(--sp-8);">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--clr-accent);animation:glow-pulse 2s infinite;flex-shrink:0;"></span>
+          <span class="t-label" style="color:var(--clr-off-white);">Available for new projects</span>
+        </div>
+
+        <!-- Hero headline -->
+        <div class="hero-text-wrap">
+          <h1 class="t-hero" style="max-width:900px;margin-bottom:var(--sp-8);">
+            <span class="hero-word"><span>We&nbsp;Craft</span></span><br>
+            <span class="hero-word"><span style="background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Digital</span></span><br>
+            <span class="hero-word"><span>Legends.</span></span>
+          </h1>
+
+          <p class="hero-subtitle t-large" style="max-width:520px;color:var(--clr-muted);margin-bottom:var(--sp-10);">
+            Award-winning studio transforming bold ideas into extraordinary digital products that captivate, convert, and endure.
+          </p>
+
+          <div class="hero-cta" style="display:flex;align-items:center;gap:var(--sp-5);flex-wrap:wrap;">
+            <div class="magnetic">
+              <div class="magnetic-inner">
+                <a href="work.html" class="btn btn--primary btn--large">
+                  View Our Work
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </div>
+            <a href="contact.html" class="btn-arrow">
+              <span>Start a project</span>
+              <span class="btn-arrow__icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="scroll-indicator" style="z-index:2;">
+        <span class="t-label">Scroll</span>
+        <div class="scroll-indicator__line"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         MARQUEE 1
+    ═══════════════════════════════════════════════════ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__inner">
+        <div class="marquee__item">Web Development<span class="marquee__separator"></span></div>
+        <div class="marquee__item">UI/UX Design<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Mobile Apps<span class="marquee__separator"></span></div>
+        <div class="marquee__item">AI Automation<span class="marquee__separator"></span></div>
+        <div class="marquee__item">SaaS Products<span class="marquee__separator"></span></div>
+        <div class="marquee__item">WebGL Experiences<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Brand Strategy<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Web Development<span class="marquee__separator"></span></div>
+        <div class="marquee__item">UI/UX Design<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Mobile Apps<span class="marquee__separator"></span></div>
+        <div class="marquee__item">AI Automation<span class="marquee__separator"></span></div>
+        <div class="marquee__item">SaaS Products<span class="marquee__separator"></span></div>
+        <div class="marquee__item">WebGL Experiences<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Brand Strategy<span class="marquee__separator"></span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         SERVICES OVERVIEW
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" style="position:relative;">
+      <div class="glow-bg glow-bg--accent" style="top:-20%;left:-10%;" aria-hidden="true"></div>
+      <div class="container">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:var(--sp-12);gap:var(--sp-8);flex-wrap:wrap;">
+          <div>
+            <div class="section-label">What We Do</div>
+            <h2 class="t-title" data-split="lines">
+              End-to-end digital<br>excellence.
+            </h2>
+          </div>
+          <p class="t-body fade-up" style="max-width:380px;">
+            From pixel-perfect interfaces to performance-engineered backends, we obsess over every detail of your digital presence.
+          </p>
+        </div>
+
+        <div class="grid grid-3 stagger-children">
+          <!-- Service 1 -->
+          <article class="glass-card service-card" data-cursor="hover">
+            <div class="service-num-bg" aria-hidden="true">01</div>
+            <div class="service-card__number">01</div>
+            <div class="service-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <h3 class="service-card__title">Web Development</h3>
+            <p class="service-card__desc">Blazing-fast, pixel-perfect websites built with cutting-edge tech stacks. From JAMstack to full-stack applications.</p>
+            <div class="service-card__hover-glow" aria-hidden="true"></div>
+          </article>
+
+          <!-- Service 2 -->
+          <article class="glass-card service-card" data-cursor="hover">
+            <div class="service-num-bg" aria-hidden="true">02</div>
+            <div class="service-card__number">02</div>
+            <div class="service-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            </div>
+            <h3 class="service-card__title">Mobile Development</h3>
+            <p class="service-card__desc">Native iOS & Android experiences plus cross-platform React Native apps that feel indistinguishable from native.</p>
+            <div class="service-card__hover-glow" aria-hidden="true"></div>
+          </article>
+
+          <!-- Service 3 -->
+          <article class="glass-card service-card" data-cursor="hover">
+            <div class="service-num-bg" aria-hidden="true">03</div>
+            <div class="service-card__number">03</div>
+            <div class="service-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3 class="service-card__title">SaaS Development</h3>
+            <p class="service-card__desc">End-to-end product engineering for scalable SaaS platforms with robust architectures and subscription billing.</p>
+            <div class="service-card__hover-glow" aria-hidden="true"></div>
+          </article>
+
+          <!-- Service 4 -->
+          <article class="glass-card service-card" data-cursor="hover">
+            <div class="service-num-bg" aria-hidden="true">04</div>
+            <div class="service-card__number">04</div>
+            <div class="service-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M21.17 8H12V2.83"/></svg>
+            </div>
+            <h3 class="service-card__title">AI & Automation</h3>
+            <p class="service-card__desc">Custom LLM integrations, intelligent automation pipelines, and AI-powered features that give your product a competitive edge.</p>
+            <div class="service-card__hover-glow" aria-hidden="true"></div>
+          </article>
+
+          <!-- Service 5 -->
+          <article class="glass-card service-card" data-cursor="hover">
+            <div class="service-num-bg" aria-hidden="true">05</div>
+            <div class="service-card__number">05</div>
+            <div class="service-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            </div>
+            <h3 class="service-card__title">UI/UX Design</h3>
+            <p class="service-card__desc">Research-driven design systems and immersive interfaces that balance breathtaking aesthetics with conversion-focused UX.</p>
+            <div class="service-card__hover-glow" aria-hidden="true"></div>
+          </article>
+
+          <!-- Service 6 -->
+          <article class="glass-card service-card" data-cursor="hover">
+            <div class="service-num-bg" aria-hidden="true">06</div>
+            <div class="service-card__number">06</div>
+            <div class="service-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 class="service-card__title">IT Consultancy</h3>
+            <p class="service-card__desc">Strategic technology advisory to modernise your infrastructure, optimize performance, and secure your digital assets.</p>
+            <div class="service-card__hover-glow" aria-hidden="true"></div>
+          </article>
+        </div>
+
+        <div style="text-align:center;margin-top:var(--sp-12);" class="fade-up">
+          <a href="services.html" class="btn btn--outline btn--large">All Services</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         SELECTED WORK
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" id="selected-work">
+      <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-12);">
+          <div>
+            <div class="section-label">Selected Work</div>
+            <h2 class="t-title" data-split="lines">Projects that<br>define eras.</h2>
+          </div>
+          <a href="work.html" class="btn-arrow" style="flex-shrink:0;">
+            <span>All Projects</span>
+            <span class="btn-arrow__icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </span>
+          </a>
+        </div>
+
+        <div class="grid" style="grid-template-columns:repeat(2,1fr);gap:var(--sp-5);">
+          <!-- Work 1 — large -->
+          <a href="work.html" class="work-card-wrap img-reveal-wrap" data-category="web design" style="grid-row:span 2;" aria-label="NovaPay fintech platform">
+            <div class="work-card" style="aspect-ratio:unset;height:100%;min-height:500px;">
+              <div class="work-card__media" style="background:linear-gradient(135deg,#1a1040 0%,#0d2060 50%,#0a4080 100%);">
+                <!-- Decorative shapes -->
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;" aria-hidden="true">
+                  <div style="width:200px;height:200px;border-radius:50%;border:1px solid rgba(124,92,252,0.2);display:flex;align-items:center;justify-content:center;">
+                    <div style="width:120px;height:120px;border-radius:50%;border:1px solid rgba(124,92,252,0.4);display:flex;align-items:center;justify-content:center;">
+                      <div style="width:60px;height:60px;border-radius:50%;background:rgba(124,92,252,0.3);"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="work-card__overlay">
+                <div class="work-card__tags">
+                  <span class="work-card__tag">Fintech</span>
+                  <span class="work-card__tag">Web App</span>
+                  <span class="work-card__tag">AI</span>
+                </div>
+                <h3 class="work-card__title">NovaPay<br>Platform</h3>
+                <p class="work-card__meta">2025 — Full-Stack Development</p>
+              </div>
+              <div class="work-card__arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              </div>
+            </div>
+          </a>
+
+          <!-- Work 2 -->
+          <a href="work.html" class="work-card-wrap img-reveal-wrap" data-category="mobile design" aria-label="Lumina app project">
+            <div class="work-card">
+              <div class="work-card__media" style="background:linear-gradient(135deg,#200a30 0%,#601040 100%);">
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;" aria-hidden="true">
+                  <div style="width:100px;height:160px;border-radius:20px;border:2px solid rgba(255,60,172,0.3);background:rgba(255,60,172,0.05);"></div>
+                </div>
+              </div>
+              <div class="work-card__overlay">
+                <div class="work-card__tags">
+                  <span class="work-card__tag">Mobile</span>
+                  <span class="work-card__tag">iOS</span>
+                </div>
+                <h3 class="work-card__title">Lumina<br>Health App</h3>
+                <p class="work-card__meta">2025 — iOS Development</p>
+              </div>
+              <div class="work-card__arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              </div>
+            </div>
+          </a>
+
+          <!-- Work 3 -->
+          <a href="work.html" class="work-card-wrap img-reveal-wrap" data-category="saas" aria-label="Orbit SaaS dashboard">
+            <div class="work-card">
+              <div class="work-card__media" style="background:linear-gradient(135deg,#061a20 0%,#0a4040 100%);">
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;" aria-hidden="true">
+                  <div style="width:160px;height:100px;border-radius:12px;border:1px solid rgba(0,240,255,0.2);background:rgba(0,240,255,0.04);display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px;">
+                    <div style="background:rgba(0,240,255,0.15);border-radius:4px;"></div>
+                    <div style="background:rgba(0,240,255,0.25);border-radius:4px;"></div>
+                    <div style="background:rgba(0,240,255,0.1);border-radius:4px;"></div>
+                    <div style="grid-column:span 2;background:rgba(0,240,255,0.08);border-radius:4px;"></div>
+                    <div style="background:rgba(0,240,255,0.2);border-radius:4px;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="work-card__overlay">
+                <div class="work-card__tags">
+                  <span class="work-card__tag">SaaS</span>
+                  <span class="work-card__tag">Dashboard</span>
+                </div>
+                <h3 class="work-card__title">Orbit<br>Analytics</h3>
+                <p class="work-card__meta">2024 — SaaS Platform</p>
+              </div>
+              <div class="work-card__arrow" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         CLIENT LOGOS MARQUEE
+    ═══════════════════════════════════════════════════ -->
+    <section class="section section--sm">
+      <div class="container">
+        <p class="t-label" style="text-align:center;margin-bottom:var(--sp-8);">Trusted by industry leaders</p>
+      </div>
+      <div class="marquee logos-marquee" aria-label="Client companies">
+        <div class="marquee__inner">
+          <div class="marquee__item">Anthropic<span class="marquee__separator"></span></div>
+          <div class="marquee__item">OpenAI<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Vercel<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Stripe<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Linear<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Figma<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Notion<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Railway<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Supabase<span class="marquee__separator"></span></div>
+          <div class="marquee__item">PlanetScale<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Anthropic<span class="marquee__separator"></span></div>
+          <div class="marquee__item">OpenAI<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Vercel<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Stripe<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Linear<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Figma<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Notion<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Railway<span class="marquee__separator"></span></div>
+          <div class="marquee__item">Supabase<span class="marquee__separator"></span></div>
+          <div class="marquee__item">PlanetScale<span class="marquee__separator"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         STATISTICS
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" style="position:relative;">
+      <div class="glow-bg glow-bg--pink" style="top:20%;right:-10%;" aria-hidden="true"></div>
+      <div class="container">
+        <div class="grid grid-4">
+          <div class="stat-card">
+            <div class="stat-card__number">
+              <span data-count="120" data-suffix="+">0+</span>
+            </div>
+            <p class="stat-card__label">Projects Delivered</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__number">
+              <span data-count="8" data-suffix=" yrs">0 yrs</span>
+            </div>
+            <p class="stat-card__label">Years of Excellence</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__number">
+              <span data-count="98" data-suffix="%">0%</span>
+            </div>
+            <p class="stat-card__label">Client Satisfaction</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__number">
+              <span data-count="25" data-suffix="+">0+</span>
+            </div>
+            <p class="stat-card__label">Global Clients</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         MARQUEE 2 (outline style)
+    ═══════════════════════════════════════════════════ -->
+    <div class="marquee marquee--outline marquee--reverse" aria-hidden="true">
+      <div class="marquee__inner">
+        <div class="marquee__item">Awwwards<span class="marquee__separator"></span></div>
+        <div class="marquee__item">FWA<span class="marquee__separator"></span></div>
+        <div class="marquee__item">CSS Design Awards<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Webby Awards<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Dribbble<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Behance<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Awwwards<span class="marquee__separator"></span></div>
+        <div class="marquee__item">FWA<span class="marquee__separator"></span></div>
+        <div class="marquee__item">CSS Design Awards<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Webby Awards<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Dribbble<span class="marquee__separator"></span></div>
+        <div class="marquee__item">Behance<span class="marquee__separator"></span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         PROCESS
+    ═══════════════════════════════════════════════════ -->
+    <section class="section">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-16);align-items:start;">
+          <div style="position:sticky;top:120px;">
+            <div class="section-label">How We Work</div>
+            <h2 class="t-title" data-split="lines">
+              A process built<br>for results.
+            </h2>
+            <p class="t-body fade-up" style="margin-top:var(--sp-6);max-width:400px;">
+              Our battle-tested methodology combines rigorous research with rapid iteration to deliver products on time, every time.
+            </p>
+            <div style="margin-top:var(--sp-10);" class="fade-up">
+              <a href="contact.html" class="btn btn--primary">Let's Build Together</a>
+            </div>
+          </div>
+
+          <div>
+            <div class="process-step">
+              <div class="process-step__num">01</div>
+              <div>
+                <h3 class="process-step__title">Discovery & Strategy</h3>
+                <p class="process-step__desc">Deep dive into your business goals, users, and competitive landscape to define a crystal-clear product strategy.</p>
+              </div>
+            </div>
+            <div class="process-step">
+              <div class="process-step__num">02</div>
+              <div>
+                <h3 class="process-step__title">Design & Prototype</h3>
+                <p class="process-step__desc">From wireframes to high-fidelity designs and interactive prototypes that validate ideas before a single line of code.</p>
+              </div>
+            </div>
+            <div class="process-step">
+              <div class="process-step__num">03</div>
+              <div>
+                <h3 class="process-step__title">Engineering</h3>
+                <p class="process-step__desc">Agile sprints, clean architecture, and obsessive code quality backed by automated testing and CI/CD pipelines.</p>
+              </div>
+            </div>
+            <div class="process-step">
+              <div class="process-step__num">04</div>
+              <div>
+                <h3 class="process-step__title">Launch & Optimize</h3>
+                <p class="process-step__desc">Seamless deployment, performance monitoring, and data-driven optimization for continuous growth post-launch.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         CTA SECTION
+    ═══════════════════════════════════════════════════ -->
+    <section class="section" style="position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:var(--gradient-glow);" aria-hidden="true"></div>
+      <div class="glow-bg glow-bg--cyan" style="bottom:-20%;right:10%;" aria-hidden="true"></div>
+      <div class="container">
+        <div style="max-width:800px;margin:0 auto;text-align:center;">
+          <div class="section-label" style="justify-content:center;">Start Today</div>
+          <h2 class="t-display" data-split="lines" style="margin-bottom:var(--sp-8);">
+            Ready to build<br>something iconic?
+          </h2>
+          <p class="t-body fade-up" style="max-width:440px;margin:0 auto var(--sp-10);">
+            Let's turn your vision into a digital masterpiece. We're selective — apply only if you're serious about quality.
+          </p>
+          <div class="fade-up" style="display:flex;align-items:center;gap:var(--sp-4);justify-content:center;flex-wrap:wrap;">
+            <div class="magnetic">
+              <div class="magnetic-inner">
+                <a href="contact.html" class="btn btn--gradient btn--large">Start a Project</a>
+              </div>
+            </div>
+            <a href="studio.html" class="btn btn--glass btn--large">About Our Studio</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════════════════ -->
+    <footer id="footer" role="contentinfo">
+      <div class="footer__glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="footer__cta">
+          <p class="footer__cta-eyebrow">Let's Connect</p>
+          <h2 class="footer__cta-title" data-split="lines">
+            hello@<br>vorex.studio
+          </h2>
+          <a href="contact.html" class="btn btn--outline btn--large fade-up" style="margin-top:var(--sp-8);">Get In Touch</a>
+        </div>
+
+        <div class="footer__grid">
+          <div>
+            <div class="footer__brand">VOREX</div>
+            <p class="footer__tagline">An independent digital product studio obsessed with craft and quality.</p>
+          </div>
+          <div>
+            <p class="footer__col-title">Navigation</p>
+            <ul class="footer__links">
+              <li><a href="index.html"    class="footer__link">Home</a></li>
+              <li><a href="work.html"     class="footer__link">Work</a></li>
+              <li><a href="services.html" class="footer__link">Services</a></li>
+              <li><a href="studio.html"   class="footer__link">Studio</a></li>
+              <li><a href="contact.html"  class="footer__link">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer__col-title">Services</p>
+            <ul class="footer__links">
+              <li><a href="services.html" class="footer__link">Web Development</a></li>
+              <li><a href="services.html" class="footer__link">Mobile Apps</a></li>
+              <li><a href="services.html" class="footer__link">SaaS Products</a></li>
+              <li><a href="services.html" class="footer__link">AI & Automation</a></li>
+              <li><a href="services.html" class="footer__link">UI/UX Design</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer__col-title">Contact</p>
+            <ul class="footer__links">
+              <li><a href="mailto:hello@vorex.studio" class="footer__link">hello@vorex.studio</a></li>
+              <li><a href="tel:+15551234567"          class="footer__link">+1 (555) 123-4567</a></li>
+              <li><span class="footer__link">San Francisco, CA</span></li>
+              <li><span class="footer__link">London, UK</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer__bottom">
+          <p class="footer__copy">© 2025 VOREX Studio. All rights reserved.</p>
+          <div class="footer__social" aria-label="Social media links">
+            <a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="footer__social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="footer__social-link" aria-label="Dribbble">●</a>
+            <a href="#" class="footer__social-link" aria-label="GitHub">⌥</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main><!-- /barba container -->
+
+  <!-- Main script (ES module) -->
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

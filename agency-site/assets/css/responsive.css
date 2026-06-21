@@ -1,0 +1,359 @@
+/* ============================================================
+   RESPONSIVE.CSS — Breakpoints & mobile overrides
+   ============================================================ */
+
+/* ── XL screens (1440px+) ── */
+@media (min-width: 1440px) {
+  .container {
+    padding: 0 var(--sp-10);
+  }
+}
+
+/* ── Large screens (1200px–1439px) ── */
+@media (max-width: 1199px) {
+  .footer__grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--sp-8);
+  }
+
+  .footer__grid > *:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── Medium (tablet) screens (768px–1023px) ── */
+@media (max-width: 1023px) {
+  :root {
+    --sp-24: 8rem;
+    --sp-20: 6rem;
+    --sp-16: 5rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-hamburger {
+    display: flex;
+  }
+
+  .nav-cta {
+    display: none;
+  }
+
+  .sound-toggle {
+    display: none;
+  }
+
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-8);
+  }
+
+  .footer__grid > *:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .process-step {
+    grid-template-columns: 60px 1fr;
+  }
+
+  .h-scroll-item {
+    width: clamp(260px, 60vw, 380px);
+  }
+
+  .work-card__title {
+    font-size: var(--fs-lg);
+  }
+
+  .page-hero__title {
+    font-size: var(--fs-3xl);
+  }
+
+  /* Services page */
+  .services-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Studio page */
+  .studio-about-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-10);
+  }
+
+  /* Contact page */
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-10);
+  }
+}
+
+/* ── Small (mobile) screens (<= 767px) ── */
+@media (max-width: 767px) {
+  :root {
+    --sp-24: 5rem;
+    --sp-20: 4rem;
+    --sp-16: 3.5rem;
+    --sp-12: 3rem;
+    --sp-10: 2.5rem;
+  }
+
+  body {
+    cursor: auto;
+  }
+
+  #cursor-dot,
+  #cursor-ring {
+    display: none;
+  }
+
+  .container {
+    padding: 0 var(--sp-5);
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Navbar */
+  #navbar {
+    padding: var(--sp-4) 0;
+  }
+
+  /* Hero section */
+  .t-hero {
+    font-size: clamp(3.5rem, 15vw, 7rem);
+    line-height: 0.95;
+  }
+
+  .t-display {
+    font-size: clamp(3rem, 13vw, 6rem);
+  }
+
+  .t-title {
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
+  }
+
+  .t-heading {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+  }
+
+  /* Sections */
+  .section {
+    padding: var(--sp-16) 0;
+  }
+
+  .section--lg {
+    padding: var(--sp-20) 0;
+  }
+
+  /* Footer */
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+  }
+
+  .footer__cta-title {
+    font-size: clamp(2.5rem, 12vw, 5rem);
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    gap: var(--sp-4);
+    text-align: center;
+  }
+
+  /* Process */
+  .process-step {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+
+  /* Cards */
+  .service-card {
+    padding: var(--sp-6);
+  }
+
+  .stat-card {
+    padding: var(--sp-6) 0;
+  }
+
+  /* Marquee */
+  .marquee__item {
+    font-size: clamp(1.2rem, 5vw, 2rem);
+  }
+
+  /* Mobile menu links */
+  .mobile-menu__link {
+    font-size: clamp(2rem, 10vw, 4rem);
+  }
+
+  /* Team */
+  .team-card__image {
+    aspect-ratio: 1/1;
+  }
+
+  /* Map */
+  .map-container {
+    height: 280px;
+  }
+
+  /* Work card */
+  .work-card__title {
+    font-size: var(--fs-md);
+  }
+
+  /* Filter tabs */
+  .filter-tabs {
+    gap: var(--sp-2);
+  }
+
+  .filter-tab {
+    font-size: 10px;
+    padding: 6px 14px;
+  }
+
+  /* Contact */
+  .contact-info-item__value {
+    font-size: var(--fs-base);
+  }
+
+  /* Page hero */
+  .page-hero {
+    min-height: 50vh;
+    padding-bottom: var(--sp-10);
+  }
+
+  .page-hero__title {
+    font-size: clamp(2.5rem, 10vw, 5rem);
+  }
+
+  /* Timeline */
+  .timeline {
+    padding-left: var(--sp-6);
+  }
+
+  /* Horizontal scroll */
+  .h-scroll-item {
+    width: clamp(240px, 80vw, 340px);
+  }
+
+  /* Stat */
+  .stat-card__number {
+    font-size: clamp(2rem, 10vw, 4rem);
+  }
+
+  /* Awards */
+  .award-item {
+    flex-direction: column;
+    gap: var(--sp-3);
+    align-items: flex-start;
+  }
+
+  /* Buttons */
+  .btn--large {
+    padding: 18px 36px;
+    font-size: var(--fs-sm);
+  }
+
+  /* Form */
+  .form-input,
+  .form-textarea {
+    font-size: var(--fs-base);
+  }
+}
+
+/* ── Very small phones (<= 380px) ── */
+@media (max-width: 380px) {
+  :root {
+    --sp-8: 2rem;
+    --sp-6: 1.5rem;
+  }
+
+  .t-hero {
+    font-size: 3rem;
+  }
+
+  .nav-logo {
+    font-size: 1rem;
+  }
+}
+
+/* ── Reduced motion preference ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .marquee__inner {
+    animation: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ── Dark mode (already dark; just ensuring system compat) ── */
+@media (prefers-color-scheme: light) {
+  /* Keep dark regardless — this is a dark-only design */
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* ── Print ── */
+@media print {
+  #preloader,
+  #cursor-dot,
+  #cursor-ring,
+  #navbar,
+  #mobile-menu,
+  #page-transition,
+  .noise-overlay,
+  #scroll-progress,
+  #webgl-canvas,
+  #particle-canvas {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+}
+
+/* ── Container queries for cards ── */
+@container (max-width: 400px) {
+  .service-card {
+    padding: var(--sp-5);
+  }
+}
+
+/* ── Portrait tablet ── */
+@media (max-width: 1023px) and (orientation: portrait) {
+  .section--lg {
+    padding: var(--sp-20) 0;
+  }
+}
+
+/* ── Landscape mobile ── */
+@media (max-width: 767px) and (orientation: landscape) {
+  .page-hero {
+    min-height: 90vw;
+  }
+}

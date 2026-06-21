@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Studio — VOREX Digital Studio</title>
+  <meta name="description" content="Learn about VOREX — our story, team, values, timeline, awards, and global presence." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7/dist/barba.umd.min.js"></script>
+
+  <style>
+    .studio-about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-16);
+      align-items: center;
+    }
+    .studio-photo-wrap {
+      aspect-ratio: 4/5;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, #0d0820, #201060);
+    }
+    .studio-photo-wrap__inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .presence-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-5);
+    }
+    .presence-card {
+      padding: var(--sp-6);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      background: var(--clr-surface);
+      text-align: center;
+      transition: all var(--transition-base);
+    }
+    .presence-card:hover {
+      border-color: var(--clr-accent);
+      transform: translateY(-6px);
+    }
+    .presence-card__flag {
+      font-size: 2rem;
+      margin-bottom: var(--sp-3);
+    }
+    .presence-card__city {
+      font-size: var(--fs-md);
+      font-weight: var(--fw-bold);
+      margin-bottom: var(--sp-2);
+    }
+    .presence-card__country {
+      font-size: var(--fs-xs);
+      color: var(--clr-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <div id="cursor-dot"  aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <div id="page-transition" aria-hidden="true">
+    <div class="transition-panel"></div>
+    <div class="transition-panel"></div>
+  </div>
+  <div id="preloader" role="status" aria-label="Loading">
+    <div class="preloader__logo">VOR<span>EX</span></div>
+    <div class="preloader__counter" id="preloader-counter">0</div>
+    <div class="preloader__bar-wrap"><div class="preloader__bar" id="preloader-bar"></div></div>
+    <div class="preloader__label">Loading Experience</div>
+  </div>
+
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">VOR<span>EX</span></a>
+        <ul class="nav-links" role="list">
+          <li><a href="index.html"    class="nav-link">Home</a></li>
+          <li><a href="work.html"     class="nav-link">Work</a></li>
+          <li><a href="services.html" class="nav-link">Services</a></li>
+          <li><a href="studio.html"   class="nav-link active" aria-current="page">Studio</a></li>
+          <li><a href="contact.html"  class="nav-link">Contact</a></li>
+        </ul>
+        <div class="nav-right">
+          <button class="sound-toggle" aria-label="Toggle sound">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </button>
+          <a href="contact.html" class="nav-cta">Start a Project</a>
+          <button class="nav-hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <nav class="mobile-menu__links">
+      <a href="index.html"    class="mobile-menu__link"><span>Home</span></a>
+      <a href="work.html"     class="mobile-menu__link"><span>Work</span></a>
+      <a href="services.html" class="mobile-menu__link"><span>Services</span></a>
+      <a href="studio.html"   class="mobile-menu__link"><span>Studio</span></a>
+      <a href="contact.html"  class="mobile-menu__link"><span>Contact</span></a>
+    </nav>
+    <div class="mobile-menu__footer">
+      <span>© 2025 VOREX</span>
+      <a href="mailto:hello@vorex.studio">hello@vorex.studio</a>
+    </div>
+  </div>
+
+  <main id="main-content" data-barba="container" data-barba-namespace="studio">
+
+    <!-- Page Hero -->
+    <section class="page-hero section section--lg" style="position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:var(--gradient-glow);opacity:0.6;" aria-hidden="true"></div>
+      <div class="glow-bg glow-bg--accent" style="top:-20%;left:-5%;" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:2;">
+        <p class="page-hero__number fade-up">004</p>
+        <h1 class="page-hero__title" data-split="lines">
+          The Studio<br>Behind It All.
+        </h1>
+        <p class="page-hero__desc fade-up">
+          We're a tight-knit team of designers, engineers, and strategists united by one belief: great digital experiences can change everything.
+        </p>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section">
+      <div class="container">
+        <div class="studio-about-grid">
+          <div class="fade-up">
+            <div class="section-label">Our Story</div>
+            <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-6);">
+              Born from<br>discontent.
+            </h2>
+            <p class="t-body" style="margin-bottom:var(--sp-5);">
+              VOREX was founded in 2017 by a group of engineers and designers frustrated with the status quo — agencies shipping mediocre work at premium prices, startups launching products that collapsed under load, enterprises stuck in decade-old tech.
+            </p>
+            <p class="t-body" style="margin-bottom:var(--sp-5);">
+              We set out to prove that speed and quality aren't mutually exclusive. That beautiful design and bulletproof engineering can coexist. Eight years and 120+ projects later, we're still proving it every day.
+            </p>
+            <p class="t-body" style="margin-bottom:var(--sp-10);">
+              Today we operate from San Francisco, London, and Singapore — a fully remote-first studio working with founders, enterprise teams, and everyone in between.
+            </p>
+            <a href="contact.html" class="btn btn--primary">Work With Us</a>
+          </div>
+          <div class="img-reveal-wrap">
+            <div class="studio-photo-wrap">
+              <div class="studio-photo-wrap__inner" aria-hidden="true">
+                <div style="font-size:clamp(4rem,10vw,8rem);font-weight:900;color:rgba(124,92,252,0.12);letter-spacing:-0.05em;">VOREX</div>
+                <div style="display:flex;gap:16px;">
+                  <div style="width:80px;height:3px;background:var(--gradient-primary);border-radius:2px;"></div>
+                </div>
+                <p style="font-size:var(--fs-sm);color:var(--clr-muted);letter-spacing:0.1em;text-transform:uppercase;">Est. 2017</p>
+              </div>
+              <div style="position:absolute;top:30px;right:30px;padding:10px 16px;background:rgba(124,92,252,0.15);border:1px solid rgba(124,92,252,0.3);border-radius:var(--radius-full);">
+                <span style="font-size:var(--fs-xs);color:var(--clr-accent);letter-spacing:0.1em;font-weight:600;text-transform:uppercase;">Awwwards SOY 2024</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section class="section" style="background:var(--clr-surface);">
+      <div class="container">
+        <div class="section-label">Our Values</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-12);">
+          What drives<br>every decision.
+        </h2>
+        <div class="grid grid-3 stagger-children">
+          <div class="value-card">
+            <div class="value-card__icon">🎨</div>
+            <h3 class="value-card__title">Craft Over Speed</h3>
+            <p class="value-card__desc">We move fast, but never at the expense of quality. Every detail matters — because your users notice everything, even when they can't name it.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-card__icon">🔬</div>
+            <h3 class="value-card__title">Evidence-Driven</h3>
+            <p class="value-card__desc">Opinions are fine. Data is better. We validate assumptions through research, testing, and real user feedback before doubling down.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-card__icon">🤝</div>
+            <h3 class="value-card__title">Radical Transparency</h3>
+            <p class="value-card__desc">No hidden timelines, no scope creep surprises. You'll always know exactly where your project stands and what's coming next.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-card__icon">♾️</div>
+            <h3 class="value-card__title">Continuous Learning</h3>
+            <p class="value-card__desc">The best technology changes monthly. We invest 20% of our time in R&D so your products benefit from what's emerging, not just what's established.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-card__icon">🌍</div>
+            <h3 class="value-card__title">Global Perspective</h3>
+            <p class="value-card__desc">Three continents, one studio. Diverse backgrounds make us better designers, engineers, and partners for your global audience.</p>
+          </div>
+          <div class="value-card">
+            <div class="value-card__icon">🏆</div>
+            <h3 class="value-card__title">Ownership Mentality</h3>
+            <p class="value-card__desc">We treat your product like it's ours. That means proactive problem-solving, honest feedback, and going beyond the brief when it matters.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label">The Team</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-12);">
+          The people who<br>make magic happen.
+        </h2>
+        <div class="grid grid-4 stagger-children">
+          <div class="team-card">
+            <div class="team-card__image">
+              <div class="team-card__placeholder">AK</div>
+            </div>
+            <h3 class="team-card__name">Alex Kim</h3>
+            <p class="team-card__role">Founder & CEO</p>
+          </div>
+          <div class="team-card">
+            <div class="team-card__image">
+              <div class="team-card__placeholder">SR</div>
+            </div>
+            <h3 class="team-card__name">Sofia Reyes</h3>
+            <p class="team-card__role">Creative Director</p>
+          </div>
+          <div class="team-card">
+            <div class="team-card__image">
+              <div class="team-card__placeholder">MJ</div>
+            </div>
+            <h3 class="team-card__name">Marcus Johnson</h3>
+            <p class="team-card__role">Lead Engineer</p>
+          </div>
+          <div class="team-card">
+            <div class="team-card__image">
+              <div class="team-card__placeholder">PL</div>
+            </div>
+            <h3 class="team-card__name">Priya Lal</h3>
+            <p class="team-card__role">Head of Design</p>
+          </div>
+          <div class="team-card">
+            <div class="team-card__image">
+              <div class="team-card__placeholder">TC</div>
+            </div>
+            <h3 class="team-card__name">Tom Chen</h3>
+            <p class="team-card__role">WebGL Specialist</p>
+          </div>
+          <div class="team-card">
+            <div class="team-card__image">
+              <div class="team-card__placeholder">EW</div>
+            </div>
+            <h3 class="team-card__name">Elena Wolf</h3>
+            <p class="team-card__role">AI Engineer</p>
+          </div>
+          <div class="team-card">
+            <div class="team-card__image">
+              <div class="team-card__placeholder">DP</div>
+            </div>
+            <h3 class="team-card__name">David Park</h3>
+            <p class="team-card__role">Mobile Lead</p>
+          </div>
+          <div class="team-card">
+            <div class="team-card__image">
+              <div class="team-card__placeholder">JM</div>
+            </div>
+            <h3 class="team-card__name">Julia Meier</h3>
+            <p class="team-card__role">Project Lead</p>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-top:var(--sp-12);" class="fade-up">
+          <p class="t-body" style="margin-bottom:var(--sp-6);">Want to join the team?</p>
+          <a href="contact.html" class="btn btn--outline">We're Hiring</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="section">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-16);">
+          <div>
+            <div class="section-label">Timeline</div>
+            <h2 class="t-title" data-split="lines">
+              Eight years<br>of evolution.
+            </h2>
+            <p class="t-body fade-up" style="margin-top:var(--sp-6);">
+              From a two-person side project to an internationally recognized studio, every year added new capabilities and raised our standards.
+            </p>
+          </div>
+          <div class="timeline fade-up">
+            <div class="timeline-item">
+              <div class="timeline-item__year">2017</div>
+              <h3 class="timeline-item__title">Founded in San Francisco</h3>
+              <p class="timeline-item__desc">Alex and Sofia launch VOREX as a boutique web studio. First client: a Y Combinator startup.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-item__year">2018</div>
+              <h3 class="timeline-item__title">First Awwwards SOTD</h3>
+              <p class="timeline-item__desc">Our WebGL experience for a luxury brand wins Site of the Day — the first of many.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-item__year">2019</div>
+              <h3 class="timeline-item__title">London Office Opens</h3>
+              <p class="timeline-item__desc">European expansion brings new clients across the EU and a diverse creative team.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-item__year">2021</div>
+              <h3 class="timeline-item__title">Team of 15 — AI Practice Launched</h3>
+              <p class="timeline-item__desc">We established a dedicated AI engineering practice as GPT-3 changed the landscape.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-item__year">2023</div>
+              <h3 class="timeline-item__title">Singapore Hub</h3>
+              <p class="timeline-item__desc">Asia-Pacific presence established to serve growing demand from APAC markets.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-item__year">2024</div>
+              <h3 class="timeline-item__title">Awwwards Site of the Year</h3>
+              <p class="timeline-item__desc">VOREX named Site of the Year — the highest honor in digital design.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-item__year">2025</div>
+              <h3 class="timeline-item__title">100+ Projects Delivered</h3>
+              <p class="timeline-item__desc">Surpassed 120 projects and continue raising the bar for what digital can be.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Awards -->
+    <section class="section" style="background:var(--clr-surface);">
+      <div class="container">
+        <div class="section-label">Recognition</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-12);">
+          Awards &amp;<br>recognition.
+        </h2>
+        <div>
+          <div class="award-item">
+            <div class="award-item__left">
+              <h3 class="award-item__name">Awwwards — Site of the Year</h3>
+              <p class="award-item__category">Digital Design Excellence</p>
+            </div>
+            <span class="award-item__year">2024</span>
+          </div>
+          <div class="award-item">
+            <div class="award-item__left">
+              <h3 class="award-item__name">FWA — Site of the Month</h3>
+              <p class="award-item__category">Interactive Experience</p>
+            </div>
+            <span class="award-item__year">2024</span>
+          </div>
+          <div class="award-item">
+            <div class="award-item__left">
+              <h3 class="award-item__name">CSS Design Awards — Best UI</h3>
+              <p class="award-item__category">Interface Design</p>
+            </div>
+            <span class="award-item__year">2023</span>
+          </div>
+          <div class="award-item">
+            <div class="award-item__left">
+              <h3 class="award-item__name">Webby Awards — Best Navigation</h3>
+              <p class="award-item__category">User Experience</p>
+            </div>
+            <span class="award-item__year">2023</span>
+          </div>
+          <div class="award-item">
+            <div class="award-item__left">
+              <h3 class="award-item__name">Awwwards — SOTD × 12</h3>
+              <p class="award-item__category">Multiple Sites</p>
+            </div>
+            <span class="award-item__year">2018–2025</span>
+          </div>
+          <div class="award-item">
+            <div class="award-item__left">
+              <h3 class="award-item__name">Dribbble — Studio of the Month</h3>
+              <p class="award-item__category">Design Community Recognition</p>
+            </div>
+            <span class="award-item__year">2022</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Global Presence -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label">Global Presence</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-12);">
+          Everywhere you<br>need us to be.
+        </h2>
+        <div class="presence-grid stagger-children">
+          <div class="presence-card">
+            <div class="presence-card__flag">🇺🇸</div>
+            <h3 class="presence-card__city">San Francisco</h3>
+            <p class="presence-card__country">United States — HQ</p>
+          </div>
+          <div class="presence-card">
+            <div class="presence-card__flag">🇬🇧</div>
+            <h3 class="presence-card__city">London</h3>
+            <p class="presence-card__country">United Kingdom</p>
+          </div>
+          <div class="presence-card">
+            <div class="presence-card__flag">🇸🇬</div>
+            <h3 class="presence-card__city">Singapore</h3>
+            <p class="presence-card__country">Singapore — APAC Hub</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="position:relative;">
+      <div style="position:absolute;inset:0;background:var(--gradient-glow);opacity:0.5;" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:1;text-align:center;">
+        <div class="section-label" style="justify-content:center;">Join Us</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-8);">
+          Ready to build<br>something legendary?
+        </h2>
+        <div class="fade-up" style="display:flex;gap:var(--sp-4);justify-content:center;flex-wrap:wrap;">
+          <a href="contact.html" class="btn btn--gradient btn--large">Start a Project</a>
+          <a href="work.html"    class="btn btn--glass   btn--large">View Work</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer" role="contentinfo">
+      <div class="footer__glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="footer__grid">
+          <div>
+            <div class="footer__brand">VOREX</div>
+            <p class="footer__tagline">An independent digital product studio obsessed with craft and quality.</p>
+          </div>
+          <div>
+            <p class="footer__col-title">Navigation</p>
+            <ul class="footer__links">
+              <li><a href="index.html"    class="footer__link">Home</a></li>
+              <li><a href="work.html"     class="footer__link">Work</a></li>
+              <li><a href="services.html" class="footer__link">Services</a></li>
+              <li><a href="studio.html"   class="footer__link">Studio</a></li>
+              <li><a href="contact.html"  class="footer__link">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer__col-title">Services</p>
+            <ul class="footer__links">
+              <li><a href="services.html" class="footer__link">Web Development</a></li>
+              <li><a href="services.html" class="footer__link">Mobile Apps</a></li>
+              <li><a href="services.html" class="footer__link">SaaS Products</a></li>
+              <li><a href="services.html" class="footer__link">AI & Automation</a></li>
+              <li><a href="services.html" class="footer__link">UI/UX Design</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer__col-title">Contact</p>
+            <ul class="footer__links">
+              <li><a href="mailto:hello@vorex.studio" class="footer__link">hello@vorex.studio</a></li>
+              <li><a href="tel:+15551234567"          class="footer__link">+1 (555) 123-4567</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <p class="footer__copy">© 2025 VOREX Studio. All rights reserved.</p>
+          <div class="footer__social">
+            <a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="footer__social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="footer__social-link" aria-label="Dribbble">●</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
