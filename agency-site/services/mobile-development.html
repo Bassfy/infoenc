@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile Development — VOREX Studio</title>
+  <meta name="description" content="Native iOS & Android apps and cross-platform React Native solutions. We build mobile experiences that feel premium on every device." />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7/dist/barba.umd.min.js"></script>
+  <style>
+    .svc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-16);align-items:start;}
+    .svc-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-5);}
+    @media(max-width:1023px){.svc-grid-2{grid-template-columns:1fr;gap:var(--sp-10);}.svc-grid-3{grid-template-columns:1fr 1fr;}}
+    @media(max-width:767px){.svc-grid-3{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <div id="page-transition" aria-hidden="true"><div class="transition-panel"></div><div class="transition-panel"></div></div>
+  <div id="preloader" role="status" aria-label="Loading">
+    <div class="preloader__logo">VOR<span>EX</span></div>
+    <div class="preloader__counter" id="preloader-counter">0</div>
+    <div class="preloader__bar-wrap"><div class="preloader__bar" id="preloader-bar"></div></div>
+    <div class="preloader__label">Loading Experience</div>
+  </div>
+
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container"><div class="nav-inner">
+      <a href="../index.html" class="nav-logo">VOR<span>EX</span></a>
+      <ul class="nav-links" role="list">
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="../work.html" class="nav-link">Work</a></li>
+        <li class="nav-item">
+          <a href="../services.html" class="nav-link active">Services<svg class="dropdown-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l4 4 4-4"/></svg></a>
+          <div class="nav-dropdown">
+            <a href="web-development.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="nav-dropdown__text"><strong>Web Development</strong><span>Next.js, React, WebGL</span></div></a>
+            <a href="mobile-development.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div><div class="nav-dropdown__text"><strong>Mobile Development</strong><span>iOS, Android, React Native</span></div></a>
+            <a href="saas-development.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="nav-dropdown__text"><strong>SaaS Development</strong><span>Scalable platforms</span></div></a>
+            <div class="nav-dropdown__divider"></div>
+            <a href="ai-automation.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg></div><div class="nav-dropdown__text"><strong>AI & Automation</strong><span>LLMs, agents, pipelines</span></div></a>
+            <a href="ui-ux-design.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg></div><div class="nav-dropdown__text"><strong>UI/UX Design</strong><span>Figma, systems, prototypes</span></div></a>
+            <a href="it-consultancy.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="nav-dropdown__text"><strong>IT Consultancy</strong><span>Architecture, security</span></div></a>
+          </div>
+        </li>
+        <li><a href="../studio.html" class="nav-link">Studio</a></li>
+        <li><a href="../contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="sound-toggle" aria-label="Toggle sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button>
+        <a href="../contact.html" class="nav-cta">Start a Project</a>
+        <button class="nav-hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+      </div>
+    </div></div>
+  </nav>
+
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <nav class="mobile-menu__links">
+      <a href="../index.html"    class="mobile-menu__link"><span>Home</span></a>
+      <a href="../work.html"     class="mobile-menu__link"><span>Work</span></a>
+      <a href="../services.html" class="mobile-menu__link"><span>Services</span></a>
+      <a href="../studio.html"   class="mobile-menu__link"><span>Studio</span></a>
+      <a href="../contact.html"  class="mobile-menu__link"><span>Contact</span></a>
+    </nav>
+    <div class="mobile-menu__footer"><span>© 2025 VOREX</span><a href="mailto:hello@vorex.studio">hello@vorex.studio</a></div>
+  </div>
+
+  <main id="main-content" data-barba="container" data-barba-namespace="service-mobile">
+
+    <!-- Hero -->
+    <section class="section section--lg" style="min-height:70vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a0520 0%,#060608 70%);" aria-hidden="true"></div>
+      <div class="glow-bg glow-bg--pink" style="top:-10%;right:5%;opacity:0.25;" aria-hidden="true"></div>
+      <!-- Phone mockups -->
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:24px;pointer-events:none;" aria-hidden="true">
+        <div style="width:100px;height:190px;border-radius:24px;border:2px solid rgba(255,60,172,0.2);background:rgba(255,60,172,0.04);transform:rotate(-8deg) translateY(20px);"></div>
+        <div style="width:110px;height:210px;border-radius:26px;border:2px solid rgba(255,60,172,0.35);background:rgba(255,60,172,0.07);"></div>
+        <div style="width:100px;height:190px;border-radius:24px;border:2px solid rgba(255,60,172,0.2);background:rgba(255,60,172,0.04);transform:rotate(8deg) translateY(20px);"></div>
+      </div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(6,6,8,0.95) 40%,rgba(6,6,8,0.2) 100%);" aria-hidden="true"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to top,var(--clr-bg),transparent);" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:2;padding-bottom:var(--sp-16);">
+        <div class="section-label">Service 02</div>
+        <h1 class="t-display" data-split="lines" style="max-width:800px;margin-bottom:var(--sp-6);">Mobile<br>Development.</h1>
+        <p class="t-large fade-up" style="max-width:560px;color:var(--clr-muted);margin-bottom:var(--sp-10);">Native iOS & Android and cross-platform React Native apps. Experiences that feel premium, perform flawlessly, and keep users coming back.</p>
+        <div class="fade-up" style="display:flex;gap:var(--sp-4);flex-wrap:wrap;align-items:center;">
+          <a href="../contact.html" class="btn btn--primary btn--large">Start a Mobile Project</a>
+          <a href="../work.html" class="btn btn--glass btn--large">View Mobile Work</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview -->
+    <section class="section">
+      <div class="container">
+        <div class="svc-grid-2">
+          <div>
+            <div class="section-label">What We Build</div>
+            <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-6);">Apps users<br>actually love.</h2>
+            <p class="t-body" style="margin-bottom:var(--sp-5);">We build mobile apps with the same obsessive attention to craft as our web work. Every interaction, every transition, every micro-animation is considered. The result: apps with 4.8+ App Store ratings.</p>
+            <p class="t-body" style="margin-bottom:var(--sp-10);">Whether you need a native Swift/Kotlin app or a cross-platform React Native solution, we'll recommend the right approach for your audience and budget.</p>
+            <div style="display:flex;gap:var(--sp-8);">
+              <div class="stat-card" style="padding:0;border:none;"><div class="stat-card__number"><span data-count="4.8" data-suffix="★" data-decimals="1">0★</span></div><p class="stat-card__label">Avg. App Store rating</p></div>
+              <div class="stat-card" style="padding:0;border:none;"><div class="stat-card__number"><span data-count="30" data-suffix="+">0+</span></div><p class="stat-card__label">Apps shipped</p></div>
+            </div>
+          </div>
+          <div class="svc-visual img-reveal-wrap" style="background:linear-gradient(135deg,#1a0520,#601050);">
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:20px;" aria-hidden="true">
+              <div style="width:100px;height:190px;border-radius:24px;border:2px solid rgba(255,60,172,0.35);background:rgba(255,60,172,0.05);padding:12px;display:flex;flex-direction:column;gap:8px;">
+                <div style="height:4px;width:36px;background:rgba(255,60,172,0.4);border-radius:2px;margin:0 auto 4px;"></div>
+                <div style="height:60px;background:linear-gradient(135deg,rgba(255,60,172,0.15),rgba(124,92,252,0.1));border-radius:10px;"></div>
+                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:3px;"></div>
+                <div style="height:6px;width:70%;background:rgba(255,255,255,0.07);border-radius:3px;"></div>
+                <div style="flex:1;"></div>
+                <div style="height:28px;background:rgba(255,60,172,0.3);border-radius:8px;"></div>
+              </div>
+              <div style="width:110px;height:210px;border-radius:26px;border:2px solid rgba(124,92,252,0.4);background:rgba(124,92,252,0.06);padding:14px;display:flex;flex-direction:column;gap:10px;transform:translateY(-16px);">
+                <div style="height:4px;width:40px;background:rgba(124,92,252,0.4);border-radius:2px;margin:0 auto 4px;"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                  <div style="height:44px;background:rgba(124,92,252,0.12);border-radius:8px;border:1px solid rgba(124,92,252,0.15);"></div>
+                  <div style="height:44px;background:rgba(124,92,252,0.18);border-radius:8px;border:1px solid rgba(124,92,252,0.2);"></div>
+                  <div style="height:44px;background:rgba(124,92,252,0.08);border-radius:8px;border:1px solid rgba(124,92,252,0.12);"></div>
+                  <div style="height:44px;background:rgba(124,92,252,0.14);border-radius:8px;border:1px solid rgba(124,92,252,0.18);"></div>
+                </div>
+                <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:3px;"></div>
+                <div style="flex:1;"></div>
+                <div style="height:30px;background:rgba(124,92,252,0.35);border-radius:8px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scope -->
+    <section class="section" style="background:var(--clr-surface);">
+      <div class="container">
+        <div class="svc-grid-2" style="gap:var(--sp-12);">
+          <div><div class="section-label">Scope of Work</div><h2 class="t-title" data-split="lines">Everything<br>included.</h2></div>
+          <div class="svc-feature-list fade-up">
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">Native iOS (Swift / SwiftUI)</div><p class="svc-feature-item__desc">Purpose-built iOS apps using the latest Apple frameworks — SwiftUI, Combine, and Core Data for maximum performance.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">Native Android (Kotlin / Jetpack Compose)</div><p class="svc-feature-item__desc">Modern Android development with Jetpack Compose, Coroutines, and Material 3 design system compliance.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">React Native / Expo</div><p class="svc-feature-item__desc">Cross-platform apps from a single codebase — 95% code sharing with native module bridges where it matters.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">App Store Submission</div><p class="svc-feature-item__desc">We handle the full App Store Connect and Google Play Console submission process including review compliance.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">Push Notifications & Analytics</div><p class="svc-feature-item__desc">Expo Notifications, Firebase, Amplitude, or Mixpanel — we instrument your app for data-driven growth.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">Offline Support & Sync</div><p class="svc-feature-item__desc">Robust offline-first architecture with optimistic UI updates and background sync for uninterrupted user experience.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label">Tech Stack</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-10);">Built with the<br>best tools.</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-3);" class="stagger-children">
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>React Native</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Expo</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Swift</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>SwiftUI</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Kotlin</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Jetpack Compose</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Firebase</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Redux Toolkit</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Zustand</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>GraphQL</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Stripe Payments</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Reanimated 3</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>MMKV Storage</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background:var(--clr-accent-2);"></span>Amplitude</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section" style="background:var(--clr-surface);">
+      <div class="container">
+        <div class="section-label">Engagement Models</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-10);">Transparent<br>pricing.</h2>
+        <div class="svc-grid-3 stagger-children">
+          <div class="pricing-card">
+            <div class="pricing-card__tier">MVP</div>
+            <div class="pricing-card__price">$20k <span>– $40k</span></div>
+            <p class="pricing-card__desc">React Native MVP covering iOS + Android with core feature set and App Store submission.</p>
+            <ul class="pricing-card__features">
+              <li class="pricing-card__feature">iOS + Android (shared codebase)</li>
+              <li class="pricing-card__feature">Up to 10 screens</li>
+              <li class="pricing-card__feature">Auth + user profiles</li>
+              <li class="pricing-card__feature">Push notifications</li>
+              <li class="pricing-card__feature">App Store submission</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--outline" style="width:100%;justify-content:center;">Get Started</a>
+          </div>
+          <div class="pricing-card pricing-card--featured">
+            <div class="pricing-card__tier">Full Product</div>
+            <div class="pricing-card__price">$40k <span>– $100k</span></div>
+            <p class="pricing-card__desc">Feature-complete native or cross-platform app with backend, analytics, and growth tooling.</p>
+            <ul class="pricing-card__features">
+              <li class="pricing-card__feature">Native iOS or React Native</li>
+              <li class="pricing-card__feature">Full backend API</li>
+              <li class="pricing-card__feature">Payments integration</li>
+              <li class="pricing-card__feature">Analytics & A/B testing</li>
+              <li class="pricing-card__feature">Offline support</li>
+              <li class="pricing-card__feature">6 months support</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--primary" style="width:100%;justify-content:center;">Get Started</a>
+          </div>
+          <div class="pricing-card">
+            <div class="pricing-card__tier">Enterprise</div>
+            <div class="pricing-card__price">$100k+</div>
+            <p class="pricing-card__desc">Complex native iOS + Android with custom hardware integrations, enterprise SSO, and MDM.</p>
+            <ul class="pricing-card__features">
+              <li class="pricing-card__feature">Separate native codebases</li>
+              <li class="pricing-card__feature">Enterprise security</li>
+              <li class="pricing-card__feature">Hardware integrations</li>
+              <li class="pricing-card__feature">Dedicated team</li>
+              <li class="pricing-card__feature">12 months support</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--outline" style="width:100%;justify-content:center;">Get Started</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Other Services -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label">Also Explore</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-10);">Our other<br>services.</h2>
+        <div class="svc-grid-3 stagger-children">
+          <a href="web-development.html" class="glass-card service-card" style="display:block;"><div class="service-card__number">01</div><h3 class="service-card__title">Web Development</h3><p class="service-card__desc">Blazing-fast websites and web apps with WebGL and GSAP.</p></a>
+          <a href="saas-development.html" class="glass-card service-card" style="display:block;"><div class="service-card__number">03</div><h3 class="service-card__title">SaaS Development</h3><p class="service-card__desc">End-to-end platforms built to scale from 10 to 10 million users.</p></a>
+          <a href="ui-ux-design.html" class="glass-card service-card" style="display:block;"><div class="service-card__number">05</div><h3 class="service-card__title">UI/UX Design</h3><p class="service-card__desc">Research-driven design systems that balance beauty and conversion.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:var(--gradient-glow);opacity:0.5;" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:1;text-align:center;">
+        <div class="section-label" style="justify-content:center;">Ready to Build?</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-8);">Let's launch your<br>app to the world.</h2>
+        <div class="fade-up" style="display:flex;gap:var(--sp-4);justify-content:center;flex-wrap:wrap;">
+          <div class="magnetic"><div class="magnetic-inner"><a href="../contact.html" class="btn btn--gradient btn--large">Start a Mobile Project</a></div></div>
+          <a href="../work.html" class="btn btn--glass btn--large">View Mobile Work</a>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer" role="contentinfo">
+      <div class="footer__glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="footer__grid">
+          <div><div class="footer__brand">VOREX</div><p class="footer__tagline">An independent digital product studio obsessed with craft and quality.</p></div>
+          <div><p class="footer__col-title">Navigation</p><ul class="footer__links"><li><a href="../index.html" class="footer__link">Home</a></li><li><a href="../work.html" class="footer__link">Work</a></li><li><a href="../services.html" class="footer__link">Services</a></li><li><a href="../studio.html" class="footer__link">Studio</a></li><li><a href="../contact.html" class="footer__link">Contact</a></li></ul></div>
+          <div><p class="footer__col-title">Services</p><ul class="footer__links"><li><a href="web-development.html" class="footer__link">Web Development</a></li><li><a href="mobile-development.html" class="footer__link">Mobile Apps</a></li><li><a href="saas-development.html" class="footer__link">SaaS Products</a></li><li><a href="ai-automation.html" class="footer__link">AI & Automation</a></li><li><a href="ui-ux-design.html" class="footer__link">UI/UX Design</a></li><li><a href="it-consultancy.html" class="footer__link">IT Consultancy</a></li></ul></div>
+          <div><p class="footer__col-title">Contact</p><ul class="footer__links"><li><a href="mailto:hello@vorex.studio" class="footer__link">hello@vorex.studio</a></li><li><a href="tel:+15551234567" class="footer__link">+1 (555) 123-4567</a></li></ul></div>
+        </div>
+        <div class="footer__bottom"><p class="footer__copy">© 2025 VOREX Studio. All rights reserved.</p><div class="footer__social"><a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a><a href="#" class="footer__social-link" aria-label="LinkedIn">in</a><a href="#" class="footer__social-link" aria-label="Dribbble">●</a></div></div>
+      </div>
+    </footer>
+  </main>
+  <script type="module" src="../assets/js/main.js"></script>
+</body>
+</html>

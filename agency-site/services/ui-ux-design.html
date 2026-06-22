@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="VOREX Studio UI/UX Design — Human-centered design that converts. From wireframes to pixel-perfect interfaces, we craft experiences users love." />
+  <title>UI/UX Design — VOREX Studio</title>
+
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/split-type@0.3.3/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@barba/core@2.9.7/dist/barba.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+</head>
+<body data-barba="wrapper">
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress"></div>
+
+  <!-- Custom Cursor -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Page Transition Overlay -->
+  <div class="page-transition-overlay" id="page-overlay"></div>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader__inner">
+      <div class="preloader__logo">VOREX</div>
+      <div class="preloader__counter" id="preloader-counter">0</div>
+      <div class="preloader__bar"><div class="preloader__fill" id="preloader-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo magnetic" data-magnetic>
+        <span class="magnetic-inner">VOREX</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="../work.html" class="nav-link">Work</a></li>
+        <li class="nav-item">
+          <a href="../services.html" class="nav-link active">
+            Services
+            <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <div class="nav-dropdown">
+            <a href="../services/web-development.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">🌐</span>
+              <span class="nav-dropdown__text">Web Development</span>
+            </a>
+            <a href="../services/mobile-development.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">📱</span>
+              <span class="nav-dropdown__text">Mobile Development</span>
+            </a>
+            <a href="../services/saas-development.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">☁️</span>
+              <span class="nav-dropdown__text">SaaS Development</span>
+            </a>
+            <a href="../services/ai-automation.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">🤖</span>
+              <span class="nav-dropdown__text">AI Automation</span>
+            </a>
+            <a href="../services/ui-ux-design.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">🎨</span>
+              <span class="nav-dropdown__text">UI/UX Design</span>
+            </a>
+            <a href="../services/it-consultancy.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">💡</span>
+              <span class="nav-dropdown__text">IT Consultancy</span>
+            </a>
+          </div>
+        </li>
+        <li><a href="../studio.html" class="nav-link">Studio</a></li>
+        <li><a href="../contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="../contact.html" class="btn btn--primary magnetic" data-magnetic>
+          <span class="magnetic-inner">Start Project</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul class="mobile-menu__links">
+      <li><a href="../work.html">Work</a></li>
+      <li><a href="../services.html">Services</a></li>
+      <li><a href="../studio.html">Studio</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <main data-barba="container" data-barba-namespace="service-uiux">
+
+    <!-- Hero Section -->
+    <section class="svc-hero" style="background: linear-gradient(135deg, #060608 0%, #1a0a2e 40%, #0d1f2d 100%); min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 120px;">
+
+      <!-- Decorative Grid -->
+      <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(255,60,172,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,60,172,0.06) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none;"></div>
+
+      <!-- Floating Design Elements -->
+      <div style="position: absolute; top: 15%; right: 8%; width: 340px; height: 340px; pointer-events: none;">
+        <!-- Floating UI Mockup -->
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; animation: float-y 6s ease-in-out infinite; backdrop-filter: blur(10px);">
+          <!-- App Bar -->
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #ff3cac, #7c5cfc);"></div>
+            <div>
+              <div style="height: 8px; width: 80px; background: rgba(255,255,255,0.2); border-radius: 4px; margin-bottom: 4px;"></div>
+              <div style="height: 6px; width: 50px; background: rgba(255,255,255,0.1); border-radius: 3px;"></div>
+            </div>
+            <div style="margin-left: auto; display: flex; gap: 6px;">
+              <div style="width: 24px; height: 24px; border-radius: 6px; background: rgba(255,60,172,0.15);"></div>
+              <div style="width: 24px; height: 24px; border-radius: 6px; background: rgba(255,60,172,0.15);"></div>
+            </div>
+          </div>
+          <!-- Cards row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+            <div style="background: rgba(255,60,172,0.1); border-radius: 10px; padding: 12px;">
+              <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 6px;">Users</div>
+              <div style="font-size: 18px; color: #ff3cac; font-weight: 700;">12.4K</div>
+            </div>
+            <div style="background: rgba(124,92,252,0.1); border-radius: 10px; padding: 12px;">
+              <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 6px;">Retention</div>
+              <div style="font-size: 18px; color: #7c5cfc; font-weight: 700;">94%</div>
+            </div>
+          </div>
+          <!-- List items -->
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px;">
+              <div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #ff3cac, #7c5cfc);"></div>
+              <div>
+                <div style="height: 6px; width: 90px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-bottom: 3px;"></div>
+                <div style="height: 5px; width: 60px; background: rgba(255,255,255,0.1); border-radius: 3px;"></div>
+              </div>
+              <div style="margin-left: auto; height: 6px; width: 30px; background: rgba(255,60,172,0.3); border-radius: 3px;"></div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px;">
+              <div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #00f0ff, #7c5cfc);"></div>
+              <div>
+                <div style="height: 6px; width: 70px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-bottom: 3px;"></div>
+                <div style="height: 5px; width: 50px; background: rgba(255,255,255,0.1); border-radius: 3px;"></div>
+              </div>
+              <div style="margin-left: auto; height: 6px; width: 45px; background: rgba(0,240,255,0.3); border-radius: 3px;"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Color palette floating badge -->
+        <div style="position: absolute; bottom: -20px; left: -30px; background: rgba(255,60,172,0.1); border: 1px solid rgba(255,60,172,0.3); border-radius: 12px; padding: 12px 16px; backdrop-filter: blur(10px); animation: float-slow 8s ease-in-out infinite;">
+          <div style="font-size: 10px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Color Palette</div>
+          <div style="display: flex; gap: 6px;">
+            <div style="width: 20px; height: 20px; border-radius: 50%; background: #ff3cac;"></div>
+            <div style="width: 20px; height: 20px; border-radius: 50%; background: #7c5cfc;"></div>
+            <div style="width: 20px; height: 20px; border-radius: 50%; background: #00f0ff;"></div>
+            <div style="width: 20px; height: 20px; border-radius: 50%; background: #fff;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Glow -->
+      <div style="position: absolute; top: 30%; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, rgba(255,60,172,0.08) 0%, transparent 70%); pointer-events: none;"></div>
+
+      <div class="container" style="position: relative; z-index: 1;">
+        <div style="max-width: 700px;">
+          <div class="section-label" style="color: #ff3cac;" data-reveal="fade-up">Service 05</div>
+          <h1 class="t-display" data-split style="margin-bottom: 24px;">UI/UX<br /><span style="background: linear-gradient(135deg, #ff3cac, #7c5cfc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Design</span></h1>
+          <p class="t-lead" style="color: var(--c-text-muted); margin-bottom: 40px; max-width: 560px;" data-reveal="fade-up">Human-centered design that converts visitors into loyal users. From research and wireframes to pixel-perfect interfaces, we craft experiences people love.</p>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;" data-reveal="fade-up">
+            <a href="../contact.html" class="btn btn--gradient btn--large magnetic" data-magnetic>
+              <span class="magnetic-inner">Start Design Project</span>
+            </a>
+            <a href="#scope" class="btn btn--outline btn--large magnetic" data-magnetic>
+              <span class="magnetic-inner">See What's Included</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section class="section" style="padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div class="svc-grid-2">
+          <div data-reveal="fade-right">
+            <div class="section-label" data-reveal="fade-up">Overview</div>
+            <h2 class="t-h2" style="margin-bottom: 24px;">Design is a <em>competitive advantage</em></h2>
+            <p style="color: var(--c-text-muted); margin-bottom: 20px; line-height: 1.8;">We don't just make things look good — we engineer user experiences that drive measurable business results. Every pixel has purpose, every interaction is intentional.</p>
+            <p style="color: var(--c-text-muted); margin-bottom: 36px; line-height: 1.8;">Our design process fuses deep user research, data analysis, and creative direction to build interfaces that feel effortless. We've helped startups achieve 3x conversion growth and enterprise products cut support tickets by 60%.</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+              <div class="stat-card" style="text-align: center;">
+                <div class="t-display" style="font-size: clamp(2rem, 4vw, 3.5rem); background: linear-gradient(135deg, #ff3cac, #7c5cfc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-count="3.2" data-suffix="x" data-decimals="1">0</div>
+                <div style="color: var(--c-text-muted); font-size: 0.875rem;">Avg Conversion Lift</div>
+              </div>
+              <div class="stat-card" style="text-align: center;">
+                <div class="t-display" style="font-size: clamp(2rem, 4vw, 3.5rem); background: linear-gradient(135deg, #ff3cac, #7c5cfc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-count="60" data-suffix="%">0</div>
+                <div style="color: var(--c-text-muted); font-size: 0.875rem;">Drop in Support Tickets</div>
+              </div>
+            </div>
+          </div>
+          <div class="svc-visual" data-reveal="fade-left">
+            <!-- Wireframe mockup -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; height: 100%; min-height: 320px; display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Wireframe → Hi-Fi</span>
+                <div style="display: flex; gap: 4px;">
+                  <div style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,60,172,0.6);"></div>
+                  <div style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,200,0,0.6);"></div>
+                  <div style="width: 10px; height: 10px; border-radius: 50%; background: rgba(0,200,100,0.6);"></div>
+                </div>
+              </div>
+              <!-- Before/After split -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1;">
+                <div style="border: 1px dashed rgba(255,255,255,0.15); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+                  <div style="font-size: 10px; color: rgba(255,255,255,0.3); text-align: center; margin-bottom: 4px;">WIREFRAME</div>
+                  <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px;"></div>
+                  <div style="height: 40px; background: rgba(255,255,255,0.05); border-radius: 6px; border: 1px dashed rgba(255,255,255,0.1);"></div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                    <div style="height: 30px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+                    <div style="height: 30px; background: rgba(255,255,255,0.05); border-radius: 4px;"></div>
+                  </div>
+                  <div style="height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; width: 70%;"></div>
+                  <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; width: 50%;"></div>
+                </div>
+                <div style="border: 1px solid rgba(255,60,172,0.3); border-radius: 10px; padding: 12px; background: rgba(255,60,172,0.04); display: flex; flex-direction: column; gap: 8px;">
+                  <div style="font-size: 10px; color: #ff3cac; text-align: center; margin-bottom: 4px;">HI-FIDELITY</div>
+                  <div style="height: 8px; background: linear-gradient(90deg, #ff3cac, #7c5cfc); border-radius: 4px; width: 60%;"></div>
+                  <div style="height: 40px; background: linear-gradient(135deg, rgba(255,60,172,0.1), rgba(124,92,252,0.1)); border-radius: 6px; border: 1px solid rgba(255,60,172,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px;">🖼️</div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                    <div style="height: 30px; background: linear-gradient(135deg, rgba(255,60,172,0.2), rgba(124,92,252,0.2)); border-radius: 4px;"></div>
+                    <div style="height: 30px; background: rgba(255,255,255,0.06); border-radius: 4px;"></div>
+                  </div>
+                  <div style="height: 6px; background: rgba(255,60,172,0.4); border-radius: 3px; width: 70%;"></div>
+                  <div style="height: 6px; background: rgba(124,92,252,0.3); border-radius: 3px; width: 50%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scope Section -->
+    <section class="section" id="scope" style="background: rgba(255,255,255,0.01); padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div class="svc-grid-2">
+          <div data-reveal="fade-right">
+            <div class="section-label" data-reveal="fade-up">What's Included</div>
+            <h2 class="t-h2">End-to-end design, <em>zero gaps</em></h2>
+          </div>
+          <div>
+            <ul class="svc-feature-list">
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>User Research & Personas</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Interviews, surveys, competitive analysis, and persona development to ground every design decision in real user needs.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Information Architecture & User Flows</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Sitemaps, task flows, and journey maps that ensure users always know where they are and where to go next.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Wireframing & Prototyping</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Low and mid-fidelity wireframes validated with stakeholders before investing in high-fidelity work. Clickable Figma prototypes for user testing.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Visual Design & Design System</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Pixel-perfect UI screens with a scalable design system: tokens, components, spacing, typography, and iconography.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Motion Design & Micro-interactions</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Animation principles applied to transitions, loading states, and feedback moments that delight without distracting.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Usability Testing & Iteration</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Moderated and unmoderated testing sessions, heatmap analysis, A/B test setup, and iterative refinement cycles.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="section" style="padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 48px;">
+          <div class="section-label" data-reveal="fade-up">Our Toolkit</div>
+          <h2 class="t-h2" data-reveal="fade-up">Design tools we master</h2>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;" data-reveal="fade-up">
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #ff3cac;"></span>Figma</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>FigJam</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>Framer</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #ff3cac;"></span>Principle</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Lottie / AE</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>Spline 3D</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #ff3cac;"></span>Maze</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Hotjar</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>Lookback</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #ff3cac;"></span>Miro</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Notion</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>Zeroheight</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #ff3cac;"></span>Storybook</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Adobe XD</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>Illustrator</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #ff3cac;"></span>Rotato</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section" style="background: rgba(255,255,255,0.01); padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 56px;">
+          <div class="section-label" data-reveal="fade-up">Investment</div>
+          <h2 class="t-h2" data-reveal="fade-up">Transparent pricing</h2>
+          <p style="color: var(--c-text-muted); max-width: 500px; margin: 16px auto 0;" data-reveal="fade-up">Design sprints to full product design systems. Choose the scope that fits your stage.</p>
+        </div>
+        <div class="svc-grid-3">
+
+          <div class="pricing-card" data-reveal="fade-up">
+            <div class="pricing-card__tier">Design Sprint</div>
+            <div class="pricing-card__price">$8k–$20k</div>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-bottom: 24px;">2–4 weeks. Rapid discovery, wireframes, and a polished prototype to validate your concept.</p>
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+              <li class="pricing-card__feature">✓ User research (5–8 interviews)</li>
+              <li class="pricing-card__feature">✓ Competitive audit</li>
+              <li class="pricing-card__feature">✓ User flows & IA</li>
+              <li class="pricing-card__feature">✓ Low-fi wireframes</li>
+              <li class="pricing-card__feature">✓ Hi-fi prototype (10–20 screens)</li>
+              <li class="pricing-card__feature">✓ 1 round of usability testing</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--outline" style="width: 100%; margin-top: 28px; text-align: center;">Get Started</a>
+          </div>
+
+          <div class="pricing-card pricing-card--featured" data-reveal="fade-up">
+            <div class="pricing-card__tier">Full Product Design</div>
+            <div class="pricing-card__price">$20k–$60k</div>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-bottom: 24px;">6–12 weeks. Complete design system, all screens, motion design, and dev handoff.</p>
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+              <li class="pricing-card__feature">✓ Everything in Sprint</li>
+              <li class="pricing-card__feature">✓ Full design system & tokens</li>
+              <li class="pricing-card__feature">✓ 50–150+ screens</li>
+              <li class="pricing-card__feature">✓ Motion design spec</li>
+              <li class="pricing-card__feature">✓ Accessibility audit (WCAG 2.1 AA)</li>
+              <li class="pricing-card__feature">✓ Developer handoff package</li>
+              <li class="pricing-card__feature">✓ 3 rounds of usability testing</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--gradient" style="width: 100%; margin-top: 28px; text-align: center;">Most Popular</a>
+          </div>
+
+          <div class="pricing-card" data-reveal="fade-up">
+            <div class="pricing-card__tier">Design Partnership</div>
+            <div class="pricing-card__price">$60k+</div>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-bottom: 24px;">Ongoing retainer. Your embedded design team — strategy, execution, and continuous improvement.</p>
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+              <li class="pricing-card__feature">✓ Dedicated design lead</li>
+              <li class="pricing-card__feature">✓ Unlimited design requests</li>
+              <li class="pricing-card__feature">✓ Weekly strategy sessions</li>
+              <li class="pricing-card__feature">✓ Continuous A/B testing</li>
+              <li class="pricing-card__feature">✓ Analytics integration</li>
+              <li class="pricing-card__feature">✓ Priority support 24/7</li>
+              <li class="pricing-card__feature">✓ Quarterly design audits</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--outline" style="width: 100%; margin-top: 28px; text-align: center;">Talk to Us</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Other Services Section -->
+    <section class="section" style="padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 48px;">
+          <div class="section-label" data-reveal="fade-up">Explore More</div>
+          <h2 class="t-h2" data-reveal="fade-up">Other services</h2>
+        </div>
+        <div class="svc-grid-3">
+          <a href="web-development.html" class="glass-card service-card" data-reveal="fade-up" style="text-decoration: none; display: block;">
+            <div style="font-size: 2.5rem; margin-bottom: 16px;">🌐</div>
+            <h3 style="margin-bottom: 8px;">Web Development</h3>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem;">Award-winning websites and web apps that perform as great as they look.</p>
+          </a>
+          <a href="saas-development.html" class="glass-card service-card" data-reveal="fade-up" style="text-decoration: none; display: block;">
+            <div style="font-size: 2.5rem; margin-bottom: 16px;">☁️</div>
+            <h3 style="margin-bottom: 8px;">SaaS Development</h3>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem;">Scalable SaaS platforms with the architecture to grow from 0 to millions.</p>
+          </a>
+          <a href="ai-automation.html" class="glass-card service-card" data-reveal="fade-up" style="text-decoration: none; display: block;">
+            <div style="font-size: 2.5rem; margin-bottom: 16px;">🤖</div>
+            <h3 style="margin-bottom: 8px;">AI Automation</h3>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem;">Intelligent automation and AI agents that eliminate manual work and unlock scale.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section" style="background: linear-gradient(135deg, rgba(255,60,172,0.08), rgba(124,92,252,0.08)); padding: var(--space-2xl) 0;">
+      <div class="container" style="text-align: center;">
+        <div class="section-label" data-reveal="fade-up">Ready to Start?</div>
+        <h2 class="t-h2" style="max-width: 600px; margin: 0 auto 24px;" data-reveal="fade-up">Let's design something <em>extraordinary</em></h2>
+        <p style="color: var(--c-text-muted); max-width: 480px; margin: 0 auto 40px;" data-reveal="fade-up">Every great product starts with a conversation. Tell us about your users, your goals, and let's figure out the rest together.</p>
+        <a href="../contact.html" class="btn btn--gradient btn--large magnetic" data-magnetic data-reveal="fade-up">
+          <span class="magnetic-inner">Book a Design Call</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer__top">
+        <div class="container">
+          <div class="footer__grid">
+            <div class="footer__brand">
+              <div class="footer__logo">VOREX</div>
+              <p class="footer__tagline">We build digital experiences that move people and drive results.</p>
+              <div class="footer__socials">
+                <a href="#" class="footer__social" aria-label="Twitter">𝕏</a>
+                <a href="#" class="footer__social" aria-label="LinkedIn">in</a>
+                <a href="#" class="footer__social" aria-label="Dribbble">🏀</a>
+                <a href="#" class="footer__social" aria-label="GitHub">⌥</a>
+              </div>
+            </div>
+            <div class="footer__nav">
+              <h4>Studio</h4>
+              <ul>
+                <li><a href="../work.html">Our Work</a></li>
+                <li><a href="../studio.html">About Us</a></li>
+                <li><a href="../studio.html#team">Team</a></li>
+                <li><a href="../studio.html#awards">Awards</a></li>
+              </ul>
+            </div>
+            <div class="footer__nav">
+              <h4>Services</h4>
+              <ul>
+                <li><a href="web-development.html">Web Development</a></li>
+                <li><a href="mobile-development.html">Mobile Apps</a></li>
+                <li><a href="saas-development.html">SaaS Platforms</a></li>
+                <li><a href="ai-automation.html">AI Automation</a></li>
+                <li><a href="ui-ux-design.html">UI/UX Design</a></li>
+                <li><a href="it-consultancy.html">IT Consultancy</a></li>
+              </ul>
+            </div>
+            <div class="footer__nav">
+              <h4>Connect</h4>
+              <ul>
+                <li><a href="../contact.html">Start a Project</a></li>
+                <li><a href="mailto:hello@vorex.studio">hello@vorex.studio</a></li>
+                <li><a href="tel:+14155550123">+1 (415) 555-0123</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <div class="container">
+          <p>&copy; 2025 VOREX Studio. All rights reserved.</p>
+          <div class="footer__legal">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <script type="module" src="../assets/js/main.js"></script>
+  <script type="module" src="../assets/js/cursor.js"></script>
+  <script type="module" src="../assets/js/smooth-scroll.js"></script>
+  <script type="module" src="../assets/js/gsap-animations.js"></script>
+  <script type="module" src="../assets/js/page-transitions.js"></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI & Automation — VOREX Studio</title>
+  <meta name="description" content="Custom LLM integrations, RAG pipelines, AI agents, and intelligent automation. We build AI-powered features that actually work in production." />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/main.css" /><link rel="stylesheet" href="../assets/css/components.css" /><link rel="stylesheet" href="../assets/css/animations.css" /><link rel="stylesheet" href="../assets/css/responsive.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script><script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script><script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7/dist/barba.umd.min.js"></script>
+  <style>.svc-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-16);align-items:start;}.svc-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-5);}@media(max-width:1023px){.svc-grid-2{grid-template-columns:1fr;gap:var(--sp-10);}.svc-grid-3{grid-template-columns:1fr 1fr;}}@media(max-width:767px){.svc-grid-3{grid-template-columns:1fr;}}</style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div><div id="scroll-progress" aria-hidden="true"></div><div id="cursor-dot" aria-hidden="true"></div><div id="cursor-ring" aria-hidden="true"></div>
+  <div id="page-transition" aria-hidden="true"><div class="transition-panel"></div><div class="transition-panel"></div></div>
+  <div id="preloader" role="status"><div class="preloader__logo">VOR<span>EX</span></div><div class="preloader__counter" id="preloader-counter">0</div><div class="preloader__bar-wrap"><div class="preloader__bar" id="preloader-bar"></div></div><div class="preloader__label">Loading Experience</div></div>
+
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container"><div class="nav-inner">
+      <a href="../index.html" class="nav-logo">VOR<span>EX</span></a>
+      <ul class="nav-links" role="list">
+        <li><a href="../index.html" class="nav-link">Home</a></li>
+        <li><a href="../work.html" class="nav-link">Work</a></li>
+        <li class="nav-item">
+          <a href="../services.html" class="nav-link active">Services<svg class="dropdown-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l4 4 4-4"/></svg></a>
+          <div class="nav-dropdown">
+            <a href="web-development.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="nav-dropdown__text"><strong>Web Development</strong><span>Next.js, React, WebGL</span></div></a>
+            <a href="mobile-development.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div><div class="nav-dropdown__text"><strong>Mobile Development</strong><span>iOS, Android, React Native</span></div></a>
+            <a href="saas-development.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="nav-dropdown__text"><strong>SaaS Development</strong><span>Scalable platforms</span></div></a>
+            <div class="nav-dropdown__divider"></div>
+            <a href="ai-automation.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg></div><div class="nav-dropdown__text"><strong>AI & Automation</strong><span>LLMs, agents, pipelines</span></div></a>
+            <a href="ui-ux-design.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg></div><div class="nav-dropdown__text"><strong>UI/UX Design</strong><span>Figma, systems, prototypes</span></div></a>
+            <a href="it-consultancy.html" class="nav-dropdown__item"><div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="nav-dropdown__text"><strong>IT Consultancy</strong><span>Architecture, security</span></div></a>
+          </div>
+        </li>
+        <li><a href="../studio.html" class="nav-link">Studio</a></li>
+        <li><a href="../contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-right"><button class="sound-toggle" aria-label="Toggle sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></button><a href="../contact.html" class="nav-cta">Start a Project</a><button class="nav-hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button></div>
+    </div></div>
+  </nav>
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation"><nav class="mobile-menu__links"><a href="../index.html" class="mobile-menu__link"><span>Home</span></a><a href="../work.html" class="mobile-menu__link"><span>Work</span></a><a href="../services.html" class="mobile-menu__link"><span>Services</span></a><a href="../studio.html" class="mobile-menu__link"><span>Studio</span></a><a href="../contact.html" class="mobile-menu__link"><span>Contact</span></a></nav><div class="mobile-menu__footer"><span>© 2025 VOREX</span><a href="mailto:hello@vorex.studio">hello@vorex.studio</a></div></div>
+
+  <main id="main-content" data-barba="container" data-barba-namespace="service-ai">
+
+    <section class="section section--lg" style="min-height:70vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0a0820 0%,#060608 70%);" aria-hidden="true"></div>
+      <div class="glow-bg glow-bg--accent" style="top:-10%;right:5%;opacity:0.25;" aria-hidden="true"></div>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;" aria-hidden="true">
+        <div style="position:relative;width:280px;height:280px;">
+          <div style="position:absolute;inset:0;border-radius:50%;border:1px solid rgba(124,92,252,0.1);animation:map-ring 4s infinite;"></div>
+          <div style="position:absolute;inset:30px;border-radius:50%;border:1px solid rgba(124,92,252,0.18);animation:map-ring 4s infinite .6s;"></div>
+          <div style="position:absolute;inset:60px;border-radius:50%;border:1px solid rgba(124,92,252,0.3);animation:map-ring 4s infinite 1.2s;"></div>
+          <div style="position:absolute;inset:90px;border-radius:50%;border:1px solid rgba(124,92,252,0.45);animation:map-ring 4s infinite 1.8s;"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:60px;height:60px;border-radius:50%;background:rgba(124,92,252,0.25);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🤖</div></div>
+        </div>
+      </div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(6,6,8,0.95) 40%,rgba(6,6,8,0.2) 100%);" aria-hidden="true"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to top,var(--clr-bg),transparent);" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:2;padding-bottom:var(--sp-16);">
+        <div class="section-label">Service 04</div>
+        <h1 class="t-display" data-split="lines" style="max-width:800px;margin-bottom:var(--sp-6);">AI &amp;<br>Automation.</h1>
+        <p class="t-large fade-up" style="max-width:560px;color:var(--clr-muted);margin-bottom:var(--sp-10);">Custom LLM integrations, intelligent agents, RAG pipelines, and automation workflows that give your product a genuine competitive edge.</p>
+        <div class="fade-up" style="display:flex;gap:var(--sp-4);flex-wrap:wrap;">
+          <a href="../contact.html" class="btn btn--primary btn--large">Start an AI Project</a>
+          <a href="../work.html" class="btn btn--glass btn--large">View AI Work</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="svc-grid-2">
+          <div>
+            <div class="section-label">What We Build</div>
+            <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-6);">AI that actually<br>ships to prod.</h2>
+            <p class="t-body" style="margin-bottom:var(--sp-5);">We've been integrating AI into production systems since the GPT-3 era. We know the failure modes — hallucinations, latency, cost blowouts, prompt injection — and how to engineer around them.</p>
+            <p class="t-body" style="margin-bottom:var(--sp-10);">From simple AI-powered features to full agentic systems with tool use, memory, and multi-step reasoning, we build AI that works reliably in the real world.</p>
+            <div style="display:flex;gap:var(--sp-8);">
+              <div class="stat-card" style="padding:0;border:none;"><div class="stat-card__number"><span data-count="40" data-suffix="+">0+</span></div><p class="stat-card__label">AI integrations shipped</p></div>
+              <div class="stat-card" style="padding:0;border:none;"><div class="stat-card__number"><span data-count="3" data-suffix="x">0x</span></div><p class="stat-card__label">Avg. productivity gain</p></div>
+            </div>
+          </div>
+          <div class="svc-visual img-reveal-wrap" style="background:linear-gradient(135deg,#0a0820,#201060);">
+            <div style="position:absolute;inset:0;padding:28px;display:flex;flex-direction:column;gap:14px;" aria-hidden="true">
+              <div style="padding:12px 16px;background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.15);border-radius:10px;">
+                <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;">User</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.7);">Summarise this 50-page contract and flag the risk clauses.</div>
+              </div>
+              <div style="padding:12px 16px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:10px;">
+                <div style="font-size:10px;color:rgba(16,185,129,0.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;">AI Agent</div>
+                <div style="height:4px;background:rgba(16,185,129,0.2);border-radius:2px;margin-bottom:5px;"></div>
+                <div style="height:4px;background:rgba(16,185,129,0.15);border-radius:2px;margin-bottom:5px;width:80%;"></div>
+                <div style="height:4px;background:rgba(16,185,129,0.2);border-radius:2px;margin-bottom:5px;width:90%;"></div>
+                <div style="height:4px;background:rgba(16,185,129,0.12);border-radius:2px;width:60%;"></div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <div style="padding:4px 10px;background:rgba(124,92,252,0.12);border:1px solid rgba(124,92,252,0.2);border-radius:20px;font-size:10px;color:rgba(124,92,252,0.8);">Tool: PDF Parser</div>
+                <div style="padding:4px 10px;background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.2);border-radius:20px;font-size:10px;color:rgba(0,240,255,0.7);">Tool: Vector Search</div>
+                <div style="padding:4px 10px;background:rgba(255,60,172,0.1);border:1px solid rgba(255,60,172,0.2);border-radius:20px;font-size:10px;color:rgba(255,60,172,0.7);">Tool: Risk DB</div>
+              </div>
+              <div style="flex:1;display:flex;align-items:flex-end;gap:6px;">
+                <div style="height:50%;background:rgba(124,92,252,0.15);border-radius:3px 3px 0 0;flex:1;"></div>
+                <div style="height:80%;background:rgba(124,92,252,0.25);border-radius:3px 3px 0 0;flex:1;"></div>
+                <div style="height:65%;background:rgba(124,92,252,0.18);border-radius:3px 3px 0 0;flex:1;"></div>
+                <div style="height:90%;background:rgba(124,92,252,0.3);border-radius:3px 3px 0 0;flex:1;"></div>
+                <div style="height:70%;background:rgba(124,92,252,0.2);border-radius:3px 3px 0 0;flex:1;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background:var(--clr-surface);">
+      <div class="container">
+        <div class="svc-grid-2" style="gap:var(--sp-12);">
+          <div><div class="section-label">Scope of Work</div><h2 class="t-title" data-split="lines">Everything<br>included.</h2></div>
+          <div class="svc-feature-list fade-up">
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">LLM Integration (Claude, GPT-4, Gemini)</div><p class="svc-feature-item__desc">Model selection, prompt engineering, system prompts, output parsing, and structured JSON generation with Zod validation.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">RAG Pipelines</div><p class="svc-feature-item__desc">Vector embeddings, semantic search, hybrid retrieval, re-ranking, and context window management for accurate, grounded responses.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">AI Agents & Tool Use</div><p class="svc-feature-item__desc">Multi-step agentic systems with tool use, memory, planning, and human-in-the-loop approval flows.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">Workflow Automation</div><p class="svc-feature-item__desc">n8n, Zapier, or custom automation pipelines to eliminate manual tasks and connect your existing tool stack.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">Fine-Tuning & Evaluation</div><p class="svc-feature-item__desc">Custom model fine-tuning on your data, eval harnesses, and ongoing prompt optimization to improve accuracy over time.</p></div></div>
+            <div class="svc-feature-item"><div class="svc-feature-item__check">✓</div><div><div class="svc-feature-item__title">Cost & Latency Optimisation</div><p class="svc-feature-item__desc">Prompt caching, model routing, output streaming, and batching strategies to cut AI costs by up to 80%.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-label">Tech Stack</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-10);">Built with the<br>best tools.</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-3);" class="stagger-children">
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Anthropic Claude</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>OpenAI GPT-4o</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Gemini 2.0</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>LangChain / LangGraph</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>LlamaIndex</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Pinecone</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Weaviate</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>pgvector</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Python / FastAPI</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Vercel AI SDK</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>n8n</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Inngest</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Hugging Face</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>OpenTelemetry</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Weights & Biases</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background:var(--clr-surface);">
+      <div class="container">
+        <div class="section-label">Engagement Models</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-10);">Transparent<br>pricing.</h2>
+        <div class="svc-grid-3 stagger-children">
+          <div class="pricing-card"><div class="pricing-card__tier">AI Feature</div><div class="pricing-card__price">$10k <span>– $30k</span></div><p class="pricing-card__desc">Add a single AI-powered feature to an existing product — chatbot, summariser, classifier, or generator.</p><ul class="pricing-card__features"><li class="pricing-card__feature">LLM integration</li><li class="pricing-card__feature">Prompt engineering</li><li class="pricing-card__feature">Output validation</li><li class="pricing-card__feature">Cost optimisation</li><li class="pricing-card__feature">3 months support</li></ul><a href="../contact.html" class="btn btn--outline" style="width:100%;justify-content:center;">Get Started</a></div>
+          <div class="pricing-card pricing-card--featured"><div class="pricing-card__tier">AI Platform</div><div class="pricing-card__price">$30k <span>– $80k</span></div><p class="pricing-card__desc">Full RAG system or agentic pipeline with vector search, tool use, memory, and evaluation framework.</p><ul class="pricing-card__features"><li class="pricing-card__feature">RAG pipeline</li><li class="pricing-card__feature">Vector database</li><li class="pricing-card__feature">Agent framework</li><li class="pricing-card__feature">Eval harness</li><li class="pricing-card__feature">Dashboard & monitoring</li><li class="pricing-card__feature">6 months support</li></ul><a href="../contact.html" class="btn btn--primary" style="width:100%;justify-content:center;">Get Started</a></div>
+          <div class="pricing-card"><div class="pricing-card__tier">Enterprise AI</div><div class="pricing-card__price">$80k+</div><p class="pricing-card__desc">Custom fine-tuned models, on-premise deployment, and organisation-wide automation transformation.</p><ul class="pricing-card__features"><li class="pricing-card__feature">Custom fine-tuning</li><li class="pricing-card__feature">On-premise / private cloud</li><li class="pricing-card__feature">Security & compliance</li><li class="pricing-card__feature">Dedicated AI team</li><li class="pricing-card__feature">12 months support</li></ul><a href="../contact.html" class="btn btn--outline" style="width:100%;justify-content:center;">Get Started</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section"><div class="container"><div class="section-label">Also Explore</div><h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-10);">Our other<br>services.</h2><div class="svc-grid-3 stagger-children"><a href="saas-development.html" class="glass-card service-card" style="display:block;"><div class="service-card__number">03</div><h3 class="service-card__title">SaaS Development</h3><p class="service-card__desc">Build the SaaS platform your AI features live in.</p></a><a href="web-development.html" class="glass-card service-card" style="display:block;"><div class="service-card__number">01</div><h3 class="service-card__title">Web Development</h3><p class="service-card__desc">Blazing-fast web interfaces for your AI product.</p></a><a href="it-consultancy.html" class="glass-card service-card" style="display:block;"><div class="service-card__number">06</div><h3 class="service-card__title">IT Consultancy</h3><p class="service-card__desc">Architecture and security review for AI deployments.</p></a></div></div></section>
+
+    <section class="section" style="position:relative;overflow:hidden;"><div style="position:absolute;inset:0;background:var(--gradient-glow);opacity:0.5;" aria-hidden="true"></div><div class="container" style="position:relative;z-index:1;text-align:center;"><div class="section-label" style="justify-content:center;">Ready to Build?</div><h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-8);">Let's build your<br>AI advantage.</h2><div class="fade-up" style="display:flex;gap:var(--sp-4);justify-content:center;flex-wrap:wrap;"><div class="magnetic"><div class="magnetic-inner"><a href="../contact.html" class="btn btn--gradient btn--large">Start an AI Project</a></div></div><a href="../work.html" class="btn btn--glass btn--large">View AI Work</a></div></div></section>
+
+    <footer id="footer" role="contentinfo"><div class="footer__glow" aria-hidden="true"></div><div class="container"><div class="footer__grid"><div><div class="footer__brand">VOREX</div><p class="footer__tagline">An independent digital product studio obsessed with craft and quality.</p></div><div><p class="footer__col-title">Navigation</p><ul class="footer__links"><li><a href="../index.html" class="footer__link">Home</a></li><li><a href="../work.html" class="footer__link">Work</a></li><li><a href="../services.html" class="footer__link">Services</a></li><li><a href="../studio.html" class="footer__link">Studio</a></li><li><a href="../contact.html" class="footer__link">Contact</a></li></ul></div><div><p class="footer__col-title">Services</p><ul class="footer__links"><li><a href="web-development.html" class="footer__link">Web Development</a></li><li><a href="mobile-development.html" class="footer__link">Mobile Apps</a></li><li><a href="saas-development.html" class="footer__link">SaaS Products</a></li><li><a href="ai-automation.html" class="footer__link">AI & Automation</a></li><li><a href="ui-ux-design.html" class="footer__link">UI/UX Design</a></li><li><a href="it-consultancy.html" class="footer__link">IT Consultancy</a></li></ul></div><div><p class="footer__col-title">Contact</p><ul class="footer__links"><li><a href="mailto:hello@vorex.studio" class="footer__link">hello@vorex.studio</a></li><li><a href="tel:+15551234567" class="footer__link">+1 (555) 123-4567</a></li></ul></div></div><div class="footer__bottom"><p class="footer__copy">© 2025 VOREX Studio. All rights reserved.</p><div class="footer__social"><a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a><a href="#" class="footer__social-link" aria-label="LinkedIn">in</a><a href="#" class="footer__social-link" aria-label="Dribbble">●</a></div></div></div></footer>
+  </main>
+  <script type="module" src="../assets/js/main.js"></script>
+</body>
+</html>

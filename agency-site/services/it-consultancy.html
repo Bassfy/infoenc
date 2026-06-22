@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="VOREX Studio IT Consultancy — Strategic technology advisory that turns complexity into competitive advantage. Architecture reviews, digital transformation, and tech leadership." />
+  <title>IT Consultancy — VOREX Studio</title>
+
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/CustomEase.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/split-type@0.3.3/umd/index.min.js"></script>
+  <script src="https://unpkg.com/@barba/core@2.9.7/dist/barba.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+</head>
+<body data-barba="wrapper">
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress"></div>
+
+  <!-- Custom Cursor -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Page Transition Overlay -->
+  <div class="page-transition-overlay" id="page-overlay"></div>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader__inner">
+      <div class="preloader__logo">VOREX</div>
+      <div class="preloader__counter" id="preloader-counter">0</div>
+      <div class="preloader__bar"><div class="preloader__fill" id="preloader-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo magnetic" data-magnetic>
+        <span class="magnetic-inner">VOREX</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="../work.html" class="nav-link">Work</a></li>
+        <li class="nav-item">
+          <a href="../services.html" class="nav-link active">
+            Services
+            <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <div class="nav-dropdown">
+            <a href="../services/web-development.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">🌐</span>
+              <span class="nav-dropdown__text">Web Development</span>
+            </a>
+            <a href="../services/mobile-development.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">📱</span>
+              <span class="nav-dropdown__text">Mobile Development</span>
+            </a>
+            <a href="../services/saas-development.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">☁️</span>
+              <span class="nav-dropdown__text">SaaS Development</span>
+            </a>
+            <a href="../services/ai-automation.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">🤖</span>
+              <span class="nav-dropdown__text">AI Automation</span>
+            </a>
+            <a href="../services/ui-ux-design.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">🎨</span>
+              <span class="nav-dropdown__text">UI/UX Design</span>
+            </a>
+            <a href="../services/it-consultancy.html" class="nav-dropdown__item">
+              <span class="nav-dropdown__icon">💡</span>
+              <span class="nav-dropdown__text">IT Consultancy</span>
+            </a>
+          </div>
+        </li>
+        <li><a href="../studio.html" class="nav-link">Studio</a></li>
+        <li><a href="../contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="../contact.html" class="btn btn--primary magnetic" data-magnetic>
+          <span class="magnetic-inner">Start Project</span>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul class="mobile-menu__links">
+      <li><a href="../work.html">Work</a></li>
+      <li><a href="../services.html">Services</a></li>
+      <li><a href="../studio.html">Studio</a></li>
+      <li><a href="../contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <main data-barba="container" data-barba-namespace="service-it">
+
+    <!-- Hero Section -->
+    <section class="svc-hero" style="background: linear-gradient(135deg, #060608 0%, #0d1a0d 40%, #1a1a0d 100%); min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 120px;">
+
+      <!-- Decorative Grid -->
+      <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(0,240,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,255,0.05) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none;"></div>
+
+      <!-- Architecture Diagram Visual -->
+      <div style="position: absolute; top: 50%; right: 5%; transform: translateY(-50%); width: 360px; pointer-events: none;">
+        <!-- System Architecture Diagram -->
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0,240,255,0.15); border-radius: 16px; padding: 24px; backdrop-filter: blur(10px); animation: float-y 7s ease-in-out infinite;">
+          <div style="font-size: 10px; color: rgba(0,240,255,0.6); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">System Architecture</div>
+
+          <!-- Top layer -->
+          <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+            <div style="background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.3); border-radius: 8px; padding: 8px 20px; font-size: 11px; color: rgba(0,240,255,0.8);">Client Layer</div>
+          </div>
+          <!-- Arrow -->
+          <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+            <div style="width: 1px; height: 16px; background: rgba(0,240,255,0.3);"></div>
+          </div>
+          <!-- Mid layer -->
+          <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 8px;">
+            <div style="background: rgba(124,92,252,0.1); border: 1px solid rgba(124,92,252,0.3); border-radius: 8px; padding: 6px 12px; font-size: 10px; color: rgba(124,92,252,0.8);">API Gateway</div>
+            <div style="background: rgba(124,92,252,0.1); border: 1px solid rgba(124,92,252,0.3); border-radius: 8px; padding: 6px 12px; font-size: 10px; color: rgba(124,92,252,0.8);">Auth Service</div>
+          </div>
+          <!-- Arrows -->
+          <div style="display: flex; justify-content: center; gap: 50px; margin-bottom: 8px;">
+            <div style="width: 1px; height: 16px; background: rgba(124,92,252,0.3);"></div>
+            <div style="width: 1px; height: 16px; background: rgba(124,92,252,0.3);"></div>
+          </div>
+          <!-- Service layer -->
+          <div style="display: flex; justify-content: space-between; gap: 6px; margin-bottom: 8px;">
+            <div style="flex: 1; background: rgba(255,60,172,0.08); border: 1px solid rgba(255,60,172,0.2); border-radius: 6px; padding: 6px 4px; font-size: 9px; text-align: center; color: rgba(255,60,172,0.7);">Users</div>
+            <div style="flex: 1; background: rgba(255,60,172,0.08); border: 1px solid rgba(255,60,172,0.2); border-radius: 6px; padding: 6px 4px; font-size: 9px; text-align: center; color: rgba(255,60,172,0.7);">Orders</div>
+            <div style="flex: 1; background: rgba(255,60,172,0.08); border: 1px solid rgba(255,60,172,0.2); border-radius: 6px; padding: 6px 4px; font-size: 9px; text-align: center; color: rgba(255,60,172,0.7);">Notify</div>
+          </div>
+          <!-- Arrow down -->
+          <div style="display: flex; justify-content: center; margin-bottom: 8px;">
+            <div style="width: 1px; height: 16px; background: rgba(255,255,255,0.2);"></div>
+          </div>
+          <!-- Data layer -->
+          <div style="display: flex; justify-content: center; gap: 8px;">
+            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 14px; font-size: 10px; color: rgba(255,255,255,0.5);">PostgreSQL</div>
+            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 14px; font-size: 10px; color: rgba(255,255,255,0.5);">Redis</div>
+          </div>
+        </div>
+
+        <!-- Uptime badge -->
+        <div style="position: absolute; top: -16px; left: -20px; background: rgba(0,200,100,0.1); border: 1px solid rgba(0,200,100,0.3); border-radius: 12px; padding: 10px 16px; backdrop-filter: blur(10px); animation: float-slow 9s ease-in-out infinite;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: #00c864; box-shadow: 0 0 8px #00c864;"></div>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.7);">99.99% Uptime</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Glow -->
+      <div style="position: absolute; top: 30%; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, rgba(0,240,255,0.06) 0%, transparent 70%); pointer-events: none;"></div>
+
+      <div class="container" style="position: relative; z-index: 1;">
+        <div style="max-width: 700px;">
+          <div class="section-label" style="color: #00f0ff;" data-reveal="fade-up">Service 06</div>
+          <h1 class="t-display" data-split style="margin-bottom: 24px;">IT<br /><span style="background: linear-gradient(135deg, #00f0ff, #7c5cfc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Consultancy</span></h1>
+          <p class="t-lead" style="color: var(--c-text-muted); margin-bottom: 40px; max-width: 560px;" data-reveal="fade-up">Strategic technology advisory that turns complexity into competitive advantage. Architecture reviews, digital transformation roadmaps, and fractional CTO expertise on demand.</p>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;" data-reveal="fade-up">
+            <a href="../contact.html" class="btn btn--gradient btn--large magnetic" data-magnetic>
+              <span class="magnetic-inner">Book a Strategy Call</span>
+            </a>
+            <a href="#scope" class="btn btn--outline btn--large magnetic" data-magnetic>
+              <span class="magnetic-inner">See What We Cover</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section class="section" style="padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div class="svc-grid-2">
+          <div data-reveal="fade-right">
+            <div class="section-label" data-reveal="fade-up">Overview</div>
+            <h2 class="t-h2" style="margin-bottom: 24px;">Technology strategy that <em>actually delivers</em></h2>
+            <p style="color: var(--c-text-muted); margin-bottom: 20px; line-height: 1.8;">Most IT consultancies tell you what's wrong. We tell you what to do about it — and help you do it. Our advisors have built and scaled systems at companies ranging from Series A startups to Fortune 500 enterprises.</p>
+            <p style="color: var(--c-text-muted); margin-bottom: 36px; line-height: 1.8;">We bring a builder's mindset to advisory work: concrete deliverables, actionable roadmaps, and the engineering depth to validate every recommendation against real-world constraints.</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+              <div class="stat-card" style="text-align: center;">
+                <div class="t-display" style="font-size: clamp(2rem, 4vw, 3.5rem); background: linear-gradient(135deg, #00f0ff, #7c5cfc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-count="40" data-suffix="%">0</div>
+                <div style="color: var(--c-text-muted); font-size: 0.875rem;">Avg Infrastructure Cost Reduction</div>
+              </div>
+              <div class="stat-card" style="text-align: center;">
+                <div class="t-display" style="font-size: clamp(2rem, 4vw, 3.5rem); background: linear-gradient(135deg, #00f0ff, #7c5cfc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-count="50" data-suffix="+">0</div>
+                <div style="color: var(--c-text-muted); font-size: 0.875rem;">Engagements Delivered</div>
+              </div>
+            </div>
+          </div>
+          <div class="svc-visual" data-reveal="fade-left">
+            <!-- Roadmap visual -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0,240,255,0.12); border-radius: 16px; padding: 24px; height: 100%; min-height: 320px; display: flex; flex-direction: column; gap: 16px;">
+              <div style="font-size: 11px; color: rgba(0,240,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Digital Transformation Roadmap</div>
+              <!-- Phase items -->
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #00f0ff, #7c5cfc); display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; font-weight: 700;">1</div>
+                <div style="flex: 1; padding-top: 4px;">
+                  <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Assess & Audit</div>
+                  <div style="height: 4px; background: linear-gradient(90deg, #00f0ff, transparent); border-radius: 2px; margin-bottom: 4px; width: 100%;"></div>
+                  <div style="font-size: 11px; color: rgba(255,255,255,0.4);">Week 1–2 · Architecture review, tech debt mapping</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #7c5cfc, #ff3cac); display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; font-weight: 700;">2</div>
+                <div style="flex: 1; padding-top: 4px;">
+                  <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Strategize</div>
+                  <div style="height: 4px; background: linear-gradient(90deg, #7c5cfc, transparent); border-radius: 2px; margin-bottom: 4px; width: 75%;"></div>
+                  <div style="font-size: 11px; color: rgba(255,255,255,0.4);">Week 3–4 · Roadmap, OKRs, vendor selection</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #ff3cac, #7c5cfc); display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; font-weight: 700;">3</div>
+                <div style="flex: 1; padding-top: 4px;">
+                  <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">Execute & Migrate</div>
+                  <div style="height: 4px; background: linear-gradient(90deg, #ff3cac, transparent); border-radius: 2px; margin-bottom: 4px; width: 55%;"></div>
+                  <div style="font-size: 11px; color: rgba(255,255,255,0.4);">Month 2–4 · Phased migration, CI/CD overhaul</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,200,100,0.2); border: 1px solid rgba(0,200,100,0.4); display: flex; align-items: center; justify-content: center; font-size: 12px; color: #00c864; font-weight: 700;">4</div>
+                <div style="flex: 1; padding-top: 4px;">
+                  <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px; color: rgba(255,255,255,0.4);">Optimize & Scale</div>
+                  <div style="height: 4px; background: rgba(0,200,100,0.2); border-radius: 2px; margin-bottom: 4px; width: 30%;"></div>
+                  <div style="font-size: 11px; color: rgba(255,255,255,0.3);">Ongoing · Monitoring, cost optimization</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scope Section -->
+    <section class="section" id="scope" style="background: rgba(255,255,255,0.01); padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div class="svc-grid-2">
+          <div data-reveal="fade-right">
+            <div class="section-label" data-reveal="fade-up">Engagement Areas</div>
+            <h2 class="t-h2">Where we add the most <em>value</em></h2>
+          </div>
+          <div>
+            <ul class="svc-feature-list">
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Architecture Review & Design</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Deep-dive analysis of existing systems: scalability bottlenecks, security gaps, coupling anti-patterns, and a clear path to where you need to be.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Digital Transformation Roadmaps</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Structured, phased plans that modernize your tech stack without halting operations. Legacy migration, microservices decomposition, cloud adoption.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Cloud Strategy & Cost Optimization</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Right-sizing, reserved instance planning, multi-cloud vs single-cloud trade-offs, and ongoing FinOps practices that typically cut bills by 30–40%.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Security & Compliance Audits</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">SOC 2, GDPR, HIPAA readiness. Penetration testing scoping, zero-trust architecture, and incident response planning.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Team & Process Engineering</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Engineering org design, hiring roadmaps, agile/DevOps implementation, and the engineering culture practices that let teams ship faster with less risk.</p>
+                </div>
+              </li>
+              <li class="svc-feature-item" data-reveal="fade-up">
+                <span class="svc-feature-item__check">✓</span>
+                <div>
+                  <strong>Fractional CTO Services</strong>
+                  <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-top: 4px;">Board-level technology representation, investor technical due diligence, and C-suite advisory for companies that need senior tech leadership without a full-time hire.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech / Frameworks Section -->
+    <section class="section" style="padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 48px;">
+          <div class="section-label" data-reveal="fade-up">Expertise</div>
+          <h2 class="t-h2" data-reveal="fade-up">Technologies we advise on</h2>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;" data-reveal="fade-up">
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>AWS</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Google Cloud</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>Azure</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Kubernetes</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>Terraform</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Datadog</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>Kafka</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Elasticsearch</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>PostgreSQL</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Redis</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>GitHub Actions</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>ArgoCD</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>Vault (HashiCorp)</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>Grafana</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #00f0ff;"></span>SOC 2 / GDPR</span>
+          <span class="tech-pill"><span class="tech-pill__dot" style="background: #7c5cfc;"></span>ISO 27001</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section" style="background: rgba(255,255,255,0.01); padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 56px;">
+          <div class="section-label" data-reveal="fade-up">Investment</div>
+          <h2 class="t-h2" data-reveal="fade-up">Engagement models</h2>
+          <p style="color: var(--c-text-muted); max-width: 500px; margin: 16px auto 0;" data-reveal="fade-up">From targeted audits to long-term strategic partnerships. Every engagement is customized to your context.</p>
+        </div>
+        <div class="svc-grid-3">
+
+          <div class="pricing-card" data-reveal="fade-up">
+            <div class="pricing-card__tier">Tech Audit</div>
+            <div class="pricing-card__price">$5k–$15k</div>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-bottom: 24px;">2–3 weeks. Comprehensive assessment of your architecture, code quality, and infrastructure with a prioritized action plan.</p>
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+              <li class="pricing-card__feature">✓ Architecture deep-dive</li>
+              <li class="pricing-card__feature">✓ Security vulnerability scan</li>
+              <li class="pricing-card__feature">✓ Infrastructure cost analysis</li>
+              <li class="pricing-card__feature">✓ Tech debt inventory</li>
+              <li class="pricing-card__feature">✓ Written report + exec summary</li>
+              <li class="pricing-card__feature">✓ 2-hour debrief session</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--outline" style="width: 100%; margin-top: 28px; text-align: center;">Get Started</a>
+          </div>
+
+          <div class="pricing-card pricing-card--featured" data-reveal="fade-up">
+            <div class="pricing-card__tier">Transformation Sprint</div>
+            <div class="pricing-card__price">$15k–$50k</div>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-bottom: 24px;">6–12 weeks. Audit + full roadmap + hands-on support through the first implementation phase.</p>
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+              <li class="pricing-card__feature">✓ Everything in Tech Audit</li>
+              <li class="pricing-card__feature">✓ 12-month transformation roadmap</li>
+              <li class="pricing-card__feature">✓ Cloud migration blueprint</li>
+              <li class="pricing-card__feature">✓ CI/CD pipeline design</li>
+              <li class="pricing-card__feature">✓ Team structure recommendations</li>
+              <li class="pricing-card__feature">✓ Vendor selection support</li>
+              <li class="pricing-card__feature">✓ Monthly check-in calls</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--gradient" style="width: 100%; margin-top: 28px; text-align: center;">Most Popular</a>
+          </div>
+
+          <div class="pricing-card" data-reveal="fade-up">
+            <div class="pricing-card__tier">Fractional CTO</div>
+            <div class="pricing-card__price">$50k+/yr</div>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem; margin-bottom: 24px;">Ongoing retainer. Senior technology leadership embedded in your executive team — strategy, hiring, culture, and board-level technical representation.</p>
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+              <li class="pricing-card__feature">✓ Dedicated senior advisor</li>
+              <li class="pricing-card__feature">✓ Weekly leadership sessions</li>
+              <li class="pricing-card__feature">✓ Hiring & team building</li>
+              <li class="pricing-card__feature">✓ Investor technical due diligence</li>
+              <li class="pricing-card__feature">✓ Board representation</li>
+              <li class="pricing-card__feature">✓ On-call crisis support</li>
+              <li class="pricing-card__feature">✓ Unlimited Slack access</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--outline" style="width: 100%; margin-top: 28px; text-align: center;">Talk to Us</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Other Services Section -->
+    <section class="section" style="padding: var(--space-2xl) 0;">
+      <div class="container">
+        <div style="text-align: center; margin-bottom: 48px;">
+          <div class="section-label" data-reveal="fade-up">Explore More</div>
+          <h2 class="t-h2" data-reveal="fade-up">Other services</h2>
+        </div>
+        <div class="svc-grid-3">
+          <a href="web-development.html" class="glass-card service-card" data-reveal="fade-up" style="text-decoration: none; display: block;">
+            <div style="font-size: 2.5rem; margin-bottom: 16px;">🌐</div>
+            <h3 style="margin-bottom: 8px;">Web Development</h3>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem;">Award-winning websites and web apps built for performance and conversion.</p>
+          </a>
+          <a href="ai-automation.html" class="glass-card service-card" data-reveal="fade-up" style="text-decoration: none; display: block;">
+            <div style="font-size: 2.5rem; margin-bottom: 16px;">🤖</div>
+            <h3 style="margin-bottom: 8px;">AI Automation</h3>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem;">Intelligent agents and workflows that eliminate manual work at scale.</p>
+          </a>
+          <a href="ui-ux-design.html" class="glass-card service-card" data-reveal="fade-up" style="text-decoration: none; display: block;">
+            <div style="font-size: 2.5rem; margin-bottom: 16px;">🎨</div>
+            <h3 style="margin-bottom: 8px;">UI/UX Design</h3>
+            <p style="color: var(--c-text-muted); font-size: 0.9rem;">Human-centered design that converts visitors into loyal users.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section" style="background: linear-gradient(135deg, rgba(0,240,255,0.06), rgba(124,92,252,0.08)); padding: var(--space-2xl) 0;">
+      <div class="container" style="text-align: center;">
+        <div class="section-label" data-reveal="fade-up">Ready to Transform?</div>
+        <h2 class="t-h2" style="max-width: 600px; margin: 0 auto 24px;" data-reveal="fade-up">Let's map your technology <em>future</em></h2>
+        <p style="color: var(--c-text-muted); max-width: 480px; margin: 0 auto 40px;" data-reveal="fade-up">30 minutes with our senior architects can reveal opportunities you haven't seen yet. No pitch, no pressure — just an honest look at where you are and where you could be.</p>
+        <a href="../contact.html" class="btn btn--gradient btn--large magnetic" data-magnetic data-reveal="fade-up">
+          <span class="magnetic-inner">Schedule Free Discovery</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer__top">
+        <div class="container">
+          <div class="footer__grid">
+            <div class="footer__brand">
+              <div class="footer__logo">VOREX</div>
+              <p class="footer__tagline">We build digital experiences that move people and drive results.</p>
+              <div class="footer__socials">
+                <a href="#" class="footer__social" aria-label="Twitter">𝕏</a>
+                <a href="#" class="footer__social" aria-label="LinkedIn">in</a>
+                <a href="#" class="footer__social" aria-label="Dribbble">🏀</a>
+                <a href="#" class="footer__social" aria-label="GitHub">⌥</a>
+              </div>
+            </div>
+            <div class="footer__nav">
+              <h4>Studio</h4>
+              <ul>
+                <li><a href="../work.html">Our Work</a></li>
+                <li><a href="../studio.html">About Us</a></li>
+                <li><a href="../studio.html#team">Team</a></li>
+                <li><a href="../studio.html#awards">Awards</a></li>
+              </ul>
+            </div>
+            <div class="footer__nav">
+              <h4>Services</h4>
+              <ul>
+                <li><a href="web-development.html">Web Development</a></li>
+                <li><a href="mobile-development.html">Mobile Apps</a></li>
+                <li><a href="saas-development.html">SaaS Platforms</a></li>
+                <li><a href="ai-automation.html">AI Automation</a></li>
+                <li><a href="ui-ux-design.html">UI/UX Design</a></li>
+                <li><a href="it-consultancy.html">IT Consultancy</a></li>
+              </ul>
+            </div>
+            <div class="footer__nav">
+              <h4>Connect</h4>
+              <ul>
+                <li><a href="../contact.html">Start a Project</a></li>
+                <li><a href="mailto:hello@vorex.studio">hello@vorex.studio</a></li>
+                <li><a href="tel:+14155550123">+1 (415) 555-0123</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <div class="container">
+          <p>&copy; 2025 VOREX Studio. All rights reserved.</p>
+          <div class="footer__legal">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <script type="module" src="../assets/js/main.js"></script>
+  <script type="module" src="../assets/js/cursor.js"></script>
+  <script type="module" src="../assets/js/smooth-scroll.js"></script>
+  <script type="module" src="../assets/js/gsap-animations.js"></script>
+  <script type="module" src="../assets/js/page-transitions.js"></script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Development — VOREX Studio</title>
+  <meta name="description" content="Blazing-fast, pixel-perfect websites and web applications built with Next.js, React, Three.js and GSAP. Awwwards-quality front-ends backed by bulletproof engineering." />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7/dist/barba.umd.min.js"></script>
+  <style>
+    .svc-hero-visual {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .svc-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-16); align-items: start; }
+    .svc-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--sp-5); }
+    @media(max-width:1023px){ .svc-grid-2{ grid-template-columns:1fr; gap:var(--sp-10); } .svc-grid-3{ grid-template-columns:1fr 1fr; } }
+    @media(max-width:767px){ .svc-grid-3{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <div id="page-transition" aria-hidden="true"><div class="transition-panel"></div><div class="transition-panel"></div></div>
+  <div id="preloader" role="status" aria-label="Loading">
+    <div class="preloader__logo">VOR<span>EX</span></div>
+    <div class="preloader__counter" id="preloader-counter">0</div>
+    <div class="preloader__bar-wrap"><div class="preloader__bar" id="preloader-bar"></div></div>
+    <div class="preloader__label">Loading Experience</div>
+  </div>
+
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="../index.html" class="nav-logo">VOR<span>EX</span></a>
+        <ul class="nav-links" role="list">
+          <li><a href="../index.html" class="nav-link">Home</a></li>
+          <li><a href="../work.html" class="nav-link">Work</a></li>
+          <li class="nav-item">
+            <a href="../services.html" class="nav-link active">Services
+              <svg class="dropdown-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l4 4 4-4"/></svg>
+            </a>
+            <div class="nav-dropdown">
+              <a href="web-development.html" class="nav-dropdown__item">
+                <div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+                <div class="nav-dropdown__text"><strong>Web Development</strong><span>Next.js, React, WebGL</span></div>
+              </a>
+              <a href="mobile-development.html" class="nav-dropdown__item">
+                <div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div>
+                <div class="nav-dropdown__text"><strong>Mobile Development</strong><span>iOS, Android, React Native</span></div>
+              </a>
+              <a href="saas-development.html" class="nav-dropdown__item">
+                <div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+                <div class="nav-dropdown__text"><strong>SaaS Development</strong><span>Scalable platforms</span></div>
+              </a>
+              <div class="nav-dropdown__divider"></div>
+              <a href="ai-automation.html" class="nav-dropdown__item">
+                <div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg></div>
+                <div class="nav-dropdown__text"><strong>AI & Automation</strong><span>LLMs, agents, pipelines</span></div>
+              </a>
+              <a href="ui-ux-design.html" class="nav-dropdown__item">
+                <div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+                <div class="nav-dropdown__text"><strong>UI/UX Design</strong><span>Figma, systems, prototypes</span></div>
+              </a>
+              <a href="it-consultancy.html" class="nav-dropdown__item">
+                <div class="nav-dropdown__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                <div class="nav-dropdown__text"><strong>IT Consultancy</strong><span>Architecture, security</span></div>
+              </a>
+            </div>
+          </li>
+          <li><a href="../studio.html" class="nav-link">Studio</a></li>
+          <li><a href="../contact.html" class="nav-link">Contact</a></li>
+        </ul>
+        <div class="nav-right">
+          <button class="sound-toggle" aria-label="Toggle sound">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </button>
+          <a href="../contact.html" class="nav-cta">Start a Project</a>
+          <button class="nav-hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <nav class="mobile-menu__links">
+      <a href="../index.html"    class="mobile-menu__link"><span>Home</span></a>
+      <a href="../work.html"     class="mobile-menu__link"><span>Work</span></a>
+      <a href="../services.html" class="mobile-menu__link"><span>Services</span></a>
+      <a href="../studio.html"   class="mobile-menu__link"><span>Studio</span></a>
+      <a href="../contact.html"  class="mobile-menu__link"><span>Contact</span></a>
+    </nav>
+    <div class="mobile-menu__footer"><span>© 2025 VOREX</span><a href="mailto:hello@vorex.studio">hello@vorex.studio</a></div>
+  </div>
+
+  <main id="main-content" data-barba="container" data-barba-namespace="service-web">
+
+    <!-- Hero -->
+    <section class="section section--lg" style="min-height:70vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0a0820 0%,#060608 60%);" aria-hidden="true"></div>
+      <div class="glow-bg glow-bg--accent" style="top:-20%;right:-10%;opacity:0.2;" aria-hidden="true"></div>
+      <!-- Decorative grid visual -->
+      <div class="svc-hero-visual" aria-hidden="true">
+        <div style="display:grid;grid-template-columns:repeat(4,80px);grid-template-rows:repeat(3,60px);gap:12px;opacity:0.12;">
+          <div style="background:var(--clr-accent);border-radius:8px;"></div>
+          <div style="background:rgba(255,255,255,0.3);border-radius:8px;grid-column:span 2;"></div>
+          <div style="background:var(--clr-accent-3);border-radius:8px;"></div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:8px;grid-column:span 2;"></div>
+          <div style="background:var(--clr-accent-2);border-radius:8px;"></div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:8px;"></div>
+          <div style="background:rgba(255,255,255,0.2);border-radius:8px;grid-column:span 3;"></div>
+          <div style="background:var(--clr-accent);border-radius:8px;opacity:0.6;"></div>
+        </div>
+      </div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(6,6,8,0.95) 40%,rgba(6,6,8,0.3) 100%);" aria-hidden="true"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to top,var(--clr-bg),transparent);" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:2;padding-bottom:var(--sp-16);">
+        <div class="section-label">Service 01</div>
+        <h1 class="t-display" data-split="lines" style="max-width:800px;margin-bottom:var(--sp-6);">
+          Web<br>Development.
+        </h1>
+        <p class="t-large fade-up" style="max-width:560px;color:var(--clr-muted);margin-bottom:var(--sp-10);">
+          Blazing-fast, pixel-perfect websites and web applications — from immersive marketing sites to complex platforms that scale to millions.
+        </p>
+        <div class="fade-up" style="display:flex;gap:var(--sp-4);flex-wrap:wrap;align-items:center;">
+          <a href="../contact.html" class="btn btn--primary btn--large">Start a Web Project</a>
+          <a href="../work.html" class="btn btn--glass btn--large">View Web Projects</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview -->
+    <section class="section">
+      <div class="container">
+        <div class="svc-grid-2">
+          <div>
+            <div class="section-label">What We Build</div>
+            <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-6);">
+              Every pixel<br>earns its place.
+            </h2>
+            <p class="t-body" style="margin-bottom:var(--sp-5);">We build websites that win awards and convert visitors. Our front-end engineers are obsessive about performance — sub-second load times, perfect Lighthouse scores, and animations that feel native to the hardware.</p>
+            <p class="t-body" style="margin-bottom:var(--sp-10);">From a single-page marketing site to a multi-tenant web application serving enterprise clients, we bring the same level of craft to every project.</p>
+            <div style="display:flex;gap:var(--sp-8);">
+              <div class="stat-card" style="padding:0;border:none;">
+                <div class="stat-card__number"><span data-count="98" data-suffix="">0</span></div>
+                <p class="stat-card__label">Avg. Lighthouse score</p>
+              </div>
+              <div class="stat-card" style="padding:0;border:none;">
+                <div class="stat-card__number"><span data-count="60" data-suffix="+">0+</span></div>
+                <p class="stat-card__label">Web projects shipped</p>
+              </div>
+            </div>
+          </div>
+          <div class="svc-visual img-reveal-wrap" style="background:linear-gradient(135deg,#0a0820,#1a1060);">
+            <div style="position:absolute;inset:0;padding:32px;display:flex;flex-direction:column;gap:14px;" aria-hidden="true">
+              <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <div style="width:10px;height:10px;border-radius:50%;background:#ff5f57;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#febc2e;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#28c840;"></div>
+              </div>
+              <div style="height:8px;background:rgba(124,92,252,0.3);border-radius:4px;width:40%;"></div>
+              <div style="height:80px;background:linear-gradient(135deg,rgba(124,92,252,0.12),rgba(0,240,255,0.06));border-radius:10px;border:1px solid rgba(124,92,252,0.15);"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+                <div style="height:50px;background:rgba(124,92,252,0.08);border-radius:8px;border:1px solid rgba(124,92,252,0.1);"></div>
+                <div style="height:50px;background:rgba(124,92,252,0.14);border-radius:8px;border:1px solid rgba(124,92,252,0.18);"></div>
+                <div style="height:50px;background:rgba(124,92,252,0.06);border-radius:8px;border:1px solid rgba(124,92,252,0.1);"></div>
+              </div>
+              <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;"></div>
+              <div style="height:6px;background:rgba(255,255,255,0.04);border-radius:3px;width:75%;"></div>
+              <div style="height:32px;background:rgba(124,92,252,0.25);border-radius:6px;width:120px;margin-top:8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What's Included -->
+    <section class="section" style="background:var(--clr-surface);">
+      <div class="container">
+        <div class="svc-grid-2" style="gap:var(--sp-12);">
+          <div>
+            <div class="section-label">Scope of Work</div>
+            <h2 class="t-title" data-split="lines">Everything<br>included.</h2>
+          </div>
+          <div class="svc-feature-list fade-up">
+            <div class="svc-feature-item">
+              <div class="svc-feature-item__check">✓</div>
+              <div><div class="svc-feature-item__title">Custom Design System</div><p class="svc-feature-item__desc">Figma-to-code design system with typography, colour tokens, component library, and dark/light mode support.</p></div>
+            </div>
+            <div class="svc-feature-item">
+              <div class="svc-feature-item__check">✓</div>
+              <div><div class="svc-feature-item__title">WebGL & 3D Experiences</div><p class="svc-feature-item__desc">Three.js scenes, custom shaders, particle systems, and GPU-accelerated visuals that set you apart.</p></div>
+            </div>
+            <div class="svc-feature-item">
+              <div class="svc-feature-item__check">✓</div>
+              <div><div class="svc-feature-item__title">GSAP Animations</div><p class="svc-feature-item__desc">Scroll-driven storytelling, text reveals, parallax, magnetic interactions, and page transitions with Barba.js.</p></div>
+            </div>
+            <div class="svc-feature-item">
+              <div class="svc-feature-item__check">✓</div>
+              <div><div class="svc-feature-item__title">Performance Engineering</div><p class="svc-feature-item__desc">Core Web Vitals optimisation, image compression pipelines, code splitting, edge caching, and CDN configuration.</p></div>
+            </div>
+            <div class="svc-feature-item">
+              <div class="svc-feature-item__check">✓</div>
+              <div><div class="svc-feature-item__title">CMS Integration</div><p class="svc-feature-item__desc">Contentful, Sanity, Payload, or any headless CMS — fully typed content models and live preview.</p></div>
+            </div>
+            <div class="svc-feature-item">
+              <div class="svc-feature-item__check">✓</div>
+              <div><div class="svc-feature-item__title">SEO & Accessibility</div><p class="svc-feature-item__desc">Semantic HTML, structured data, WCAG 2.1 AA compliance, and a technical SEO audit at launch.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label">Tech Stack</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-10);">Built with the<br>best tools.</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-3);" class="stagger-children">
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Next.js 15</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>React 19</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>TypeScript</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Three.js</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>GSAP 3</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Framer Motion</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Tailwind CSS</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Lenis</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Barba.js</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>SplitType</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Node.js</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>PostgreSQL</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Prisma</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Vercel / Cloudflare</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Sanity CMS</span>
+          <span class="tech-pill"><span class="tech-pill__dot"></span>Contentful</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section" style="background:var(--clr-surface);">
+      <div class="container">
+        <div class="section-label">Engagement Models</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-10);">Transparent<br>pricing.</h2>
+        <div class="svc-grid-3 stagger-children">
+          <div class="pricing-card">
+            <div class="pricing-card__tier">Starter</div>
+            <div class="pricing-card__price">$10k <span>– $25k</span></div>
+            <p class="pricing-card__desc">Perfect for landing pages, portfolio sites, and early-stage startup MVPs.</p>
+            <ul class="pricing-card__features">
+              <li class="pricing-card__feature">Up to 8 pages</li>
+              <li class="pricing-card__feature">Custom design system</li>
+              <li class="pricing-card__feature">GSAP animations</li>
+              <li class="pricing-card__feature">CMS integration</li>
+              <li class="pricing-card__feature">3 months support</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--outline" style="width:100%;justify-content:center;">Get Started</a>
+          </div>
+          <div class="pricing-card pricing-card--featured">
+            <div class="pricing-card__tier">Growth</div>
+            <div class="pricing-card__price">$25k <span>– $75k</span></div>
+            <p class="pricing-card__desc">Full marketing sites, web apps, and WebGL-powered experiences.</p>
+            <ul class="pricing-card__features">
+              <li class="pricing-card__feature">Unlimited pages</li>
+              <li class="pricing-card__feature">WebGL / Three.js scene</li>
+              <li class="pricing-card__feature">Page transitions</li>
+              <li class="pricing-card__feature">Full back-end integration</li>
+              <li class="pricing-card__feature">Performance audit</li>
+              <li class="pricing-card__feature">6 months support</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--primary" style="width:100%;justify-content:center;">Get Started</a>
+          </div>
+          <div class="pricing-card">
+            <div class="pricing-card__tier">Enterprise</div>
+            <div class="pricing-card__price">$75k+</div>
+            <p class="pricing-card__desc">Complex platforms, multi-region deployments, and Awwwards-contending experiences.</p>
+            <ul class="pricing-card__features">
+              <li class="pricing-card__feature">Everything in Growth</li>
+              <li class="pricing-card__feature">Dedicated team</li>
+              <li class="pricing-card__feature">Custom infrastructure</li>
+              <li class="pricing-card__feature">SLA guarantees</li>
+              <li class="pricing-card__feature">12 months support</li>
+            </ul>
+            <a href="../contact.html" class="btn btn--outline" style="width:100%;justify-content:center;">Get Started</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Other Services -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label">Also Explore</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-10);">Our other<br>services.</h2>
+        <div class="svc-grid-3 stagger-children">
+          <a href="mobile-development.html" class="glass-card service-card" style="display:block;text-decoration:none;">
+            <div class="service-card__number">02</div>
+            <h3 class="service-card__title">Mobile Development</h3>
+            <p class="service-card__desc">iOS, Android, and React Native apps that feel native on every device.</p>
+          </a>
+          <a href="saas-development.html" class="glass-card service-card" style="display:block;text-decoration:none;">
+            <div class="service-card__number">03</div>
+            <h3 class="service-card__title">SaaS Development</h3>
+            <p class="service-card__desc">End-to-end SaaS platforms built to scale from 10 to 10 million users.</p>
+          </a>
+          <a href="ai-automation.html" class="glass-card service-card" style="display:block;text-decoration:none;">
+            <div class="service-card__number">04</div>
+            <h3 class="service-card__title">AI & Automation</h3>
+            <p class="service-card__desc">LLM integrations, agents, and intelligent automation workflows.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:var(--gradient-glow);opacity:0.5;" aria-hidden="true"></div>
+      <div class="container" style="position:relative;z-index:1;text-align:center;">
+        <div class="section-label" style="justify-content:center;">Ready to Build?</div>
+        <h2 class="t-title" data-split="lines" style="margin-bottom:var(--sp-8);">Let's create your<br>next web experience.</h2>
+        <div class="fade-up" style="display:flex;gap:var(--sp-4);justify-content:center;flex-wrap:wrap;">
+          <div class="magnetic"><div class="magnetic-inner"><a href="../contact.html" class="btn btn--gradient btn--large">Start a Project</a></div></div>
+          <a href="../work.html" class="btn btn--glass btn--large">View Web Work</a>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer" role="contentinfo">
+      <div class="footer__glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="footer__grid">
+          <div><div class="footer__brand">VOREX</div><p class="footer__tagline">An independent digital product studio obsessed with craft and quality.</p></div>
+          <div><p class="footer__col-title">Navigation</p><ul class="footer__links"><li><a href="../index.html" class="footer__link">Home</a></li><li><a href="../work.html" class="footer__link">Work</a></li><li><a href="../services.html" class="footer__link">Services</a></li><li><a href="../studio.html" class="footer__link">Studio</a></li><li><a href="../contact.html" class="footer__link">Contact</a></li></ul></div>
+          <div><p class="footer__col-title">Services</p><ul class="footer__links"><li><a href="web-development.html" class="footer__link">Web Development</a></li><li><a href="mobile-development.html" class="footer__link">Mobile Apps</a></li><li><a href="saas-development.html" class="footer__link">SaaS Products</a></li><li><a href="ai-automation.html" class="footer__link">AI & Automation</a></li><li><a href="ui-ux-design.html" class="footer__link">UI/UX Design</a></li><li><a href="it-consultancy.html" class="footer__link">IT Consultancy</a></li></ul></div>
+          <div><p class="footer__col-title">Contact</p><ul class="footer__links"><li><a href="mailto:hello@vorex.studio" class="footer__link">hello@vorex.studio</a></li><li><a href="tel:+15551234567" class="footer__link">+1 (555) 123-4567</a></li></ul></div>
+        </div>
+        <div class="footer__bottom"><p class="footer__copy">© 2025 VOREX Studio. All rights reserved.</p><div class="footer__social"><a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a><a href="#" class="footer__social-link" aria-label="LinkedIn">in</a><a href="#" class="footer__social-link" aria-label="Dribbble">●</a></div></div>
+      </div>
+    </footer>
+  </main>
+  <script type="module" src="../assets/js/main.js"></script>
+</body>
+</html>
