@@ -1,14 +1,17 @@
 import { Module } from "@nestjs/common";
 import { LeadService } from "./lead.service.js";
 import { ProposalService } from "./proposal.service.js";
+import { LeadController } from "./lead.controller.js";
+import { TurnstileService } from "./turnstile.service.js";
 
 /**
- * CRM module (Phase 2 doc 05, FR-AD-020s). Lead pipeline, scoring/routing, proposals, account 360.
- * Lead intake emits crm.lead.created for the automation layer (FR-AU-010); ProposalService owns the
- * won→engagement flywheel conversion (doc 04 J3).
+ * CRM module (Phase 2 doc 05, FR-AD-020s). Public scoping intake (LeadController), lead pipeline +
+ * scoring, proposals + the won→engagement flywheel. Lead intake emits crm.lead.created for the
+ * FR-AU-010 automation.
  */
 @Module({
-  providers: [LeadService, ProposalService],
+  controllers: [LeadController],
+  providers: [LeadService, ProposalService, TurnstileService],
   exports: [LeadService, ProposalService],
 })
 export class CrmModule {}

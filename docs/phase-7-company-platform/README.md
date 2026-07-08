@@ -24,7 +24,9 @@ existential-brand event (Phase 1 R3), so this phase is where every security cont
 | **CRM — proposals + flywheel** | ✅ | Proposal lifecycle (draft→sent→viewed→signed); the **won→engagement conversion** — a signed proposal atomically creates the client org, makes the contact its owner, and opens the engagement (doc 04 J3, the business flywheel). |
 | **engagements — retest workflow** | ✅ | Finding status state machine with **role-guarded transitions** — a client can remediate/request-retest/accept-risk, but only a consultant verifies `resolved` (you can't close your own finding); status notes encrypted like bodies (FR-CO-035). |
 | **client portal UI** | ✅ scaffold | The `web` Next.js app (company site + `/portal`), bilingual, with the **findings-feed page** — severity rollup + list using the shared `SeverityBadge` (color + icon + label, never color-only). RLS scopes the API read to the client org. |
-| report assembly | 🔩 scaffolded | Report assembly is a Phase 8 automation (FR-AU-050, human-approved). |
+| **engagements — report delivery** | ✅ | Approval-gated delivery: a report is registered (encrypted), a **lead consultant must approve before it can be delivered** (the human gate on customer-facing output), delivery emits the event and unlocks the client fetch. Refuses to deliver an unapproved report. Bilingual, RLS-scoped. |
+| **CRM — scoping intake** | ✅ | Public `POST /api/v1/scoping` — Turnstile-verified bot defense → per-service structured submission → derived signals → LeadService (scores/routes/emits). Web-app **scoping form pages** per service family (structured, not a generic contact box — FR-CO-020). |
+| report *assembly* (the AI draft) | 🔩 Phase 8 | The report's content generation is the FR-AU-050 automation; delivery + approval gate are done here. |
 
 ## The crown-jewel security model (why this is the phase that matters)
 
