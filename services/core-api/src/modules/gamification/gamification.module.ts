@@ -1,13 +1,14 @@
 import { Module } from "@nestjs/common";
 import { XpService } from "./xp.service.js";
+import { XpConsumer } from "./xp.consumer.js";
 
 /**
- * Gamification module (Phase 2 doc 03 §1). XP/rank/badge/streak/leaderboard logic. Consumers of
- * domain events (labs.lab.solved, learning.lesson.completed, ctf.challenge.solved) award XP via
- * XpService inside the worker runtime; leaderboards are served from Redis with periodic snapshots.
+ * Gamification module (Phase 2 doc 03 §1). XpService (award logic) + XpConsumer (worker-runtime
+ * event handler that awards XP on solve/completion events, re-establishing tenant context per
+ * event). Rank/badge/streak/leaderboard services extend this module.
  */
 @Module({
-  providers: [XpService],
-  exports: [XpService],
+  providers: [XpService, XpConsumer],
+  exports: [XpService, XpConsumer],
 })
 export class GamificationModule {}

@@ -1,6 +1,8 @@
 import { Global, Module } from "@nestjs/common";
 import { PrismaService } from "./prisma/prisma.service.js";
 import { AuthzService } from "./authz/authz.service.js";
+import { RedisService } from "./redis/redis.service.js";
+import { OutboxService } from "./outbox/outbox.service.js";
 
 /**
  * Platform module — cross-cutting infrastructure every domain module depends on
@@ -8,7 +10,7 @@ import { AuthzService } from "./authz/authz.service.js";
  */
 @Global()
 @Module({
-  providers: [PrismaService, AuthzService],
-  exports: [PrismaService, AuthzService],
+  providers: [PrismaService, AuthzService, RedisService, OutboxService],
+  exports: [PrismaService, AuthzService, RedisService, OutboxService],
 })
 export class PlatformModule {}

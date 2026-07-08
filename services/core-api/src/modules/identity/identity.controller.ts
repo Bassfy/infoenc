@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { IdentityService } from "./identity.service.js";
 import { hashIp } from "./session.service.js";
 import { LoginDto, RegisterDto } from "./dto.js";
+import { Public } from "../../platform/auth/auth.guard.js";
 
 /**
  * REST auth endpoints (Phase 2 doc 05 §4). The refresh token is set as an httpOnly, Secure,
@@ -13,6 +14,7 @@ import { LoginDto, RegisterDto } from "./dto.js";
 export class IdentityController {
   constructor(private readonly identity: IdentityService) {}
 
+  @Public()
   @Post("register")
   async register(@Body() dto: RegisterDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const result = await this.identity.register(dto, meta(req));
@@ -20,6 +22,7 @@ export class IdentityController {
     return { accessToken: result.accessToken, expiresAt: result.expiresAt };
   }
 
+  @Public()
   @Post("login")
   async login(@Body() dto: LoginDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const result = await this.identity.login(dto, meta(req));
