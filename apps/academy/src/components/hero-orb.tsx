@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, useEffect } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { gradientPoles } from "@infoenc/ui/tokens";
 
@@ -69,15 +69,16 @@ const fragment = /* glsl */ `
     float m = vDepth * 0.5 + 0.5;
     vec3 col = mix(cPurple, cPink, smoothstep(0.0, 0.62, m));
     col = mix(col, cBlue, smoothstep(0.55, 1.0, m));
-    float bright = 0.35 + 0.75 * m + 0.12 * sin(vSeed * 30.0);
-    gl_FragColor = vec4(col * bright, a * 0.95);
+    // depth-faded brightness; kept modest so additive blending reads as discrete
+    // glowing particles rather than blowing out to a solid white core
+    float bright = 0.25 + 0.5 * m + 0.1 * sin(vSeed * 30.0);
+    gl_FragColor = vec4(col * bright, a * 0.5);
   }
 `;
 
 function Orb({ reduced }: { reduced: boolean }) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const pointer = useRef(new THREE.Vector2(0, 0));
-  const { size } = useThree();
 
   // Fibonacci sphere — even point distribution, no clustering at the poles.
   const { positions, seeds } = useMemo(() => {
@@ -100,12 +101,13 @@ function Orb({ reduced }: { reduced: boolean }) {
     () => ({
       uTime: { value: 0 },
       uPointer: { value: new THREE.Vector2(0, 0) },
-      uSize: { value: Math.min(size.width, size.height) * 0.14 },
+      // base point size in device pixels; the shader adds perspective attenuation
+      uSize: { value: 2.4 },
       cPurple: { value: toVec3(gradientPoles.purple) },
       cPink: { value: toVec3(gradientPoles.pink) },
       cBlue: { value: toVec3(gradientPoles.babyBlue) },
     }),
-    // uSize recomputed on resize below; poles are stable
+    // poles are stable; uSize is refreshed per-frame for DPR
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
@@ -121,17 +123,22 @@ function Orb({ reduced }: { reduced: boolean }) {
   useFrame((state) => {
     const m = matRef.current;
     if (!m) return;
-    m.uniforms.uSize.value = Math.min(state.size.width, state.size.height) * 0.14;
+    const u = m.uniforms as {
+      uSize: { value: number };
+      uPointer: { value: THREE.Vector2 };
+      uTime: { value: number };
+    };
+    u.uSize.value = 2.4 * state.gl.getPixelRatio();
     // smooth the pointer toward the target
-    const p = m.uniforms.uPointer.value as THREE.Vector2;
+    const p = u.uPointer.value;
     p.x += (pointer.current.x - p.x) * 0.05;
     p.y += (pointer.current.y - p.y) * 0.05;
     // freeze time under reduced motion → a single still frame
-    m.uniforms.uTime.value = reduced ? 0.6 : state.clock.elapsedTime;
+    u.uTime.value = reduced ? 0.6 : state.clock.elapsedTime;
   });
 
   return (
-    <points>
+    <points position={[1.35, 0.15, 0]}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute attach="attributes-aSeed" args={[seeds, 1]} />

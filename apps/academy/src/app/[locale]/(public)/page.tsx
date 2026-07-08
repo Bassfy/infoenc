@@ -9,8 +9,9 @@ import { HeroOrb } from "../../../components/hero-orb";
  * shared bilingual catalog; the layout is direction-agnostic (logical properties), so the same
  * markup renders correctly LTR and RTL.
  */
-export default function LandingPage({ params }: { params: { locale: string } }) {
-  setRequestLocale(params.locale);
+export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   return <Landing />;
 }
 
@@ -30,6 +31,9 @@ function Landing() {
         </nav>
       </header>
 
+      {/* The hero is a cinematic dark set-piece in BOTH themes: the additive-blended WebGL orb needs
+          a near-black canvas to glow against, so this band pins dark values regardless of the page
+          theme (the sections below still follow light/dark). */}
       <section
         style={{
           position: "relative",
@@ -37,7 +41,8 @@ function Landing() {
           minHeight: "88vh",
           display: "flex",
           alignItems: "center",
-          // signature aurora backdrop (purple → pink → baby blue), token-driven
+          backgroundColor: "#0b0810",
+          // signature aurora backdrop (purple → pink → baby blue) over the near-black band
           backgroundImage: "var(--gradient-aurora)",
         }}
       >
@@ -52,7 +57,7 @@ function Landing() {
         />
 
         <div className="container" style={{ position: "relative", zIndex: 2, paddingBlock: "var(--space-10)" }}>
-          <p style={{ fontFamily: "var(--font-mono)", color: "var(--color-accent)", letterSpacing: "0.18em", textTransform: "uppercase", fontSize: "var(--text-xs)" }}>
+          <p style={{ fontFamily: "var(--font-mono)", color: "#c4a0ff", letterSpacing: "0.18em", textTransform: "uppercase", fontSize: "var(--text-xs)" }}>
             {t("brand.tagline")}
           </p>
           <h1 style={{ fontSize: "var(--text-5xl)", maxWidth: "15ch", marginBlock: "var(--space-4)" }}>
@@ -67,14 +72,14 @@ function Landing() {
               {t("hero.headline")}
             </span>
           </h1>
-          <p style={{ fontSize: "var(--text-lg)", color: "var(--text-secondary)", maxWidth: "48ch" }}>
+          <p style={{ fontSize: "var(--text-lg)", color: "rgba(240,238,248,0.72)", maxWidth: "48ch" }}>
             {t("hero.subhead")}
           </p>
           <div style={{ display: "flex", gap: "var(--space-3)", marginTop: "var(--space-6)" }}>
             <a href="register" style={{ backgroundImage: "var(--gradient-brand)", color: "#12081f", padding: "var(--space-3) var(--space-5)", borderRadius: "var(--radius-md)", fontWeight: 600, boxShadow: "var(--shadow-accent-glow)" }}>
               {t("hero.ctaPrimary")}
             </a>
-            <a href="paths" className="glass" style={{ padding: "var(--space-3) var(--space-5)", borderRadius: "var(--radius-md)", color: "var(--text-primary)" }}>
+            <a href="paths" style={{ padding: "var(--space-3) var(--space-5)", borderRadius: "var(--radius-md)", color: "#efeaf6", border: "1px solid rgba(233,234,255,0.18)", backgroundColor: "rgba(233,234,255,0.04)" }}>
               {t("hero.ctaSecondary")}
             </a>
           </div>
