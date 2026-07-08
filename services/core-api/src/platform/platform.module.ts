@@ -3,6 +3,7 @@ import { PrismaService } from "./prisma/prisma.service.js";
 import { AuthzService } from "./authz/authz.service.js";
 import { RedisService } from "./redis/redis.service.js";
 import { OutboxService } from "./outbox/outbox.service.js";
+import { CryptoService } from "./crypto/crypto.service.js";
 
 /**
  * Platform module — cross-cutting infrastructure every domain module depends on
@@ -10,7 +11,7 @@ import { OutboxService } from "./outbox/outbox.service.js";
  */
 @Global()
 @Module({
-  providers: [PrismaService, AuthzService, RedisService, OutboxService],
-  exports: [PrismaService, AuthzService, RedisService, OutboxService],
+  providers: [PrismaService, AuthzService, RedisService, OutboxService, CryptoService],
+  exports: [PrismaService, AuthzService, RedisService, OutboxService, CryptoService],
 })
 export class PlatformModule {}

@@ -1,0 +1,23 @@
+{
+  "name": "@infoenc/lab-orchestrator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "INFOENC lab orchestrator — owns the isolated lab Kubernetes cluster (Phase 2 doc 07).",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@kubernetes/client-node": "^0.22.3",
+    "cdk8s": "^2.69.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
