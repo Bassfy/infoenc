@@ -1,11 +1,13 @@
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
+import { HeroOrb } from "../../../components/hero-orb";
 
 /**
- * Academy landing (Phase 4 wireframe §1). Server-rendered, near-zero client JS — the cinematic
- * hero/3D islands (Phase 4 doc 05) hydrate lazily and are omitted from this scaffold. Copy comes
- * from the shared bilingual catalog; the layout is direction-agnostic (logical properties), so the
- * same markup renders correctly LTR and RTL.
+ * Academy landing (Phase 4 wireframe §1). Server-rendered; the cinematic hero is a real 3D island
+ * (Phase 4 doc 05) — the WebGL particle orb (HeroOrb) is a client component that hydrates in place
+ * over a token-driven aurora backdrop, while the copy stays server-rendered. Copy comes from the
+ * shared bilingual catalog; the layout is direction-agnostic (logical properties), so the same
+ * markup renders correctly LTR and RTL.
  */
 export default function LandingPage({ params }: { params: { locale: string } }) {
   setRequestLocale(params.locale);
@@ -28,23 +30,54 @@ function Landing() {
         </nav>
       </header>
 
-      <section className="container" style={{ paddingBlock: "var(--space-10)" }}>
-        <p style={{ fontFamily: "var(--font-mono)", color: "var(--color-accent)", letterSpacing: "0.18em", textTransform: "uppercase", fontSize: "var(--text-xs)" }}>
-          {t("brand.tagline")}
-        </p>
-        <h1 style={{ fontSize: "var(--text-5xl)", maxWidth: "15ch", marginBlock: "var(--space-4)" }}>
-          {t("hero.headline")}
-        </h1>
-        <p style={{ fontSize: "var(--text-lg)", color: "var(--text-secondary)", maxWidth: "48ch" }}>
-          {t("hero.subhead")}
-        </p>
-        <div style={{ display: "flex", gap: "var(--space-3)", marginTop: "var(--space-6)" }}>
-          <a href="register" className="glass" style={{ background: "var(--color-accent)", color: "var(--text-on-accent)", padding: "var(--space-3) var(--space-5)", borderRadius: "var(--radius-md)", fontWeight: 500 }}>
-            {t("hero.ctaPrimary")}
-          </a>
-          <a href="paths" style={{ border: "1px solid var(--color-border)", padding: "var(--space-3) var(--space-5)", borderRadius: "var(--radius-md)", color: "var(--text-primary)" }}>
-            {t("hero.ctaSecondary")}
-          </a>
+      <section
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          minHeight: "88vh",
+          display: "flex",
+          alignItems: "center",
+          // signature aurora backdrop (purple → pink → baby blue), token-driven
+          backgroundImage: "var(--gradient-aurora)",
+        }}
+      >
+        {/* live 3D island — the WebGL particle orb, behind the copy */}
+        <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+          <HeroOrb />
+        </div>
+        {/* bottom readability veil into the page background */}
+        <div
+          aria-hidden
+          style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "linear-gradient(180deg, transparent 45%, var(--color-bg) 100%)" }}
+        />
+
+        <div className="container" style={{ position: "relative", zIndex: 2, paddingBlock: "var(--space-10)" }}>
+          <p style={{ fontFamily: "var(--font-mono)", color: "var(--color-accent)", letterSpacing: "0.18em", textTransform: "uppercase", fontSize: "var(--text-xs)" }}>
+            {t("brand.tagline")}
+          </p>
+          <h1 style={{ fontSize: "var(--text-5xl)", maxWidth: "15ch", marginBlock: "var(--space-4)" }}>
+            <span
+              style={{
+                backgroundImage: "var(--gradient-brand)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              {t("hero.headline")}
+            </span>
+          </h1>
+          <p style={{ fontSize: "var(--text-lg)", color: "var(--text-secondary)", maxWidth: "48ch" }}>
+            {t("hero.subhead")}
+          </p>
+          <div style={{ display: "flex", gap: "var(--space-3)", marginTop: "var(--space-6)" }}>
+            <a href="register" style={{ backgroundImage: "var(--gradient-brand)", color: "#12081f", padding: "var(--space-3) var(--space-5)", borderRadius: "var(--radius-md)", fontWeight: 600, boxShadow: "var(--shadow-accent-glow)" }}>
+              {t("hero.ctaPrimary")}
+            </a>
+            <a href="paths" className="glass" style={{ padding: "var(--space-3) var(--space-5)", borderRadius: "var(--radius-md)", color: "var(--text-primary)" }}>
+              {t("hero.ctaSecondary")}
+            </a>
+          </div>
         </div>
       </section>
     </main>
