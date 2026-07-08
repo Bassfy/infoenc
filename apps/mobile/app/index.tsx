@@ -39,9 +39,9 @@ export default function Home() {
 // Design-token values from Phase 4 (packages/ui/tokens), transcribed for React Native which can't
 // consume CSS custom properties. Kept in sync with the token source.
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#0b0f14", padding: 24, justifyContent: "center", gap: 16 },
-  eyebrow: { color: "#3fd9c4", fontSize: 12, letterSpacing: 2, fontWeight: "600" },
-  headline: { color: "#e9edf2", fontSize: 40, fontWeight: "600", lineHeight: 44 },
-  cta: { backgroundColor: "#3fd9c4", paddingVertical: 14, paddingHorizontal: 22, borderRadius: 10, alignSelf: "flex-start" },
-  ctaText: { color: "#0b0f14", fontWeight: "600", fontSize: 16 },
+  screen: { flex: 1, backgroundColor: "#0b0810", padding: 24, justifyContent: "center", gap: 16 },
+  eyebrow: { color: "#ff5db1", fontSize: 12, letterSpacing: 2, fontWeight: "600" }, // pink (accent-2)
+  headline: { color: "#efeaf6", fontSize: 40, fontWeight: "600", lineHeight: 44 },
+  cta: { backgroundColor: "#a24dff", paddingVertical: 14, paddingHorizontal: 22, borderRadius: 10, alignSelf: "flex-start" }, // purple (accent)
+  ctaText: { color: "#0b0810", fontWeight: "600", fontSize: 16 },
 });

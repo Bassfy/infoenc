@@ -66,36 +66,61 @@ export const motion = {
 /** Primitive color ramps (dark-resolved OKLCH strings). Prefer semantic CSS vars in UI. */
 export const color = {
   ink: {
-    950: "oklch(0.16 0.012 250)",
-    900: "oklch(0.19 0.013 250)",
-    850: "oklch(0.22 0.014 250)",
-    800: "oklch(0.26 0.015 250)",
-    700: "oklch(0.32 0.016 250)",
-    600: "oklch(0.42 0.017 250)",
-    500: "oklch(0.54 0.017 250)",
-    400: "oklch(0.65 0.016 248)",
-    300: "oklch(0.76 0.013 246)",
-    200: "oklch(0.85 0.010 244)",
-    100: "oklch(0.92 0.007 242)",
-    50: "oklch(0.97 0.004 240)",
-    0: "oklch(0.99 0.002 240)",
+    950: "oklch(0.13 0.014 300)",
+    900: "oklch(0.16 0.016 300)",
+    850: "oklch(0.19 0.018 300)",
+    800: "oklch(0.23 0.020 300)",
+    700: "oklch(0.30 0.022 300)",
+    600: "oklch(0.40 0.022 300)",
+    500: "oklch(0.53 0.020 300)",
+    400: "oklch(0.65 0.017 298)",
+    300: "oklch(0.76 0.013 296)",
+    200: "oklch(0.85 0.010 294)",
+    100: "oklch(0.92 0.007 292)",
+    50: "oklch(0.97 0.004 290)",
+    0: "oklch(0.99 0.002 290)",
   },
+  // Cipher — signature purple / iris (primary accent)
   cipher: {
-    900: "oklch(0.30 0.070 195)",
-    800: "oklch(0.40 0.090 194)",
-    700: "oklch(0.52 0.110 193)",
-    600: "oklch(0.64 0.125 192)",
-    500: "oklch(0.74 0.130 191)",
-    400: "oklch(0.81 0.115 190)",
-    300: "oklch(0.87 0.090 189)",
-    200: "oklch(0.92 0.060 188)",
-    100: "oklch(0.96 0.032 188)",
+    900: "oklch(0.32 0.130 295)",
+    800: "oklch(0.42 0.170 295)",
+    700: "oklch(0.52 0.200 295)",
+    600: "oklch(0.60 0.225 295)",
+    500: "oklch(0.67 0.235 295)",
+    400: "oklch(0.74 0.190 296)",
+    300: "oklch(0.82 0.140 297)",
+    200: "oklch(0.89 0.090 298)",
+    100: "oklch(0.95 0.045 300)",
+  },
+  // Blush — pink (secondary accent + gradient pole)
+  blush: {
+    700: "oklch(0.52 0.190 350)",
+    600: "oklch(0.61 0.215 350)",
+    500: "oklch(0.70 0.210 350)",
+    400: "oklch(0.78 0.170 352)",
+    300: "oklch(0.86 0.115 354)",
+    200: "oklch(0.92 0.065 356)",
+  },
+  // Sky — baby blue (tertiary accent + gradient pole)
+  sky: {
+    600: "oklch(0.62 0.150 235)",
+    500: "oklch(0.72 0.140 234)",
+    400: "oklch(0.80 0.120 232)",
+    300: "oklch(0.87 0.085 230)",
+    200: "oklch(0.92 0.055 228)",
   },
   violet: {
-    600: "oklch(0.55 0.180 292)",
-    500: "oklch(0.64 0.180 290)",
-    400: "oklch(0.72 0.150 288)",
+    600: "oklch(0.55 0.220 300)",
+    500: "oklch(0.64 0.215 298)",
+    400: "oklch(0.72 0.180 296)",
   },
+} as const;
+
+/** Signature gradient poles as hex-ish sRGB triples for Three.js / canvas (purple → pink → baby blue). */
+export const gradientPoles = {
+  purple: "#8b3dff",
+  pink: "#ff5db1",
+  babyBlue: "#7fc7ff",
 } as const;
 
 /**

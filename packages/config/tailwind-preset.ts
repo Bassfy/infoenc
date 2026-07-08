@@ -41,6 +41,17 @@ const preset = {
           hover: "var(--color-accent-hover)",
           muted: "var(--color-accent-muted)",
         },
+        // secondary (pink) + tertiary (baby blue) accents
+        "accent-2": {
+          DEFAULT: "var(--color-accent-2)",
+          hover: "var(--color-accent-2-hover)",
+          muted: "var(--color-accent-2-muted)",
+        },
+        "accent-3": {
+          DEFAULT: "var(--color-accent-3)",
+          hover: "var(--color-accent-3-hover)",
+          muted: "var(--color-accent-3-muted)",
+        },
         success: "var(--color-success)",
         warning: "var(--color-warning)",
         danger: "var(--color-danger)",
@@ -134,6 +145,12 @@ const preset = {
       },
       backdropBlur: {
         glass: "var(--glass-blur)",
+      },
+      backgroundImage: {
+        // signature purple → pink → baby-blue gradient poles (hero, 3D, glow)
+        brand: "var(--gradient-brand)",
+        "brand-soft": "var(--gradient-brand-soft)",
+        aurora: "var(--gradient-aurora)",
       },
     },
   },

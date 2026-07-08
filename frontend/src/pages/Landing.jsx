@@ -43,8 +43,8 @@ const features = [
 ];
 
 const tracks = [
-  { name: 'Web Security', icon: '🌐', color: '#00ff88', count: 15, level: 'All Levels' },
-  { name: 'Network Hacking', icon: '📡', color: '#0088ff', count: 12, level: 'Intermediate' },
+  { name: 'Web Security', icon: '🌐', color: '#8b3dff', count: 15, level: 'All Levels' },
+  { name: 'Network Hacking', icon: '📡', color: '#7fc7ff', count: 12, level: 'Intermediate' },
   { name: 'Malware Analysis', icon: '🦠', color: '#ff4444', count: 8, level: 'Advanced' },
   { name: 'Cryptography', icon: '🔐', color: '#ff8800', count: 10, level: 'All Levels' },
   { name: 'Digital Forensics', icon: '🔍', color: '#8800ff', count: 9, level: 'Intermediate' },

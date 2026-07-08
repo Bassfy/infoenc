@@ -13,36 +13,53 @@
  */
 
 :root {
-  /* ── Primitive: Ink neutral ramp (cool near-black → white) ───────────────── */
-  --ink-950: oklch(0.16 0.012 250); /* deepest background */
-  --ink-900: oklch(0.19 0.013 250);
-  --ink-850: oklch(0.22 0.014 250);
-  --ink-800: oklch(0.26 0.015 250);
-  --ink-700: oklch(0.32 0.016 250);
-  --ink-600: oklch(0.42 0.017 250);
-  --ink-500: oklch(0.54 0.017 250);
-  --ink-400: oklch(0.65 0.016 248);
-  --ink-300: oklch(0.76 0.013 246);
-  --ink-200: oklch(0.85 0.010 244);
-  --ink-100: oklch(0.92 0.007 242);
-  --ink-050: oklch(0.97 0.004 240);
-  --ink-000: oklch(0.99 0.002 240);
+  /* ── Primitive: Ink neutral ramp (true black → white, faint violet undertone) ─
+     The base is near-black (requested "black"); a whisper of violet chroma keeps
+     the dark surfaces from reading as flat grey and ties them to the purple accent. */
+  --ink-950: oklch(0.13 0.014 300); /* deepest background — near-black */
+  --ink-900: oklch(0.16 0.016 300);
+  --ink-850: oklch(0.19 0.018 300);
+  --ink-800: oklch(0.23 0.020 300);
+  --ink-700: oklch(0.30 0.022 300);
+  --ink-600: oklch(0.40 0.022 300);
+  --ink-500: oklch(0.53 0.020 300);
+  --ink-400: oklch(0.65 0.017 298);
+  --ink-300: oklch(0.76 0.013 296);
+  --ink-200: oklch(0.85 0.010 294);
+  --ink-100: oklch(0.92 0.007 292);
+  --ink-050: oklch(0.97 0.004 290);
+  --ink-000: oklch(0.99 0.002 290);
 
-  /* ── Primitive: Cipher accent ramp (signature cyan-teal) ─────────────────── */
-  --cipher-900: oklch(0.30 0.070 195);
-  --cipher-800: oklch(0.40 0.090 194);
-  --cipher-700: oklch(0.52 0.110 193);
-  --cipher-600: oklch(0.64 0.125 192);
-  --cipher-500: oklch(0.74 0.130 191); /* hero interactive */
-  --cipher-400: oklch(0.81 0.115 190);
-  --cipher-300: oklch(0.87 0.090 189);
-  --cipher-200: oklch(0.92 0.060 188);
-  --cipher-100: oklch(0.96 0.032 188);
+  /* ── Primitive: Cipher accent ramp (signature purple / iris) ─────────────── */
+  --cipher-900: oklch(0.32 0.130 295);
+  --cipher-800: oklch(0.42 0.170 295);
+  --cipher-700: oklch(0.52 0.200 295);
+  --cipher-600: oklch(0.60 0.225 295);
+  --cipher-500: oklch(0.67 0.235 295); /* hero interactive — electric purple */
+  --cipher-400: oklch(0.74 0.190 296);
+  --cipher-300: oklch(0.82 0.140 297);
+  --cipher-200: oklch(0.89 0.090 298);
+  --cipher-100: oklch(0.95 0.045 300);
 
-  /* Violet — used ONLY in gradient/3D moments, never as a UI accent on its own */
-  --violet-600: oklch(0.55 0.180 292);
-  --violet-500: oklch(0.64 0.180 290);
-  --violet-400: oklch(0.72 0.150 288);
+  /* ── Primitive: Blush accent ramp (pink — secondary accent + gradient pole) ─ */
+  --blush-700: oklch(0.52 0.190 350);
+  --blush-600: oklch(0.61 0.215 350);
+  --blush-500: oklch(0.70 0.210 350); /* pink hero pole */
+  --blush-400: oklch(0.78 0.170 352);
+  --blush-300: oklch(0.86 0.115 354);
+  --blush-200: oklch(0.92 0.065 356);
+
+  /* ── Primitive: Sky accent ramp (baby blue — tertiary accent + gradient pole) */
+  --sky-600: oklch(0.62 0.150 235);
+  --sky-500: oklch(0.72 0.140 234);
+  --sky-400: oklch(0.80 0.120 232); /* baby-blue hero pole */
+  --sky-300: oklch(0.87 0.085 230);
+  --sky-200: oklch(0.92 0.055 228);
+
+  /* Violet — legacy gradient/3D pole (kept; now part of the purple family) */
+  --violet-600: oklch(0.55 0.220 300);
+  --violet-500: oklch(0.64 0.215 298);
+  --violet-400: oklch(0.72 0.180 296);
 
   /* ── Primitive: Signal / severity ramp (doubles as finding-severity scale) ─ */
   --sev-info: oklch(0.70 0.130 240); /* blue     */
@@ -69,25 +86,40 @@
   --text-on-accent: var(--ink-950);
   --text-link: var(--cipher-400);
 
-  --color-accent: var(--cipher-500);
+  --color-accent: var(--cipher-500); /* purple — primary */
   --color-accent-hover: var(--cipher-400);
-  --color-accent-muted: oklch(0.74 0.130 191 / 0.14);
+  --color-accent-muted: oklch(0.67 0.235 295 / 0.16);
   --color-focus-ring: var(--cipher-400);
+
+  /* Secondary (pink) and tertiary (baby blue) accents — for CTAs, highlights, 3D */
+  --color-accent-2: var(--blush-500);
+  --color-accent-2-hover: var(--blush-400);
+  --color-accent-2-muted: oklch(0.70 0.210 350 / 0.16);
+  --color-accent-3: var(--sky-400);
+  --color-accent-3-hover: var(--sky-300);
+  --color-accent-3-muted: oklch(0.80 0.120 232 / 0.16);
+
+  /* Signature gradient poles (hero, 3D, glow) — purple → pink → baby blue */
+  --gradient-brand: linear-gradient(120deg, var(--cipher-500) 0%, var(--blush-500) 52%, var(--sky-400) 100%);
+  --gradient-brand-soft: linear-gradient(120deg, var(--cipher-600) 0%, var(--blush-600) 55%, var(--sky-500) 100%);
+  --gradient-aurora: radial-gradient(120% 120% at 20% 10%, oklch(0.67 0.235 295 / 0.35) 0%, transparent 55%),
+    radial-gradient(120% 120% at 85% 20%, oklch(0.70 0.210 350 / 0.30) 0%, transparent 55%),
+    radial-gradient(120% 120% at 55% 95%, oklch(0.80 0.120 232 / 0.28) 0%, transparent 55%);
 
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
 
   /* Glass / elevation surfaces (glassmorphism, brand doc §5) */
-  --glass-bg: oklch(0.24 0.015 250 / 0.55);
-  --glass-border: oklch(0.85 0.010 244 / 0.08);
+  --glass-bg: oklch(0.19 0.018 300 / 0.55);
+  --glass-border: oklch(0.89 0.090 298 / 0.10);
   --glass-blur: 16px;
 
   /* ── Elevation (shadows tuned for dark surfaces) ─────────────────────────── */
   --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.4);
   --shadow-md: 0 4px 16px oklch(0 0 0 / 0.45);
   --shadow-lg: 0 12px 40px oklch(0 0 0 / 0.5);
-  --shadow-accent-glow: 0 0 0 1px var(--color-accent-muted), 0 8px 32px oklch(0.74 0.13 191 / 0.18);
+  --shadow-accent-glow: 0 0 0 1px var(--color-accent-muted), 0 8px 32px oklch(0.67 0.235 295 / 0.28);
 
   /* ── Radius ──────────────────────────────────────────────────────────────── */
   --radius-xs: 4px;
@@ -181,16 +213,23 @@
 
   --color-accent: var(--cipher-700);
   --color-accent-hover: var(--cipher-800);
-  --color-accent-muted: oklch(0.52 0.110 193 / 0.10);
+  --color-accent-muted: oklch(0.52 0.200 295 / 0.10);
   --color-focus-ring: var(--cipher-600);
 
-  --glass-bg: oklch(0.99 0.002 240 / 0.6);
-  --glass-border: oklch(0.32 0.016 250 / 0.08);
+  --color-accent-2: var(--blush-600);
+  --color-accent-2-hover: var(--blush-700);
+  --color-accent-2-muted: oklch(0.61 0.215 350 / 0.10);
+  --color-accent-3: var(--sky-600);
+  --color-accent-3-hover: var(--sky-500);
+  --color-accent-3-muted: oklch(0.62 0.150 235 / 0.10);
 
-  --shadow-sm: 0 1px 2px oklch(0.2 0.02 250 / 0.08);
-  --shadow-md: 0 4px 16px oklch(0.2 0.02 250 / 0.10);
-  --shadow-lg: 0 12px 40px oklch(0.2 0.02 250 / 0.14);
-  --shadow-accent-glow: 0 0 0 1px var(--color-accent-muted), 0 8px 24px oklch(0.52 0.11 193 / 0.16);
+  --glass-bg: oklch(0.99 0.002 290 / 0.6);
+  --glass-border: oklch(0.52 0.200 295 / 0.10);
+
+  --shadow-sm: 0 1px 2px oklch(0.2 0.03 300 / 0.08);
+  --shadow-md: 0 4px 16px oklch(0.2 0.03 300 / 0.10);
+  --shadow-lg: 0 12px 40px oklch(0.2 0.03 300 / 0.14);
+  --shadow-accent-glow: 0 0 0 1px var(--color-accent-muted), 0 8px 24px oklch(0.52 0.200 295 / 0.18);
 }
 
 /* Respect OS preference when no explicit data-theme is set (theme-aware default). */
@@ -210,9 +249,15 @@
     --text-link: var(--cipher-700);
     --color-accent: var(--cipher-700);
     --color-accent-hover: var(--cipher-800);
-    --color-accent-muted: oklch(0.52 0.110 193 / 0.10);
+    --color-accent-muted: oklch(0.52 0.200 295 / 0.10);
     --color-focus-ring: var(--cipher-600);
-    --glass-bg: oklch(0.99 0.002 240 / 0.6);
-    --glass-border: oklch(0.32 0.016 250 / 0.08);
+    --color-accent-2: var(--blush-600);
+    --color-accent-2-hover: var(--blush-700);
+    --color-accent-2-muted: oklch(0.61 0.215 350 / 0.10);
+    --color-accent-3: var(--sky-600);
+    --color-accent-3-hover: var(--sky-500);
+    --color-accent-3-muted: oklch(0.62 0.150 235 / 0.10);
+    --glass-bg: oklch(0.99 0.002 290 / 0.6);
+    --glass-border: oklch(0.52 0.200 295 / 0.10);
   }
 }
