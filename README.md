@@ -2,7 +2,10 @@
 
 A full-stack cybersecurity learning platform with courses, hacking labs, CTF challenges, leaderboards, and more.
 
-> **Platform rebuild in progress.** INFOENC is being rebuilt as a two-platform company (security services + academy) on Next.js 15 / NestJS / PostgreSQL. The codebase below is the validated MVP; the rebuild is driven by the phased documentation in [`docs/`](docs/phase-1-business-analysis/README.md), starting with [Phase 1 — Business Analysis & Requirements](docs/phase-1-business-analysis/README.md).
+> **Platform rebuild in progress.** INFOENC is being rebuilt as a two-platform company (security services + academy) on Next.js 15 / NestJS / PostgreSQL. The codebase below is the validated MVP; the rebuild is driven by the phased documentation in [`docs/`](docs/):
+>
+> - [Phase 1 — Business Analysis & Requirements](docs/phase-1-business-analysis/README.md)
+> - [Phase 2 — System Architecture](docs/phase-2-architecture/README.md)
 
 ## Tech Stack
 
