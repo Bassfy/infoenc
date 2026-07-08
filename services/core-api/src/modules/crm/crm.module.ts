@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { LeadService } from "./lead.service.js";
 import { ProposalService } from "./proposal.service.js";
+import { AccountService } from "./account.service.js";
 import { LeadController } from "./lead.controller.js";
 import { TurnstileService } from "./turnstile.service.js";
 
@@ -11,7 +12,7 @@ import { TurnstileService } from "./turnstile.service.js";
  */
 @Module({
   controllers: [LeadController],
-  providers: [LeadService, ProposalService, TurnstileService],
-  exports: [LeadService, ProposalService],
+  providers: [LeadService, ProposalService, AccountService, TurnstileService],
+  exports: [LeadService, ProposalService, AccountService],
 })
 export class CrmModule {}
