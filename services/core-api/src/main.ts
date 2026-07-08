@@ -10,7 +10,9 @@ import { loadEnv } from "./config/env.js";
  */
 async function bootstrap(): Promise<void> {
   const env = loadEnv();
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  // rawBody: true preserves the exact request bytes for payment-webhook signature verification
+  // (commerce/webhook.controller.ts). JSON parsing still applies to normal routes.
+  const app = await NestFactory.create(AppModule, { bufferLogs: true, rawBody: true });
 
   // Security headers (NFR-011). Strict CSP is set per-app at the edge/Next layer; helmet covers
   // the API responses (no inline, frameguard, HSTS in production).
