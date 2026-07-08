@@ -6,6 +6,7 @@ A full-stack cybersecurity learning platform with courses, hacking labs, CTF cha
 >
 > - [Phase 1 — Business Analysis & Requirements](docs/phase-1-business-analysis/README.md)
 > - [Phase 2 — System Architecture](docs/phase-2-architecture/README.md)
+> - [Phase 3 — Database Design](docs/phase-3-database/README.md) — with real Prisma schema in [`prisma/schema/`](prisma/schema/)
 
 ## Tech Stack
 

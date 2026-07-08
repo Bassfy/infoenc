@@ -1,0 +1,297 @@
+// Shared enums — closed, code-coupled sets only (doc 01 §7).
+// Runtime-extensible sets (categories, tags, ranks, badges) are lookup tables, not enums.
+
+enum Locale {
+  ar
+  en
+}
+
+// ── Organizations & identity ──────────────────────────────────────────────
+enum OrgType {
+  personal // an individual learner's org-of-one
+  business // corporate academy customer
+  client // services (consulting) client
+  internal // INFOENC staff org
+}
+
+enum OrgRole {
+  owner
+  admin
+  manager // team-scoped (corporate)
+  member
+}
+
+enum ClientRole {
+  client_owner
+  client_contact
+}
+
+enum InvitationStatus {
+  pending
+  accepted
+  revoked
+  expired
+}
+
+enum CredentialType {
+  password
+  oauth
+  passkey
+  totp
+}
+
+enum OAuthProvider {
+  google
+  github
+}
+
+// ── Catalog & learning ────────────────────────────────────────────────────
+enum ContentStatus {
+  draft
+  in_review
+  approved
+  published
+  archived
+}
+
+enum Difficulty {
+  beginner
+  intermediate
+  advanced
+  expert
+}
+
+enum LessonType {
+  video
+  article
+  lab
+  quiz
+}
+
+enum QuestionType {
+  single
+  multiple
+  fill_in
+  ordered
+}
+
+enum AssessmentType {
+  quiz
+  exam
+}
+
+enum EnrollmentState {
+  active
+  completed
+  expired
+}
+
+// ── Labs & CTF ────────────────────────────────────────────────────────────
+enum LabCategory {
+  web
+  network
+  crypto
+  forensics
+  reversing
+  pwn
+  osint
+  steganography
+  cloud
+  active_directory
+  misc
+}
+
+enum LabSessionState {
+  provisioning
+  ready
+  active
+  idle_warning
+  expired
+  terminated
+  failed
+}
+
+enum LabDelivery {
+  terminal
+  desktop
+  vpn
+}
+
+enum CtfEventState {
+  scheduled
+  running
+  frozen
+  ended
+}
+
+// ── Gamification ──────────────────────────────────────────────────────────
+enum LeaderboardScope {
+  global
+  monthly
+  country
+  path
+  org
+  ctf_event
+}
+
+// ── Commerce ──────────────────────────────────────────────────────────────
+enum PlanTier {
+  free
+  learner
+  pro
+  corporate
+  enterprise
+}
+
+enum BillingPeriod {
+  monthly
+  quarterly
+  yearly
+}
+
+enum SubscriptionStatus {
+  trialing
+  active
+  past_due
+  suspended
+  canceled
+}
+
+enum PaymentProviderKind {
+  stripe
+  paypal
+  moyasar
+  paymob
+}
+
+enum PaymentStatus {
+  pending
+  succeeded
+  failed
+  refunded
+  partially_refunded
+}
+
+enum InvoiceStatus {
+  draft
+  issued
+  paid
+  void
+  credited
+}
+
+enum CouponKind {
+  percentage
+  fixed
+}
+
+// ── Engagements (services) ────────────────────────────────────────────────
+enum EngagementType {
+  pentest_network
+  pentest_web
+  pentest_api
+  pentest_mobile
+  red_team
+  purple_team
+  cloud_review
+  ad_assessment
+  vuln_assessment
+  compliance
+  incident_response
+  forensics
+  code_review
+  mssp
+}
+
+enum EngagementState {
+  scoped
+  scheduled
+  in_progress
+  reporting
+  retest
+  closed
+}
+
+enum FindingSeverity {
+  info
+  low
+  medium
+  high
+  critical
+}
+
+enum FindingStatus {
+  open
+  remediating
+  retest_requested
+  resolved
+  accepted_risk
+  false_positive
+}
+
+// ── CRM ───────────────────────────────────────────────────────────────────
+enum LeadStage {
+  new
+  qualified
+  proposal
+  negotiation
+  won
+  lost
+}
+
+enum LeadTemperature {
+  hot
+  warm
+  cold
+}
+
+// ── Support ───────────────────────────────────────────────────────────────
+enum TicketStatus {
+  open
+  pending
+  on_hold
+  resolved
+  closed
+}
+
+enum TicketPriority {
+  low
+  normal
+  high
+  urgent
+}
+
+// ── Automation ────────────────────────────────────────────────────────────
+enum AutomationTrigger {
+  event
+  schedule
+  manual
+}
+
+enum GatePolicy {
+  auto
+  human_approve
+}
+
+enum AutomationRunStatus {
+  running
+  completed
+  failed
+  gated
+  approved
+  rejected
+}
+
+// ── Community & moderation ────────────────────────────────────────────────
+enum ModerationState {
+  visible
+  queued
+  hidden
+  removed
+}
+
+// ── Notifications ─────────────────────────────────────────────────────────
+enum NotificationChannel {
+  in_app
+  email
+}

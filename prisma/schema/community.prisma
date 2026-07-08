@@ -1,0 +1,89 @@
+// Community — discussions, forums, moderation (Phase 2 doc 03 community module).
+// A single Post model with parentId serves lesson/lab Q&A and forum threads (MVP forum_posts,
+// now with moderation state + spoiler shielding for flags).
+
+model Forum {
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  translations ForumTranslation[]
+  posts        Post[]
+
+  @@map("forums")
+}
+
+model ForumTranslation {
+  id          String  @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  forumId     String  @db.Uuid
+  forum       Forum   @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  locale      Locale
+  name        String
+  description String?
+
+  @@unique([forumId, locale])
+  @@map("forum_translations")
+}
+
+model Post {
+  id         String          @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  authorId   String          @db.Uuid
+  author     User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  // context: a forum thread, a lesson Q&A, or a lab discussion (spoiler-shielded)
+  forumId    String?         @db.Uuid
+  forum      Forum?          @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  lessonId   String?         @db.Uuid
+  labId      String?         @db.Uuid
+  parentId   String?         @db.Uuid // reply threading (self-relation)
+  parent     Post?           @relation("PostReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    Post[]          @relation("PostReplies")
+  title      String?
+  bodyMd     String // sanitized (shared renderer, Phase 2 doc 04 §7)
+  isSpoiler  Boolean         @default(false) // flag/solution content shielded until reveal
+  isPinned   Boolean         @default(false)
+  isAccepted Boolean         @default(false) // accepted answer (Q&A)
+  moderation ModerationState @default(visible)
+  voteScore  Int             @default(0) // maintained from PostVote
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  deletedAt  DateTime?
+
+  votes   PostVote[]
+  reports PostReport[]
+
+  @@index([forumId, createdAt])
+  @@index([lessonId])
+  @@index([labId])
+  @@index([parentId])
+  @@map("posts")
+}
+
+model PostVote {
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  postId    String   @db.Uuid
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  value     Int // +1 / -1
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@map("post_votes")
+}
+
+// Moderation queue backing (FR-AU-023 pre-moderation + human review).
+model PostReport {
+  id            String           @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  postId        String           @db.Uuid
+  post          Post             @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reporterId    String?          @db.Uuid // null = AI pre-moderation
+  reason        String
+  // AI scores (toxicity/spam/spoiler) typed in contracts
+  scores        Json?
+  resolvedState ModerationState?
+  resolvedBy    String?          @db.Uuid
+  createdAt     DateTime         @default(now())
+
+  @@index([postId])
+  @@map("post_reports")
+}

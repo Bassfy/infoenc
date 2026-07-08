@@ -1,0 +1,252 @@
+// Catalog — global learning content (Phase 2 doc 03 catalog module).
+// Content is NOT org-scoped (it's the public product); private corporate content is a
+// later capability flagged via visibility. Bilingual via translation-row pattern (doc 01 §4).
+
+model Category {
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug      String   @unique
+  icon      String?
+  color     String?
+  createdAt DateTime @default(now())
+
+  translations CategoryTranslation[]
+  courses      Course[]
+  labs         Lab[]
+
+  @@map("categories")
+}
+
+model CategoryTranslation {
+  id          String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  categoryId  String   @db.Uuid
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  locale      Locale
+  name        String
+  description String?
+
+  @@unique([categoryId, locale])
+  @@map("category_translations")
+}
+
+model Tag {
+  id      String      @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug    String      @unique
+  courses CourseTag[]
+
+  @@map("tags")
+}
+
+// Ordered sequence of courses/labs toward a target role.
+model LearningPath {
+  id             String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug           String        @unique
+  difficulty     Difficulty    @default(beginner)
+  targetRole     String? // "SOC Analyst", "Web Pentester", ...
+  estimatedHours Int           @default(0)
+  status         ContentStatus @default(draft)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  deletedAt      DateTime?
+
+  translations PathTranslation[]
+  items        PathItem[]
+  enrollments  Enrollment[]
+  certificates Certificate[]
+
+  @@index([status, difficulty])
+  @@map("learning_paths")
+}
+
+model PathTranslation {
+  id      String       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  pathId  String       @db.Uuid
+  path    LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  locale  Locale
+  title   String
+  summary String?
+
+  @@unique([pathId, locale])
+  @@map("path_translations")
+}
+
+// A path is composed of courses and/or labs, ordered, with prerequisites.
+model PathItem {
+  id            String           @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  pathId        String           @db.Uuid
+  path          LearningPath     @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  orderIndex    Int              @default(0)
+  courseId      String?          @db.Uuid
+  course        Course?          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  labId         String?          @db.Uuid
+  lab           Lab?             @relation(fields: [labId], references: [id], onDelete: Cascade)
+  // prerequisite path items that must complete first (self-relation via join)
+  prerequisites PathItemPrereq[] @relation("PathItemDependent")
+  dependents    PathItemPrereq[] @relation("PathItemPrereq")
+
+  @@index([pathId, orderIndex])
+  @@map("path_items")
+}
+
+model PathItemPrereq {
+  id           String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  itemId       String   @db.Uuid
+  item         PathItem @relation("PathItemDependent", fields: [itemId], references: [id], onDelete: Cascade)
+  prereqItemId String   @db.Uuid
+  prereqItem   PathItem @relation("PathItemPrereq", fields: [prereqItemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, prereqItemId])
+  @@map("path_item_prereqs")
+}
+
+model Course {
+  id              String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug            String        @unique
+  categoryId      String?       @db.Uuid
+  category        Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  instructorId    String?       @db.Uuid
+  thumbnailUrl    String?
+  difficulty      Difficulty    @default(beginner)
+  durationMinutes Int           @default(0)
+  // pricing: a course may be individually sold or included in subscription tiers
+  isFreeTier      Boolean       @default(false)
+  minPlanTier     PlanTier      @default(learner)
+  status          ContentStatus @default(draft)
+  // maintained read-model counters (source of truth is enrollments / ratings tables)
+  enrolledCount   Int           @default(0)
+  ratingAvg       Int           @default(0) // stored x100 to avoid float
+  ratingCount     Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+
+  translations CourseTranslation[]
+  modules      CourseModule[]
+  tags         CourseTag[]
+  pathItems    PathItem[]
+  enrollments  Enrollment[]
+  certificates Certificate[]
+  reviews      CourseReview[]
+
+  @@index([status, difficulty])
+  @@index([categoryId])
+  @@map("courses")
+}
+
+model CourseTranslation {
+  id               String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  courseId         String   @db.Uuid
+  course           Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  locale           Locale
+  title            String
+  shortDescription String?
+  description      String?
+  // structured lists kept as string arrays (small, non-relational)
+  requirements     String[]
+  whatYouLearn     String[]
+
+  @@unique([courseId, locale])
+  @@map("course_translations")
+}
+
+model CourseTag {
+  courseId String @db.Uuid
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  tagId    String @db.Uuid
+  tag      Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([courseId, tagId])
+  @@map("course_tags")
+}
+
+model CourseModule {
+  id           String              @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  courseId     String              @db.Uuid
+  course       Course              @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  orderIndex   Int                 @default(0)
+  lessons      Lesson[]
+  translations ModuleTranslation[]
+
+  @@index([courseId, orderIndex])
+  @@map("course_modules")
+}
+
+model ModuleTranslation {
+  id          String       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  moduleId    String       @db.Uuid
+  module      CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  locale      Locale
+  title       String
+  description String?
+
+  @@unique([moduleId, locale])
+  @@map("module_translations")
+}
+
+model Lesson {
+  id                   String       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  moduleId             String       @db.Uuid
+  module               CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  slug                 String
+  type                 LessonType   @default(video)
+  orderIndex           Int          @default(0)
+  isPreview            Boolean      @default(false)
+  // video-lesson fields (null for other types); localized video/subtitles live on translation
+  videoDurationSeconds Int          @default(0)
+  // link to a lab or assessment when the lesson is interactive
+  labId                String?      @db.Uuid
+  lab                  Lab?         @relation(fields: [labId], references: [id], onDelete: SetNull)
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  deletedAt            DateTime?
+
+  translations LessonTranslation[]
+  assessments  Assessment[]
+  progress     LessonProgress[]
+  versions     LessonVersion[]
+
+  @@unique([moduleId, slug])
+  @@index([moduleId, orderIndex])
+  @@map("lessons")
+}
+
+model LessonTranslation {
+  id         String  @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  lessonId   String  @db.Uuid
+  lesson     Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  locale     Locale
+  title      String
+  bodyMd     String? // sanitized markdown (rehype-sanitize allowlist, Phase 2 doc 04 §7)
+  videoUrl   String? // Cloudflare Stream id per locale (dubbed/subtitled variants)
+  transcript String?
+
+  @@unique([lessonId, locale])
+  @@map("lesson_translations")
+}
+
+// Content versioning (FR-AC-028): published lessons retain history.
+model LessonVersion {
+  id          String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  lessonId    String   @db.Uuid
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  version     Int
+  snapshot    Json // full lesson + translations at publish time
+  publishedBy String?  @db.Uuid
+  createdAt   DateTime @default(now())
+
+  @@unique([lessonId, version])
+  @@map("lesson_versions")
+}
+
+model CourseReview {
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  courseId  String   @db.Uuid
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  userId    String   @db.Uuid
+  rating    Int // 1..5
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@unique([courseId, userId])
+  @@index([courseId])
+  @@map("course_reviews")
+}

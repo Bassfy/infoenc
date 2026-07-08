@@ -1,0 +1,109 @@
+// CMS — marketing pages, blog, media (Phase 2 doc 03 cms module, FR-AD-030s).
+// Bilingual entries publish independently per language (FR-CO-004).
+
+model CmsPage {
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug      String   @unique
+  kind      String // "marketing" | "service" | "industry" | "legal"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations CmsPageTranslation[]
+
+  @@map("cms_pages")
+}
+
+model CmsPageTranslation {
+  id             String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  pageId         String        @db.Uuid
+  page           CmsPage       @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  locale         Locale
+  status         ContentStatus @default(draft)
+  title          String
+  // structured content blocks (typed in contracts) — not free HTML
+  blocks         Json          @default("[]")
+  // per-entry SEO fields (NFR-055)
+  seoTitle       String?
+  seoDescription String?
+  ogImageUrl     String?
+  publishedAt    DateTime?
+
+  @@unique([pageId, locale])
+  @@index([status])
+  @@map("cms_page_translations")
+}
+
+model BlogPost {
+  id            String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug          String   @unique
+  authorId      String?  @db.Uuid
+  category      String? // "advisory" | "research" | "field-notes" | "compliance"
+  coverImageUrl String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  translations BlogPostTranslation[]
+
+  @@map("blog_posts")
+}
+
+model BlogPostTranslation {
+  id             String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  postId         String        @db.Uuid
+  post           BlogPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  locale         Locale
+  status         ContentStatus @default(draft)
+  title          String
+  excerpt        String?
+  bodyMd         String
+  seoTitle       String?
+  seoDescription String?
+  publishedAt    DateTime?
+
+  @@unique([postId, locale])
+  @@index([status, publishedAt])
+  @@map("blog_post_translations")
+}
+
+// Media library with alt-text enforcement (FR-AD-032) + optimization metadata.
+model MediaAsset {
+  id          String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  s3Key       String   @unique
+  kind        String // "image" | "video" | "file"
+  contentType String
+  sizeBytes   BigInt
+  width       Int?
+  height      Int?
+  // alt text is required for images (enforced at API boundary), stored per locale
+  altText     Json     @default("{}") // { ar, en }
+  uploadedBy  String?  @db.Uuid
+  createdAt   DateTime @default(now())
+
+  @@map("media_assets")
+}
+
+// Careers page open roles (FR-CO-006) — internal hiring, distinct from the academy job board.
+model CareerOpening {
+  id         String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug       String        @unique
+  department String
+  location   String?
+  status     ContentStatus @default(draft)
+  createdAt  DateTime      @default(now())
+
+  translations CareerOpeningTranslation[]
+
+  @@map("career_openings")
+}
+
+model CareerOpeningTranslation {
+  id        String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  openingId String        @db.Uuid
+  opening   CareerOpening @relation(fields: [openingId], references: [id], onDelete: Cascade)
+  locale    Locale
+  title     String
+  bodyMd    String
+
+  @@unique([openingId, locale])
+  @@map("career_opening_translations")
+}

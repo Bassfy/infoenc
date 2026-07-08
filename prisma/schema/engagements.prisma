@@ -1,0 +1,170 @@
+// Engagements — services delivery + client portal (Phase 2 doc 05, doc 06 §4).
+// CROWN JEWEL: org-scoped + engagement-contact ACL + field-level encryption + evidence bucket.
+// Finding/evidence bodies are envelope-encrypted (Bytes cipher columns), never plaintext at rest.
+
+model Engagement {
+  id               String          @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId            String          @db.Uuid // the client org (RLS boundary)
+  org              Organization    @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  type             EngagementType
+  reference        String          @unique // human reference, e.g. "ENG-2026-0042"
+  title            String
+  state            EngagementState @default(scoped)
+  // scope + schedule details (non-sensitive metadata) typed in contracts
+  scope            Json            @default("{}")
+  startsOn         DateTime?       @db.Date
+  endsOn           DateTime?       @db.Date
+  leadConsultantId String?         @db.Uuid
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  findings   Finding[]
+  evidence   Evidence[]
+  reports    EngagementReport[]
+  messages   PortalMessage[]
+  milestones EngagementMilestone[]
+
+  @@index([orgId, state])
+  @@map("engagements")
+}
+
+model EngagementMilestone {
+  id           String     @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  engagementId String     @db.Uuid
+  engagement   Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  title        String
+  dueOn        DateTime?  @db.Date
+  completedAt  DateTime?
+  orderIndex   Int        @default(0)
+
+  @@index([engagementId, orderIndex])
+  @@map("engagement_milestones")
+}
+
+// Reusable findings library — templates instantiated per engagement (FR-CO-051).
+model FindingTemplate {
+  id              String                       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  key             String                       @unique
+  defaultSeverity FindingSeverity              @default(medium)
+  cweId           String?
+  translations    FindingTemplateTranslation[]
+  createdAt       DateTime                     @default(now())
+
+  @@map("finding_templates")
+}
+
+model FindingTemplateTranslation {
+  id            String          @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  templateId    String          @db.Uuid
+  template      FindingTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  locale        Locale
+  title         String
+  descriptionMd String
+  remediationMd String
+
+  @@unique([templateId, locale])
+  @@map("finding_template_translations")
+}
+
+model Finding {
+  id            String          @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  engagementId  String          @db.Uuid
+  engagement    Engagement      @relation(fields: [engagementId], references: [id], onDelete: Restrict)
+  orgId         String          @db.Uuid // denormalized for RLS predicate on the leading index
+  templateId    String?         @db.Uuid
+  severity      FindingSeverity
+  cvssVector    String?
+  cvssScore     Int? // x10 (e.g., 91 = 9.1) — integer, no float
+  affectedAsset String?
+  status        FindingStatus   @default(open)
+  // finding body + evidence notes are envelope-encrypted at rest (NFR-020)
+  bodyCipher    Bytes
+  publishedAt   DateTime? // visible to client once set (FR-CO-032)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  comments FindingComment[]
+
+  @@index([orgId, engagementId])
+  @@index([engagementId, severity])
+  @@map("findings")
+}
+
+model FindingComment {
+  id         String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  findingId  String   @db.Uuid
+  finding    Finding  @relation(fields: [findingId], references: [id], onDelete: Cascade)
+  orgId      String   @db.Uuid
+  authorId   String   @db.Uuid
+  bodyCipher Bytes // client remediation notes can be sensitive too
+  createdAt  DateTime @default(now())
+
+  @@index([findingId])
+  @@map("finding_comments")
+}
+
+// Evidence objects live in the object-locked evidence bucket; this row is metadata + key wrap.
+model Evidence {
+  id           String     @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  engagementId String     @db.Uuid
+  engagement   Engagement @relation(fields: [engagementId], references: [id], onDelete: Restrict)
+  orgId        String     @db.Uuid
+  s3Key        String // per-org/per-engagement prefix, deny-by-default bucket
+  filename     String
+  contentType  String
+  sizeBytes    BigInt
+  // wrapped data key for the object (envelope; crypto-shred = drop this)
+  wrappedKey   Bytes
+  uploadedBy   String     @db.Uuid
+  createdAt    DateTime   @default(now())
+
+  downloads EvidenceDownload[]
+
+  @@index([orgId, engagementId])
+  @@map("evidence")
+}
+
+// Every evidence download is attributed + logged (FR-CO-033), links expire <=72h.
+model EvidenceDownload {
+  id           String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  evidenceId   String   @db.Uuid
+  evidence     Evidence @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+  userId       String   @db.Uuid
+  ipHash       String?
+  downloadedAt DateTime @default(now())
+
+  @@index([evidenceId])
+  @@map("evidence_downloads")
+}
+
+model EngagementReport {
+  id           String     @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  engagementId String     @db.Uuid
+  engagement   Engagement @relation(fields: [engagementId], references: [id], onDelete: Restrict)
+  orgId        String     @db.Uuid
+  kind         String // "executive" | "technical" | "machine_readable"
+  locale       Locale
+  s3Key        String // watermarked PDF / JSON export
+  wrappedKey   Bytes
+  version      Int        @default(1)
+  approvedBy   String?    @db.Uuid // consultant approval gate before client delivery
+  deliveredAt  DateTime?
+  createdAt    DateTime   @default(now())
+
+  @@index([orgId, engagementId])
+  @@map("engagement_reports")
+}
+
+// Portal messaging thread per engagement (FR-CO-036) — replaces email attachments.
+model PortalMessage {
+  id           String     @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  engagementId String     @db.Uuid
+  engagement   Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+  orgId        String     @db.Uuid
+  authorId     String     @db.Uuid
+  bodyCipher   Bytes
+  createdAt    DateTime   @default(now())
+
+  @@index([engagementId, createdAt])
+  @@map("portal_messages")
+}

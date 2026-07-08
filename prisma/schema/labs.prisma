@@ -1,0 +1,248 @@
+// Labs & CTF — metadata side (Phase 2 doc 07). The lab-orchestrator owns the
+// infrastructure side; these tables hold definitions, sessions, and scoring.
+
+model Lab {
+  id               String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug             String        @unique
+  categoryId       String?       @db.Uuid
+  category         Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  labCategory      LabCategory   @default(misc)
+  difficulty       Difficulty    @default(beginner)
+  delivery         LabDelivery   @default(terminal)
+  basePoints       Int           @default(100)
+  minPlanTier      PlanTier      @default(free)
+  // scenario definition reference in the lab registry (image, topology, networking)
+  scenarioKey      String
+  scenarioVersion  String
+  // dynamic per-session flags when true (leaked flag worthless to others — Phase 2 doc 07 §6)
+  dynamicFlags     Boolean       @default(true)
+  // static flag (envelope-encrypted) only when dynamicFlags = false
+  staticFlagCipher Bytes?
+  status           ContentStatus @default(draft)
+  solveCount       Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  deletedAt        DateTime?
+
+  translations LabTranslation[]
+  tasks        LabTask[]
+  sessions     LabSession[]
+  submissions  FlagSubmission[]
+  completions  LabCompletion[]
+  pathItems    PathItem[]
+  lessons      Lesson[]
+
+  @@index([status, difficulty])
+  @@index([labCategory])
+  @@map("labs")
+}
+
+model LabTranslation {
+  id               String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  labId            String   @db.Uuid
+  lab              Lab      @relation(fields: [labId], references: [id], onDelete: Cascade)
+  locale           Locale
+  title            String
+  shortDescription String?
+  description      String?
+  toolsNeeded      String[]
+
+  @@unique([labId, locale])
+  @@map("lab_translations")
+}
+
+// Guided-lab tasks: each has its own flag/answer + XP-costed hints (FR-AC-041).
+model LabTask {
+  id           String               @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  labId        String               @db.Uuid
+  lab          Lab                  @relation(fields: [labId], references: [id], onDelete: Cascade)
+  orderIndex   Int                  @default(0)
+  points       Int                  @default(0)
+  // answer validation config (regex / dynamic-flag derivation) typed in contracts
+  answerSpec   Json
+  translations LabTaskTranslation[]
+  hints        LabHint[]
+  completions  LabTaskCompletion[]
+
+  @@index([labId, orderIndex])
+  @@map("lab_tasks")
+}
+
+model LabTaskTranslation {
+  id     String  @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  taskId String  @db.Uuid
+  task   LabTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  locale Locale
+  prompt String
+
+  @@unique([taskId, locale])
+  @@map("lab_task_translations")
+}
+
+model LabHint {
+  id           String               @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  taskId       String               @db.Uuid
+  task         LabTask              @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  orderIndex   Int                  @default(0)
+  xpCost       Int                  @default(0)
+  translations LabHintTranslation[]
+
+  @@index([taskId, orderIndex])
+  @@map("lab_hints")
+}
+
+model LabHintTranslation {
+  id     String  @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  hintId String  @db.Uuid
+  hint   LabHint @relation(fields: [hintId], references: [id], onDelete: Cascade)
+  locale Locale
+  body   String
+
+  @@unique([hintId, locale])
+  @@map("lab_hint_translations")
+}
+
+// A provisioned lab instance for a user (Phase 2 doc 07 §4). orchestratorRef ties to k8s namespace.
+model LabSession {
+  id              String          @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  labId           String          @db.Uuid
+  lab             Lab             @relation(fields: [labId], references: [id], onDelete: Cascade)
+  userId          String          @db.Uuid
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  state           LabSessionState @default(provisioning)
+  orchestratorRef String? // namespace/session id in the lab cluster
+  // dynamic-flag seed (envelope-encrypted) — never returned to the client
+  flagSeedCipher  Bytes?
+  startedAt       DateTime        @default(now())
+  expiresAt       DateTime
+  lastActivityAt  DateTime        @default(now())
+  terminatedAt    DateTime?
+  // metering for cost-per-learner (NFR-042)
+  computeSeconds  Int             @default(0)
+
+  taskCompletions LabTaskCompletion[]
+
+  @@index([userId, state])
+  @@index([state, expiresAt]) // reaper query
+  @@map("lab_sessions")
+}
+
+// Every flag attempt (rate-limited path). Correct/incorrect both recorded.
+model FlagSubmission {
+  id          String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  labId       String   @db.Uuid
+  lab         Lab      @relation(fields: [labId], references: [id], onDelete: Cascade)
+  userId      String   @db.Uuid
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId      String?  @db.Uuid
+  isCorrect   Boolean  @default(false)
+  submittedAt DateTime @default(now())
+
+  @@index([userId, labId])
+  @@index([labId, submittedAt])
+  @@map("flag_submissions")
+}
+
+model LabTaskCompletion {
+  id           String      @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  taskId       String      @db.Uuid
+  task         LabTask     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId       String      @db.Uuid
+  sessionId    String?     @db.Uuid
+  session      LabSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  pointsEarned Int         @default(0)
+  completedAt  DateTime    @default(now())
+
+  @@unique([taskId, userId])
+  @@index([userId])
+  @@map("lab_task_completions")
+}
+
+// One row per user/lab first solve (drives solveCount, XP, first-blood badge).
+model LabCompletion {
+  id           String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  labId        String   @db.Uuid
+  lab          Lab      @relation(fields: [labId], references: [id], onDelete: Cascade)
+  userId       String   @db.Uuid
+  pointsEarned Int      @default(0)
+  completedAt  DateTime @default(now())
+
+  @@unique([labId, userId])
+  @@index([userId])
+  @@map("lab_completions")
+}
+
+// ── CTF ────────────────────────────────────────────────────────────────────
+model CtfEvent {
+  id        String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug      String        @unique
+  // org-scoped for private corporate CTFs (FR-AC-052); null = public event
+  orgId     String?       @db.Uuid
+  state     CtfEventState @default(scheduled)
+  startsAt  DateTime
+  endsAt    DateTime
+  freezeAt  DateTime?
+  createdAt DateTime      @default(now())
+
+  translations CtfEventTranslation[]
+  challenges   CtfChallenge[]
+
+  @@index([state, startsAt])
+  @@map("ctf_events")
+}
+
+model CtfEventTranslation {
+  id          String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  eventId     String   @db.Uuid
+  event       CtfEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  locale      Locale
+  title       String
+  description String?
+
+  @@unique([eventId, locale])
+  @@map("ctf_event_translations")
+}
+
+model CtfChallenge {
+  id             String      @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  eventId        String?     @db.Uuid // null = standing challenge library (FR-AC-050)
+  event          CtfEvent?   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  labCategory    LabCategory @default(misc)
+  // dynamic scoring: points decay with solves (typed config in contracts)
+  basePoints     Int         @default(100)
+  dynamicFlags   Boolean     @default(true)
+  flagSeedCipher Bytes?
+  solveCount     Int         @default(0)
+  createdAt      DateTime    @default(now())
+
+  translations CtfChallengeTranslation[]
+  solves       CtfSolve[]
+
+  @@index([eventId])
+  @@map("ctf_challenges")
+}
+
+model CtfChallengeTranslation {
+  id          String       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  challengeId String       @db.Uuid
+  challenge   CtfChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  locale      Locale
+  title       String
+  description String?
+
+  @@unique([challengeId, locale])
+  @@map("ctf_challenge_translations")
+}
+
+model CtfSolve {
+  id           String       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  challengeId  String       @db.Uuid
+  challenge    CtfChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  userId       String       @db.Uuid
+  pointsEarned Int          @default(0)
+  solvedAt     DateTime     @default(now())
+
+  @@unique([challengeId, userId])
+  @@index([userId])
+  @@map("ctf_solves")
+}

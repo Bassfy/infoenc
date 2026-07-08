@@ -1,0 +1,237 @@
+// Commerce — plans, subscriptions, entitlements, invoices (Phase 2 doc 03 §4).
+// Money in integer minor units + ISO-4217 currency (doc 01 §5). Invoices are immutable ledgers.
+
+model Plan {
+  id        String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  tier      PlanTier
+  key       String        @unique // "learner_monthly", "pro_yearly", ...
+  period    BillingPeriod
+  isActive  Boolean       @default(true)
+  // per-tier feature set (lab concurrency, machine access, etc.) typed in contracts
+  features  Json
+  createdAt DateTime      @default(now())
+
+  prices        PlanPrice[]
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+// Prices are per plan + currency (never converted at display time — doc 03 §3).
+model PlanPrice {
+  id       String  @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  planId   String  @db.Uuid
+  plan     Plan    @relation(fields: [planId], references: [id], onDelete: Cascade)
+  currency String // ISO 4217
+  amount   Int // minor units
+  // per-seat price for corporate; null for B2C
+  perSeat  Boolean @default(false)
+
+  @@unique([planId, currency])
+  @@map("plan_prices")
+}
+
+model Subscription {
+  id                 String              @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId              String              @db.Uuid
+  org                Organization        @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  planId             String              @db.Uuid
+  plan               Plan                @relation(fields: [planId], references: [id])
+  status             SubscriptionStatus  @default(trialing)
+  provider           PaymentProviderKind
+  providerSubId      String? // subscription id at the provider
+  seats              Int                 @default(1)
+  currency           String
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAt           DateTime?
+  canceledAt         DateTime?
+  trialEndsAt        DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  invoices     Invoice[]
+  entitlements Entitlement[]
+
+  @@index([orgId, status])
+  @@index([status, currentPeriodEnd]) // renewal/dunning sweeps
+  @@map("subscriptions")
+}
+
+// Computed, cached, event-refreshed access grants (Phase 2 doc 03 §4).
+model Entitlement {
+  id             String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId          String        @db.Uuid
+  org            Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  subscriptionId String?       @db.Uuid
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  featureKey     String // "labs.concurrency", "machines.deploy", "career.priority", ...
+  limitValue     Int? // numeric limit where applicable
+  grantedUntil   DateTime?
+  updatedAt      DateTime      @updatedAt
+
+  @@unique([orgId, featureKey])
+  @@index([orgId])
+  @@map("entitlements")
+}
+
+// Invoices are legal documents: sequential per-jurisdiction numbering, immutable once issued.
+model Invoice {
+  id               String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId            String        @db.Uuid
+  org              Organization  @relation(fields: [orgId], references: [id], onDelete: Restrict)
+  subscriptionId   String?       @db.Uuid
+  subscription     Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  // sequential legal number per jurisdiction — assigned at issue inside a serialized txn
+  invoiceNumber    String?       @unique
+  jurisdiction     String // country/region governing numbering + tax
+  status           InvoiceStatus @default(draft)
+  currency         String
+  subtotal         Int
+  taxAmount        Int           @default(0)
+  taxRateBps       Int           @default(0) // e.g., 1500 = 15% VAT
+  total            Int
+  // credit-note linkage for corrections (never mutate an issued invoice)
+  creditsInvoiceId String?       @db.Uuid
+  issuedAt         DateTime?
+  paidAt           DateTime?
+  pdfUrl           String? // rendered bilingual PDF (packages/pdf)
+  createdAt        DateTime      @default(now())
+
+  lineItems InvoiceLineItem[]
+  payments  Payment[]
+
+  @@index([orgId, status])
+  @@map("invoices")
+}
+
+model InvoiceLineItem {
+  id          String  @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  invoiceId   String  @db.Uuid
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  description String
+  quantity    Int     @default(1)
+  unitAmount  Int
+  amount      Int
+
+  @@index([invoiceId])
+  @@map("invoice_line_items")
+}
+
+model Payment {
+  id              String              @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  invoiceId       String?             @db.Uuid
+  invoice         Invoice?            @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  provider        PaymentProviderKind
+  providerRef     String? // charge/payment intent id
+  status          PaymentStatus       @default(pending)
+  currency        String
+  amount          Int
+  refundedAmount  Int                 @default(0)
+  // idempotency: provider event id makes webhook replays no-ops (Phase 2 doc 03 §4)
+  providerEventId String?             @unique
+  createdAt       DateTime            @default(now())
+
+  @@index([invoiceId])
+  @@map("payments")
+}
+
+// Raw webhook events (dedup + audit). Idempotency guard for all providers.
+model WebhookEvent {
+  id              String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  provider        String
+  providerEventId String    @unique
+  type            String
+  payload         Json
+  processedAt     DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@index([provider, processedAt])
+  @@map("webhook_events")
+}
+
+model Coupon {
+  id             String     @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  code           String     @unique
+  kind           CouponKind
+  value          Int // percent (bps) or fixed minor units
+  currency       String? // for fixed coupons
+  // scoping (plan/duration/first-N-cycles) + campaign tag, typed in contracts
+  scope          Json       @default("{}")
+  maxRedemptions Int?
+  redeemedCount  Int        @default(0)
+  campaign       String?
+  startsAt       DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime   @default(now())
+
+  redemptions CouponRedemption[]
+
+  @@index([campaign])
+  @@map("coupons")
+}
+
+model CouponRedemption {
+  id         String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  couponId   String   @db.Uuid
+  coupon     Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  orgId      String   @db.Uuid
+  redeemedAt DateTime @default(now())
+
+  @@unique([couponId, orgId])
+  @@map("coupon_redemptions")
+}
+
+model Referral {
+  id             String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  referrerUserId String    @db.Uuid
+  code           String    @unique
+  refereeUserId  String?   @db.Uuid // set on signup
+  convertedAt    DateTime? // set on referee's first payment
+  rewardGranted  Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+
+  @@index([referrerUserId])
+  @@map("referrals")
+}
+
+model Affiliate {
+  id          String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId      String    @unique @db.Uuid
+  code        String    @unique
+  revShareBps Int       @default(2500) // 25%
+  payoutEmail String?
+  approvedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  conversions AffiliateConversion[]
+
+  @@map("affiliates")
+}
+
+model AffiliateConversion {
+  id          String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  affiliateId String    @db.Uuid
+  affiliate   Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  orgId       String    @db.Uuid
+  amount      Int
+  currency    String
+  paidOut     Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  @@index([affiliateId, paidOut])
+  @@map("affiliate_conversions")
+}
+
+model GiftCard {
+  id              String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  code            String    @unique
+  amount          Int
+  currency        String
+  balance         Int
+  redeemedByOrgId String?   @db.Uuid
+  expiresAt       DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@map("gift_cards")
+}

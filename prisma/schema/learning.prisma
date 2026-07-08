@@ -1,0 +1,151 @@
+// Learning — enrollments, progress, assessments (Phase 2 doc 03 learning module).
+// User-scoped rows carry userId; corporate assignments carry orgId (RLS).
+
+model Enrollment {
+  id          String          @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId      String          @db.Uuid
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId    String?         @db.Uuid
+  course      Course?         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  pathId      String?         @db.Uuid
+  path        LearningPath?   @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  state       EnrollmentState @default(active)
+  progressBps Int             @default(0) // basis points 0..10000 (avoids float percent)
+  enrolledAt  DateTime        @default(now())
+  completedAt DateTime?
+
+  @@unique([userId, courseId])
+  @@unique([userId, pathId])
+  @@index([userId, state])
+  @@map("enrollments")
+}
+
+model LessonProgress {
+  id           String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId       String    @db.Uuid
+  lessonId     String    @db.Uuid
+  lesson       Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  isCompleted  Boolean   @default(false)
+  watchSeconds Int       @default(0)
+  completedAt  DateTime?
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@map("lesson_progress")
+}
+
+// Assessment definition (quiz or exam) attached to a lesson (Phase 2 doc 03).
+model Assessment {
+  id               String         @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  lessonId         String?        @db.Uuid
+  lesson           Lesson?        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  type             AssessmentType @default(quiz)
+  passScoreBps     Int            @default(7000) // 70.00%
+  timeLimitSeconds Int? // exams only
+  maxAttempts      Int? // null = unlimited
+  randomize        Boolean        @default(false) // exam question-pool randomization
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  questions    AssessmentQuestion[]
+  attempts     QuizAttempt[]
+  translations AssessmentTranslation[]
+
+  @@index([lessonId])
+  @@map("assessments")
+}
+
+model AssessmentTranslation {
+  id           String     @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  assessmentId String     @db.Uuid
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  locale       Locale
+  title        String
+
+  @@unique([assessmentId, locale])
+  @@map("assessment_translations")
+}
+
+model AssessmentQuestion {
+  id           String                @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  assessmentId String                @db.Uuid
+  assessment   Assessment            @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  type         QuestionType          @default(single)
+  points       Int                   @default(10)
+  orderIndex   Int                   @default(0)
+  // correct-answer key kept as typed JSON (shape depends on type; validated in contracts)
+  answerKey    Json
+  translations QuestionTranslation[]
+  options      QuestionOption[]
+
+  @@index([assessmentId, orderIndex])
+  @@map("assessment_questions")
+}
+
+model QuestionTranslation {
+  id          String             @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  questionId  String             @db.Uuid
+  question    AssessmentQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  locale      Locale
+  prompt      String
+  explanation String?
+
+  @@unique([questionId, locale])
+  @@map("question_translations")
+}
+
+// Options are rows (orderable, translatable) — not a JSON blob (doc 01 §8).
+model QuestionOption {
+  id           String              @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  questionId   String              @db.Uuid
+  question     AssessmentQuestion  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  orderIndex   Int                 @default(0)
+  translations OptionTranslation[]
+
+  @@index([questionId, orderIndex])
+  @@map("question_options")
+}
+
+model OptionTranslation {
+  id       String         @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  optionId String         @db.Uuid
+  option   QuestionOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  locale   Locale
+  label    String
+
+  @@unique([optionId, locale])
+  @@map("option_translations")
+}
+
+model QuizAttempt {
+  id           String     @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId       String     @db.Uuid
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assessmentId String     @db.Uuid
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  answers      Json // submitted answers (typed in contracts)
+  scoreBps     Int        @default(0)
+  passed       Boolean    @default(false)
+  startedAt    DateTime   @default(now())
+  submittedAt  DateTime?
+
+  @@index([userId, assessmentId])
+  @@map("quiz_attempts")
+}
+
+// Corporate/institution assignment of a path/course to members with due dates (FR-AC-111).
+model LearningAssignment {
+  id         String       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId      String       @db.Uuid
+  org        Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  assigneeId String       @db.Uuid // user in the org
+  courseId   String?      @db.Uuid
+  pathId     String?      @db.Uuid
+  dueAt      DateTime?
+  assignedBy String       @db.Uuid
+  createdAt  DateTime     @default(now())
+
+  @@index([orgId, assigneeId])
+  @@map("learning_assignments")
+}

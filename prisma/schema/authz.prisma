@@ -1,0 +1,34 @@
+// Authorization — RBAC role bundles + assignments (Phase 2 doc 05 §5).
+// ABAC policies are code (typed, unit-tested), not rows; only role assignments persist here.
+
+model Role {
+  id          String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  key         String   @unique // "staff:finance", "staff:support", "instructor", ...
+  name        String
+  description String?
+  // permission keys granted by this role (matched against action strings in authz.can())
+  permissions String[]
+  isStaff     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assignments RoleAssignment[]
+
+  @@map("roles")
+}
+
+model RoleAssignment {
+  id         String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roleId     String   @db.Uuid
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  // staff roles are scoped to the internal org; null scope = platform-wide staff role
+  scopeOrgId String?  @db.Uuid
+  grantedBy  String?  @db.Uuid
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, roleId, scopeOrgId])
+  @@index([userId])
+  @@map("role_assignments")
+}
