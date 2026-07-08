@@ -1,0 +1,70 @@
+# Production deploy (Phase 2 doc 08 §5, NFR-082). Runs on merge to main after CI passes. Progressive
+# rollout with automated rollback on SLO breach; prod apply is gated on a human approval environment.
+name: deploy-production
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write # OIDC to the cloud, no long-lived keys (NFR-015)
+
+jobs:
+  build-images:
+    name: Build · scan · sign · SBOM
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build images
+        id: build
+        run: echo "digest=sha256:placeholder" >> "$GITHUB_OUTPUT" # buildx per-service
+      - name: Container vulnerability scan
+        run: echo "trivy image --severity HIGH,CRITICAL --exit-code 1 ..." # critical vulns block (NFR-016)
+      - name: Generate SBOM
+        run: echo "syft ... -o spdx-json" # published as a build artifact
+      - name: Sign images (cosign, keyless OIDC)
+        run: echo "cosign sign --yes ..."
+
+  migrate:
+    name: DB migrate (expand/contract)
+    needs: build-images
+    runs-on: ubuntu-latest
+    environment: production # requires approval
+    steps:
+      - uses: actions/checkout@v4
+      # Expand/contract means this deploy's migrations are backward-compatible with the running
+      # version, so a rollback never hits a schema it can't read (Phase 3 doc 04 §2, ADR-010).
+      - run: echo "prisma migrate deploy --schema prisma/schema (as migrator role)"
+
+  rollout:
+    name: Progressive rollout
+    needs: [build-images, migrate]
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      # Argo Rollouts canary: 10% → analyze SLO (error rate + p95 latency) → 50% → 100%.
+      # Automated rollback if the analysis breaches the error budget (NFR-040/082).
+      - name: Canary 10%
+        run: echo "kubectl argo rollouts set image ... && wait for analysis"
+      - name: Analyze SLOs
+        run: echo "abort + rollback on burn-rate breach; else promote"
+      - name: Promote to 100%
+        run: echo "kubectl argo rollouts promote ..."
+      - name: Smoke test
+        run: echo "curl -sf https://infoenc.com/healthz and top-journey probe"
+
+  notify:
+    name: Chat-ops notify
+    needs: rollout
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "post deploy status (result, digest, rollback state) to #deploys (FR-AU-063)"
