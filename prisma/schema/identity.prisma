@@ -1,0 +1,153 @@
+// Identity — users, credentials, sessions (Phase 2 doc 05).
+// Users are global (not org-scoped); they gain tenant access through OrgMembership.
+
+model User {
+  id            String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  username      String    @unique
+  displayName   String?
+  avatarUrl     String?
+  bio           String?
+  locale        Locale    @default(en)
+  // profile privacy flags kept as typed JSON (validated in contracts)
+  privacy       Json      @default("{}")
+  lastLoginAt   DateTime?
+  isActive      Boolean   @default(true)
+  isStaff       Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  credentials     Credential[]
+  oauthIdentities OAuthIdentity[]
+  passkeys        Passkey[]
+  totpSecret      TotpSecret?
+  recoveryCodes   RecoveryCode[]
+  sessions        Session[]
+  memberships     OrgMembership[]
+  roleAssignments RoleAssignment[]
+  enrollments     Enrollment[]
+  progressSummary UserProgressSummary?
+  xpEvents        XpEvent[]
+  badges          UserBadge[]
+  streak          UserStreak?
+  labSessions     LabSession[]
+  flagSubmissions FlagSubmission[]
+  quizAttempts    QuizAttempt[]
+  certificates    Certificate[]
+  notifications   Notification[]
+  posts           Post[]
+  votes           PostVote[]
+  ticketsCreated  Ticket[]             @relation("TicketRequester")
+  ticketsAssigned Ticket[]             @relation("TicketAssignee")
+
+  @@index([isStaff])
+  @@map("users")
+}
+
+// A user may hold several credential kinds; password optional once another factor exists.
+model Credential {
+  id         String         @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId     String         @db.Uuid
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       CredentialType
+  // Argon2id hash for password credentials; null for factor-pointer rows.
+  secretHash String?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@index([userId, type])
+  @@map("credentials")
+}
+
+model OAuthIdentity {
+  id         String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId     String        @db.Uuid
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider   OAuthProvider
+  providerId String // subject id from the IdP
+  email      String?
+  createdAt  DateTime      @default(now())
+
+  @@unique([provider, providerId])
+  @@index([userId])
+  @@map("oauth_identities")
+}
+
+model Passkey {
+  id           String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId       String    @db.Uuid
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialId String    @unique // WebAuthn credential id (base64url)
+  publicKey    Bytes
+  counter      BigInt    @default(0)
+  transports   String[]
+  deviceLabel  String?
+  createdAt    DateTime  @default(now())
+  lastUsedAt   DateTime?
+
+  @@index([userId])
+  @@map("passkeys")
+}
+
+model TotpSecret {
+  id           String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId       String    @unique @db.Uuid
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Secret is envelope-encrypted at rest (KMS); ciphertext stored here.
+  secretCipher Bytes
+  confirmedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@map("totp_secrets")
+}
+
+model RecoveryCode {
+  id        String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeHash  String // Argon2 hash; single-use
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@map("recovery_codes")
+}
+
+// Refresh-token sessions with rotation + family tracking (doc 05 §3).
+model Session {
+  id             String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId         String    @db.Uuid
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  familyId       String    @db.Uuid // rotation family; reuse of a consumed token kills the family
+  refreshHash    String    @unique // hashed opaque refresh token
+  // active org context for this session (re-issued on org switch)
+  activeOrgId    String?   @db.Uuid
+  userAgent      String?
+  ipHash         String? // hashed for privacy (NFR-073)
+  approxLocation String?
+  amr            String[] // auth methods present: pwd, mfa, passkey, oauth
+  createdAt      DateTime  @default(now())
+  lastUsedAt     DateTime  @default(now())
+  expiresAt      DateTime
+  revokedAt      DateTime?
+
+  @@index([userId, revokedAt])
+  @@index([familyId])
+  @@map("sessions")
+}
+
+// Email verification / password reset tokens (single-use, short-lived).
+model VerificationToken {
+  id        String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId    String    @db.Uuid
+  purpose   String // "email_verify" | "password_reset"
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, purpose])
+  @@map("verification_tokens")
+}

@@ -2,6 +2,19 @@
 
 A full-stack cybersecurity learning platform with courses, hacking labs, CTF challenges, leaderboards, and more.
 
+> **Platform rebuild in progress.** INFOENC is being rebuilt as a two-platform company (security services + academy) on Next.js 15 / NestJS / PostgreSQL. The codebase below is the validated MVP; the rebuild is driven by the phased documentation in [`docs/`](docs/):
+>
+> - [Phase 1 — Business Analysis & Requirements](docs/phase-1-business-analysis/README.md)
+> - [Phase 2 — System Architecture](docs/phase-2-architecture/README.md)
+> - [Phase 3 — Database Design](docs/phase-3-database/README.md) — with real Prisma schema in [`prisma/schema/`](prisma/schema/)
+> - [Phase 4 — Design System](docs/phase-4-design-system/README.md) — with real tokens in [`packages/ui/tokens/`](packages/ui/tokens/) and a [Tailwind preset](packages/config/tailwind-preset.ts)
+> - [Phase 5 — Core Platform Build](docs/phase-5-core-platform/README.md) — monorepo scaffold, [`@infoenc/contracts`](packages/contracts/), [core-api skeleton](services/core-api/) with RLS tenant isolation, and [RLS migrations](prisma/migrations/)
+> - [Phase 6 — Academy Build](docs/phase-6-academy/README.md) — identity/auth, the idempotent [XP engine](services/core-api/src/modules/gamification/), catalog, labs lifecycle (dynamic flags, envelope crypto, orchestrator), commerce/billing, [`@infoenc/i18n`](packages/i18n/) with a passing parity gate, and the [`academy`](apps/academy/) Next.js app
+> - [Phase 7 — Company Platform](docs/phase-7-company-platform/README.md) — CRM lead intake + scoring, proposals + the won→engagement flywheel, and the crown-jewel [engagements module](services/core-api/src/modules/engagements/) (field-level encryption + four-layer defense in depth)
+> - [Phase 8 — Automation Layer](docs/phase-8-automation/README.md) — the [LLM gateway + workflow engine](services/core-api/src/modules/automation/) (Claude, per-workflow data boundaries, human-approval gate, earned autonomy) with the FR-AU-050 pentest-report generator as showcase
+> - [Phase 9 — Hardening & Launch](docs/phase-9-hardening/README.md) — [load tests](infra/load/), [production deploy pipeline](.github/workflows/deploy-production.yml), SEO surfaces, and the DR/go-live/SLO runbooks
+> - [Phase 10 — Fast-Follows](docs/phase-10-fast-follows/README.md) — the [mobile app scaffold](apps/mobile/) (Expo, shared contracts + i18n) and the sequenced post-GA growth roadmap
+
 ## Tech Stack
 
 | Layer | Technology |

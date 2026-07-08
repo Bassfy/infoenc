@@ -1,0 +1,115 @@
+// Organizations & tenancy root (Phase 2 doc 06).
+// Personal accounts are orgs-of-one — one code path for entitlements, billing, scoping.
+
+model Organization {
+  id           String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  type         OrgType
+  name         String
+  slug         String    @unique
+  // capability flags let one org be both business + client (the flywheel) without type explosion
+  isBusiness   Boolean   @default(false)
+  isClient     Boolean   @default(false)
+  billingEmail String?
+  country      String? // ISO 3166-1 alpha-2 — drives price book / tax
+  locale       Locale    @default(en)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  memberships   OrgMembership[]
+  invitations   OrgInvitation[]
+  ssoConfig     OrgSsoConfig?
+  subscriptions Subscription[]
+  entitlements  Entitlement[]
+  invoices      Invoice[]
+  assignments   LearningAssignment[]
+  engagements   Engagement[]
+  leads         Lead[]
+  tickets       Ticket[]
+  apiKeys       ApiKey[]
+
+  @@index([type])
+  @@map("organizations")
+}
+
+model OrgMembership {
+  id         String       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId      String       @db.Uuid
+  org        Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  userId     String       @db.Uuid
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       OrgRole
+  // for client orgs, the engagement-scoped role (nullable for non-client orgs)
+  clientRole ClientRole?
+  teamId     String?      @db.Uuid
+  team       Team?        @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  // seat activation: an invited member holds a seat once active
+  seatActive Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@unique([orgId, userId])
+  @@index([orgId, role])
+  @@index([userId])
+  @@map("org_memberships")
+}
+
+model Team {
+  id        String          @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId     String          @db.Uuid
+  name      String
+  createdAt DateTime        @default(now())
+  members   OrgMembership[]
+
+  @@index([orgId])
+  @@map("teams")
+}
+
+model OrgInvitation {
+  id        String           @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId     String           @db.Uuid
+  org       Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  email     String
+  role      OrgRole
+  tokenHash String           @unique
+  status    InvitationStatus @default(pending)
+  expiresAt DateTime
+  createdAt DateTime         @default(now())
+
+  @@index([orgId, status])
+  @@map("org_invitations")
+}
+
+// Enterprise SSO config (SAML/OIDC), architecture present at v1, enforced post-launch.
+model OrgSsoConfig {
+  id              String       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId           String       @unique @db.Uuid
+  org             Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  protocol        String // "saml" | "oidc"
+  // provider config is envelope-encrypted (contains client secrets / certs)
+  configCipher    Bytes
+  enforcedDomains String[] // "all @bank.com must SSO"
+  jitProvisioning Boolean      @default(true)
+  enabled         Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@map("org_sso_configs")
+}
+
+// Org-scoped, read-only export API keys (Phase 2 doc 05 §6).
+model ApiKey {
+  id         String       @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId      String       @db.Uuid
+  org        Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  label      String
+  prefix     String       @unique // "ienc_live_xxxx" — secret-scanning friendly
+  secretHash String
+  scopes     String[]
+  lastUsedAt DateTime?
+  createdAt  DateTime     @default(now())
+  revokedAt  DateTime?
+
+  @@index([orgId])
+  @@map("api_keys")
+}

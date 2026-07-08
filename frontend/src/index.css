@@ -14,14 +14,14 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #13151c;
+    background: #131019;
   }
   ::-webkit-scrollbar-thumb {
-    background: #393e48;
+    background: #393248;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #00ff88;
+    background: #8b3dff;
   }
 }
 
@@ -52,7 +52,13 @@
   }
   .glow-text {
     @apply text-cyber-500;
-    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 255, 136, 0.3);
+    text-shadow: 0 0 10px rgba(139, 61, 255, 0.5), 0 0 20px rgba(255, 93, 177, 0.3);
+  }
+  .brand-text {
+    background: linear-gradient(120deg, #8b3dff 0%, #ff5db1 52%, #7fc7ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   .difficulty-easy {
     @apply text-emerald-400 bg-emerald-400/10 border border-emerald-400/30;
@@ -82,11 +88,11 @@
 
 @layer utilities {
   .bg-cyber-grid {
-    background-image: linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(139,61,255,0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(139,61,255,0.04) 1px, transparent 1px);
     background-size: 50px 50px;
   }
   .text-shadow-cyber {
-    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    text-shadow: 0 0 10px rgba(139, 61, 255, 0.5);
   }
 }

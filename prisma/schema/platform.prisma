@@ -1,0 +1,122 @@
+// Platform — outbox, notifications, audit log, feature flags (Phase 2 doc 03 §3/§6).
+
+// Transactional outbox: written in the same txn as domain changes; relay publishes to BullMQ.
+// This is the platform's "no lost events" guarantee (Phase 2 doc 03 §3).
+model OutboxEvent {
+  id          String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  // event type from the taxonomy (packages/contracts/events)
+  type        String
+  aggregateId String    @db.Uuid
+  // tenant context travels with the event so consumers re-establish RLS (doc 06 §3)
+  orgId       String?   @db.Uuid
+  payload     Json
+  createdAt   DateTime  @default(now())
+  publishedAt DateTime?
+
+  @@index([publishedAt, createdAt]) // relay picks unpublished, oldest first
+  @@map("outbox_events")
+}
+
+// Consumer idempotency ledger — a (consumer, event) pair processes exactly once.
+model ProcessedEvent {
+  consumer    String
+  eventId     String   @db.Uuid
+  processedAt DateTime @default(now())
+
+  @@id([consumer, eventId])
+  @@map("processed_events")
+}
+
+model Notification {
+  id        String              @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId    String              @db.Uuid
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel   NotificationChannel @default(in_app)
+  category  String // preference key for per-category opt-out (FR-AC-130)
+  // localized title/body resolved at send from templates; snapshot stored for the in-app center
+  title     String
+  body      String?
+  metadata  Json?
+  readAt    DateTime?
+  createdAt DateTime            @default(now())
+
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id       String              @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId   String              @db.Uuid
+  category String
+  channel  NotificationChannel
+  enabled  Boolean             @default(true)
+  digest   String? // "instant" | "daily" | "weekly"
+
+  @@unique([userId, category, channel])
+  @@map("notification_preferences")
+}
+
+// Immutable, hash-chained audit log (FR-AD-002). App role has INSERT-only grant; no UPDATE/DELETE.
+model AuditLog {
+  id         String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  actorId    String?  @db.Uuid // null = system
+  orgId      String?  @db.Uuid
+  action     String // "subscription.refund", "evidence.download", "impersonation.start", ...
+  targetType String?
+  targetId   String?  @db.Uuid
+  // before/after snapshots for state-changing admin actions
+  before     Json?
+  after      Json?
+  ipHash     String?
+  userAgent  String?
+  // tamper-evidence: hash of (prevHash + this row's canonical content)
+  prevHash   String?
+  rowHash    String
+  createdAt  DateTime @default(now())
+
+  @@index([orgId, createdAt])
+  @@index([actorId, createdAt])
+  @@index([targetType, targetId])
+  @@map("audit_logs")
+}
+
+model FeatureFlag {
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  key       String   @unique
+  enabled   Boolean  @default(false)
+  // targeting rules (percentage rollout, org allowlist) typed in contracts
+  rules     Json     @default("{}")
+  updatedAt DateTime @updatedAt
+
+  @@map("feature_flags")
+}
+
+// File object registry for user/private files (evidence has its own model in engagements).
+model FileObject {
+  id          String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  orgId       String?  @db.Uuid
+  ownerId     String?  @db.Uuid
+  s3Key       String   @unique
+  bucket      String // "public" | "private"
+  contentType String
+  sizeBytes   BigInt
+  createdAt   DateTime @default(now())
+
+  @@index([orgId])
+  @@map("file_objects")
+}
+
+// Platform SOC / security operations log (NFR-023, FR-AD-062).
+model SecurityEvent {
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  kind      String // "auth.anomaly", "lab.abuse", "export.bulk", "policy.ack", ...
+  severity  String // info|low|medium|high|critical
+  actorId   String?  @db.Uuid
+  orgId     String?  @db.Uuid
+  detail    Json
+  createdAt DateTime @default(now())
+
+  @@index([kind, createdAt])
+  @@index([severity, createdAt])
+  @@map("security_events")
+}

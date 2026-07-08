@@ -4,30 +4,46 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Primary accent — purple (was neon green). Component classes keep the `cyber-*` names.
         cyber: {
-          50: '#f0fdf9',
-          100: '#ccfbef',
-          200: '#99f6df',
-          300: '#5beeca',
-          400: '#1dddb0',
-          500: '#00ff88',
-          600: '#00c46a',
-          700: '#009c56',
-          800: '#047a46',
-          900: '#05633b',
+          50: '#f6f0ff',
+          100: '#ecdfff',
+          200: '#d9c2ff',
+          300: '#bd94ff',
+          400: '#a568ff',
+          500: '#8b3dff',
+          600: '#7a2ae6',
+          700: '#6320bd',
+          800: '#4d1a94',
+          900: '#3a1470',
         },
+        // Secondary accent — pink
+        pinkc: {
+          300: '#ffb3d9',
+          400: '#ff85c2',
+          500: '#ff5db1',
+          600: '#e6408f',
+        },
+        // Tertiary accent — baby blue
+        sky2: {
+          300: '#b3e0ff',
+          400: '#7fc7ff',
+          500: '#4fb0ff',
+          600: '#2f93e6',
+        },
+        // Near-black base with a faint violet undertone (was cool grey).
         dark: {
-          50: '#f0f0f1',
-          100: '#d8d9db',
-          200: '#b0b2b6',
-          300: '#888b91',
-          400: '#61656d',
-          500: '#393e48',
-          600: '#2a2e38',
-          700: '#1e2128',
-          800: '#13151c',
-          900: '#0a0b10',
-          950: '#050608',
+          50: '#f1eef5',
+          100: '#d8d2df',
+          200: '#b0a8bd',
+          300: '#887f97',
+          400: '#61596d',
+          500: '#393248',
+          600: '#2a2438',
+          700: '#1c1826',
+          800: '#131019',
+          900: '#0b0810',
+          950: '#08060d',
         },
       },
       fontFamily: {
@@ -43,8 +59,8 @@ export default {
       },
       keyframes: {
         glow: {
-          from: { boxShadow: '0 0 5px #00ff88, 0 0 10px #00ff88' },
-          to: { boxShadow: '0 0 20px #00ff88, 0 0 40px #00ff88, 0 0 80px #00ff88' },
+          from: { boxShadow: '0 0 5px #8b3dff, 0 0 10px #8b3dff' },
+          to: { boxShadow: '0 0 20px #8b3dff, 0 0 40px #ff5db1, 0 0 80px #8b3dff' },
         },
         scan: {
           '0%': { transform: 'translateY(-100%)' },
@@ -61,10 +77,11 @@ export default {
       },
       backgroundImage: {
         'cyber-grid': `
-          linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px)
+          linear-gradient(rgba(139,61,255,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(139,61,255,0.04) 1px, transparent 1px)
         `,
-        'hero-gradient': 'linear-gradient(135deg, #0a0b10 0%, #13151c 50%, #0a0b10 100%)',
+        'hero-gradient': 'linear-gradient(135deg, #0b0810 0%, #131019 50%, #0b0810 100%)',
+        'brand-gradient': 'linear-gradient(120deg, #8b3dff 0%, #ff5db1 52%, #7fc7ff 100%)',
       },
       backgroundSize: {
         'cyber-grid': '50px 50px',

@@ -1,0 +1,24 @@
+{
+  "name": "@infoenc/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Source-of-truth zod schemas and types shared across INFOENC apps and services.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./events": "./src/events/index.ts",
+    "./auth": "./src/auth/index.ts",
+    "./commerce": "./src/commerce/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

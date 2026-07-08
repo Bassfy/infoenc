@@ -1,0 +1,71 @@
+// Support — ticketing + knowledge base (Phase 2 doc 03 support module, FR-AD-050s).
+
+model Ticket {
+  id                 String         @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  // requester's org for SLA tiering + scoping; support staff see cross-org via ABAC
+  orgId              String         @db.Uuid
+  org                Organization   @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  requesterId        String         @db.Uuid
+  requester          User           @relation("TicketRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  assigneeId         String?        @db.Uuid
+  assignee           User?          @relation("TicketAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  subject            String
+  status             TicketStatus   @default(open)
+  priority           TicketPriority @default(normal)
+  // AI classification (FR-AU-021): category + sentiment; suggest-only until accuracy gate
+  category           String?
+  sentiment          String?
+  // SLA timers derived from plan tier
+  firstResponseDueAt DateTime?
+  resolveDueAt       DateTime?
+  firstRespondedAt   DateTime?
+  resolvedAt         DateTime?
+  csatScore          Int? // 1..5 on resolution
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  messages TicketMessage[]
+
+  @@index([orgId, status])
+  @@index([status, priority])
+  @@map("tickets")
+}
+
+model TicketMessage {
+  id         String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  ticketId   String   @db.Uuid
+  ticket     Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId   String?  @db.Uuid // null = system/AI
+  isInternal Boolean  @default(false) // internal notes not shown to requester
+  body       String
+  createdAt  DateTime @default(now())
+
+  @@index([ticketId, createdAt])
+  @@map("ticket_messages")
+}
+
+// Public help center — bilingual, searchable (FR-AD-051).
+model KbArticle {
+  id        String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug      String        @unique
+  status    ContentStatus @default(draft)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  translations KbArticleTranslation[]
+
+  @@index([status])
+  @@map("kb_articles")
+}
+
+model KbArticleTranslation {
+  id        String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  articleId String    @db.Uuid
+  article   KbArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  locale    Locale
+  title     String
+  bodyMd    String
+
+  @@unique([articleId, locale])
+  @@map("kb_article_translations")
+}

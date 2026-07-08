@@ -1,0 +1,59 @@
+// Automation — workflow definitions, runs, human-gate queue (Phase 2 doc 03 §5, doc 07 P1).
+// Definitions live in code; this persists run state, traces, and gate decisions for audit + evals.
+
+model AutomationWorkflow {
+  id              String            @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  key             String            @unique // "FR-AU-011", "FR-AU-021", ...
+  name            String
+  trigger         AutomationTrigger
+  gatePolicy      GatePolicy        @default(human_approve)
+  enabled         Boolean           @default(true)
+  // suggest-only until an accuracy threshold is met (FR-AU-021 AC)
+  autonomyEnabled Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  runs AutomationRun[]
+
+  @@map("automation_workflows")
+}
+
+model AutomationRun {
+  id           String              @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  workflowId   String              @db.Uuid
+  workflow     AutomationWorkflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  status       AutomationRunStatus @default(running)
+  // full traceability (doc 07 ground rules): trigger, inputs, model+version, tokens, output
+  triggerRef   String? // source event id / schedule / actor
+  inputs       Json
+  output       Json?
+  model        String?
+  modelVersion String?
+  tokensUsed   Int?
+  // data-boundary assertion: the scope this run was allowed to read (e.g., engagementId)
+  scopeRef     String?
+  error        String?
+  startedAt    DateTime            @default(now())
+  finishedAt   DateTime?
+
+  gate AutomationGate?
+
+  @@index([workflowId, status])
+  @@index([status, startedAt])
+  @@map("automation_runs")
+}
+
+// Human-gate review record — approve / edit / reject; feeds the workflow's eval set.
+model AutomationGate {
+  id              String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  runId           String        @unique @db.Uuid
+  run             AutomationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  decision        String? // "approved" | "edited" | "rejected"
+  reviewerId      String?       @db.Uuid
+  // edit distance / correction captured for accuracy tracking (FR-AU-050 AC)
+  editDistanceBps Int?
+  reviewedAt      DateTime?
+  createdAt       DateTime      @default(now())
+
+  @@map("automation_gates")
+}

@@ -1,0 +1,125 @@
+// Gamification — XP as an append-only event log (doc 01 §5, FR-AC-060).
+// The MVP's mutable users.points counter is replaced by XpEvent + a rebuildable summary.
+
+model XpEvent {
+  id         String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount     Int
+  // rule that granted the XP (for anti-farming diminishing rules + audit)
+  ruleKey    String
+  // idempotency: the source event that caused this grant; a repeat is a no-op
+  sourceType String // "lab.task.completed", "lesson.completed", "ctf.solve", ...
+  sourceId   String   @db.Uuid
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, ruleKey, sourceType, sourceId]) // idempotent grant guarantee
+  @@index([userId, createdAt])
+  @@map("xp_events")
+}
+
+// Maintained read model — rebuildable from XpEvent (source of truth).
+model UserProgressSummary {
+  userId           String   @id @db.Uuid
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalXp          Int      @default(0)
+  rankId           String?  @db.Uuid
+  rank             Rank?    @relation(fields: [rankId], references: [id], onDelete: SetNull)
+  coursesCompleted Int      @default(0)
+  labsSolved       Int      @default(0)
+  ctfSolves        Int      @default(0)
+  updatedAt        DateTime @updatedAt
+
+  @@index([totalXp(sort: Desc)])
+  @@map("user_progress_summaries")
+}
+
+// Rank ladder — runtime-editable lookup, not an enum (doc 01 §7).
+model Rank {
+  id           String                @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  key          String                @unique // novice, analyst, operator, specialist, elite, legend
+  minXp        Int
+  orderIndex   Int
+  translations RankTranslation[]
+  summaries    UserProgressSummary[]
+
+  @@map("ranks")
+}
+
+model RankTranslation {
+  id     String @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  rankId String @db.Uuid
+  rank   Rank   @relation(fields: [rankId], references: [id], onDelete: Cascade)
+  locale Locale
+  name   String
+
+  @@unique([rankId, locale])
+  @@map("rank_translations")
+}
+
+model Badge {
+  id             String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  key            String   @unique
+  icon           String?
+  // trigger definition evaluated by the gamification consumer (typed in contracts)
+  conditionType  String
+  conditionValue Int?
+  createdAt      DateTime @default(now())
+
+  translations BadgeTranslation[]
+  awards       UserBadge[]
+
+  @@map("badges")
+}
+
+model BadgeTranslation {
+  id          String  @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  badgeId     String  @db.Uuid
+  badge       Badge   @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  locale      Locale
+  name        String
+  description String?
+
+  @@unique([badgeId, locale])
+  @@map("badge_translations")
+}
+
+model UserBadge {
+  id       String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId   String   @db.Uuid
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId  String   @db.Uuid
+  badge    Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@map("user_badges")
+}
+
+model UserStreak {
+  userId       String   @id @db.Uuid
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  current      Int      @default(0)
+  longest      Int      @default(0)
+  freezeTokens Int      @default(0) // earned, not bought (FR-AC-064)
+  lastActiveOn DateTime @db.Date
+  updatedAt    DateTime @updatedAt
+
+  @@map("user_streaks")
+}
+
+// Leaderboard entries are a materialized read model; Redis serves live reads (Phase 2 doc 01 §4).
+// This table persists periodic snapshots for history + rebuilds.
+model LeaderboardSnapshot {
+  id        String           @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  scope     LeaderboardScope
+  scopeRef  String? // pathId / orgId / ctfEventId / country code, per scope
+  periodKey String // "2026-07" for monthly, "all" for global
+  // ranked entries: [{ userId, xp, rank }] — snapshot blob (typed in contracts)
+  entries   Json
+  createdAt DateTime         @default(now())
+
+  @@unique([scope, scopeRef, periodKey])
+  @@map("leaderboard_snapshots")
+}

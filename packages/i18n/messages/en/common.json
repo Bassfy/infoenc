@@ -1,0 +1,44 @@
+{
+  "brand": {
+    "name": "INFOENC",
+    "tagline": "Trained by the people who break in for a living."
+  },
+  "nav": {
+    "paths": "Learning paths",
+    "labs": "Labs",
+    "pricing": "Pricing",
+    "signIn": "Sign in",
+    "startFree": "Start free"
+  },
+  "hero": {
+    "headline": "Signal, resolved from static.",
+    "subhead": "Hands-on cybersecurity training and labs, built from real engagements. Learn in Arabic or English.",
+    "ctaPrimary": "Start free",
+    "ctaSecondary": "Explore paths"
+  },
+  "dashboard": {
+    "continue": "Continue learning",
+    "yourPaths": "Your paths",
+    "recommended": "Recommended for you",
+    "rank": "Rank",
+    "streakDays": "{count, plural, one {# day streak} other {# day streak}}",
+    "xp": "{count} XP"
+  },
+  "labs": {
+    "start": "Start lab",
+    "submitFlag": "Submit flag",
+    "correct": "Correct — {xp} XP awarded",
+    "incorrect": "Not quite — try again",
+    "timeLeft": "Time left",
+    "hint": "Hint"
+  },
+  "paywall": {
+    "locked": "This lab is part of your path",
+    "progress": "You're {percent}% through {path}",
+    "unlock": "Unlock the remaining {count} rooms",
+    "startTrial": "Start 7-day trial — cancel anytime"
+  },
+  "notice": {
+    "localeFallback": "Not yet available in Arabic — showing English."
+  }
+}

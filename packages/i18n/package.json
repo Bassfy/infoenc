@@ -1,0 +1,19 @@
+{
+  "name": "@infoenc/i18n",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared bilingual (ar/en) message catalogs, locale negotiation, and formatting.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./messages/*": "./messages/*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "check:parity": "tsx scripts/check-parity.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

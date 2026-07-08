@@ -1,0 +1,81 @@
+// Career services — roadmaps, job board, certificates (Phase 2 doc 03 career module).
+
+// Verifiable completion certificates (FR-AC-065): public URL, unguessable id, QR, revocation.
+model Certificate {
+  id                String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  userId            String        @db.Uuid
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId          String?       @db.Uuid
+  course            Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  pathId            String?       @db.Uuid
+  path              LearningPath? @relation(fields: [pathId], references: [id], onDelete: SetNull)
+  // public verification number (unguessable) — the value shown/encoded in the QR
+  certificateNumber String        @unique
+  locale            Locale        @default(en)
+  pdfUrl            String?
+  issuedAt          DateTime      @default(now())
+  revokedAt         DateTime?
+  revokeReason      String?
+
+  @@index([userId])
+  @@map("certificates")
+}
+
+model CareerRoadmap {
+  id         String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  slug       String        @unique
+  targetRole String
+  status     ContentStatus @default(draft)
+  // ordered skills/paths + salary bands (typed in contracts)
+  content    Json          @default("{}")
+  createdAt  DateTime      @default(now())
+
+  translations CareerRoadmapTranslation[]
+
+  @@map("career_roadmaps")
+}
+
+model CareerRoadmapTranslation {
+  id        String        @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  roadmapId String        @db.Uuid
+  roadmap   CareerRoadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  locale    Locale
+  title     String
+  summary   String?
+
+  @@unique([roadmapId, locale])
+  @@map("career_roadmap_translations")
+}
+
+model JobPosting {
+  id            String    @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  // employer org (business account) posting the role
+  orgId         String    @db.Uuid
+  title         String
+  role          String
+  region        String?
+  remote        Boolean   @default(false)
+  descriptionMd String
+  applyUrl      String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  expiresAt     DateTime?
+
+  applications JobApplication[]
+
+  @@index([isActive, region])
+  @@map("job_postings")
+}
+
+model JobApplication {
+  id        String     @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  postingId String     @db.Uuid
+  posting   JobPosting @relation(fields: [postingId], references: [id], onDelete: Cascade)
+  userId    String     @db.Uuid
+  // resume snapshot generated from verified accomplishments (FR-AC-082)
+  resumeUrl String?
+  createdAt DateTime   @default(now())
+
+  @@unique([postingId, userId])
+  @@map("job_applications")
+}

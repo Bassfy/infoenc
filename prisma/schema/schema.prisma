@@ -1,0 +1,17 @@
+// INFOENC — Prisma schema (multi-file, split by domain).
+// Phase 3 database design. Conventions: docs/phase-3-database/01-data-model-and-conventions.md
+//
+// Tenancy: every tenant-scoped model carries `orgId` with a leading composite index so
+// Postgres row-level security predicates ride an index (Phase 2 doc 06). RLS policies
+// themselves live in migration SQL (docs/phase-3-database/04) — they are not expressible here.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgcrypto, pg_trgm]
+}

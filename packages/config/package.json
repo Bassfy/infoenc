@@ -1,0 +1,14 @@
+{
+  "name": "@infoenc/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared config: Tailwind preset, tsconfig, lint rules (Phase 4 / Phase 5).",
+  "exports": {
+    "./tailwind-preset": "./tailwind-preset.ts"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2"
+  }
+}

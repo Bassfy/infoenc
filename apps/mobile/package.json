@@ -1,0 +1,26 @@
+{
+  "name": "mobile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "INFOENC Academy mobile app (iOS/Android) — React Native + Expo (ADR-014).",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "ios": "expo start --ios",
+    "android": "expo start --android",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@infoenc/contracts": "workspace:*",
+    "@infoenc/i18n": "workspace:*",
+    "expo": "~52.0.0",
+    "expo-router": "~4.0.0",
+    "expo-secure-store": "~14.0.0",
+    "react": "^19.0.0",
+    "react-native": "0.76.5"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.2",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,263 @@
+/*
+ * INFOENC design tokens — CSS custom properties.
+ * Phase 4 design system. Consumed by packages/ui and all three apps (Phase 2 doc 02).
+ *
+ * Colors are authored in OKLCH for perceptual uniformity (even lightness steps, predictable
+ * contrast). Dark theme is the default (:root); light theme overrides under
+ * [data-theme="light"] and prefers-color-scheme. Never hardcode a color in a component —
+ * reference a semantic token (--color-surface, --color-accent, …).
+ *
+ * Two token layers:
+ *   1. Primitive ramps  (--ink-*, --cipher-*, severity-*)   — raw palette, do not use directly.
+ *   2. Semantic tokens  (--color-*, --text-*, --border-*)    — what components reference.
+ */
+
+:root {
+  /* ── Primitive: Ink neutral ramp (true black → white, faint violet undertone) ─
+     The base is near-black (requested "black"); a whisper of violet chroma keeps
+     the dark surfaces from reading as flat grey and ties them to the purple accent. */
+  --ink-950: oklch(0.13 0.014 300); /* deepest background — near-black */
+  --ink-900: oklch(0.16 0.016 300);
+  --ink-850: oklch(0.19 0.018 300);
+  --ink-800: oklch(0.23 0.020 300);
+  --ink-700: oklch(0.30 0.022 300);
+  --ink-600: oklch(0.40 0.022 300);
+  --ink-500: oklch(0.53 0.020 300);
+  --ink-400: oklch(0.65 0.017 298);
+  --ink-300: oklch(0.76 0.013 296);
+  --ink-200: oklch(0.85 0.010 294);
+  --ink-100: oklch(0.92 0.007 292);
+  --ink-050: oklch(0.97 0.004 290);
+  --ink-000: oklch(0.99 0.002 290);
+
+  /* ── Primitive: Cipher accent ramp (signature purple / iris) ─────────────── */
+  --cipher-900: oklch(0.32 0.130 295);
+  --cipher-800: oklch(0.42 0.170 295);
+  --cipher-700: oklch(0.52 0.200 295);
+  --cipher-600: oklch(0.60 0.225 295);
+  --cipher-500: oklch(0.67 0.235 295); /* hero interactive — electric purple */
+  --cipher-400: oklch(0.74 0.190 296);
+  --cipher-300: oklch(0.82 0.140 297);
+  --cipher-200: oklch(0.89 0.090 298);
+  --cipher-100: oklch(0.95 0.045 300);
+
+  /* ── Primitive: Blush accent ramp (pink — secondary accent + gradient pole) ─ */
+  --blush-700: oklch(0.52 0.190 350);
+  --blush-600: oklch(0.61 0.215 350);
+  --blush-500: oklch(0.70 0.210 350); /* pink hero pole */
+  --blush-400: oklch(0.78 0.170 352);
+  --blush-300: oklch(0.86 0.115 354);
+  --blush-200: oklch(0.92 0.065 356);
+
+  /* ── Primitive: Sky accent ramp (baby blue — tertiary accent + gradient pole) */
+  --sky-600: oklch(0.62 0.150 235);
+  --sky-500: oklch(0.72 0.140 234);
+  --sky-400: oklch(0.80 0.120 232); /* baby-blue hero pole */
+  --sky-300: oklch(0.87 0.085 230);
+  --sky-200: oklch(0.92 0.055 228);
+
+  /* Violet — legacy gradient/3D pole (kept; now part of the purple family) */
+  --violet-600: oklch(0.55 0.220 300);
+  --violet-500: oklch(0.64 0.215 298);
+  --violet-400: oklch(0.72 0.180 296);
+
+  /* ── Primitive: Signal / severity ramp (doubles as finding-severity scale) ─ */
+  --sev-info: oklch(0.70 0.130 240); /* blue     */
+  --sev-low: oklch(0.72 0.140 165); /* teal-green */
+  --sev-medium: oklch(0.80 0.150 85); /* amber    */
+  --sev-high: oklch(0.70 0.170 45); /* orange   */
+  --sev-critical: oklch(0.62 0.210 12); /* red      */
+  --success: oklch(0.72 0.150 155);
+  --warning: oklch(0.80 0.150 85);
+  --danger: oklch(0.62 0.200 20);
+
+  /* ── Semantic (DARK theme, default) ──────────────────────────────────────── */
+  --color-bg: var(--ink-950);
+  --color-bg-subtle: var(--ink-900);
+  --color-surface: var(--ink-850);
+  --color-surface-raised: var(--ink-800);
+  --color-surface-overlay: oklch(0.22 0.014 250 / 0.72); /* glass base */
+  --color-border: oklch(0.32 0.016 250 / 0.7);
+  --color-border-strong: var(--ink-600);
+
+  --text-primary: var(--ink-050);
+  --text-secondary: var(--ink-300);
+  --text-tertiary: var(--ink-400);
+  --text-on-accent: var(--ink-950);
+  --text-link: var(--cipher-400);
+
+  --color-accent: var(--cipher-500); /* purple — primary */
+  --color-accent-hover: var(--cipher-400);
+  --color-accent-muted: oklch(0.67 0.235 295 / 0.16);
+  --color-focus-ring: var(--cipher-400);
+
+  /* Secondary (pink) and tertiary (baby blue) accents — for CTAs, highlights, 3D */
+  --color-accent-2: var(--blush-500);
+  --color-accent-2-hover: var(--blush-400);
+  --color-accent-2-muted: oklch(0.70 0.210 350 / 0.16);
+  --color-accent-3: var(--sky-400);
+  --color-accent-3-hover: var(--sky-300);
+  --color-accent-3-muted: oklch(0.80 0.120 232 / 0.16);
+
+  /* Signature gradient poles (hero, 3D, glow) — purple → pink → baby blue */
+  --gradient-brand: linear-gradient(120deg, var(--cipher-500) 0%, var(--blush-500) 52%, var(--sky-400) 100%);
+  --gradient-brand-soft: linear-gradient(120deg, var(--cipher-600) 0%, var(--blush-600) 55%, var(--sky-500) 100%);
+  --gradient-aurora: radial-gradient(120% 120% at 20% 10%, oklch(0.67 0.235 295 / 0.35) 0%, transparent 55%),
+    radial-gradient(120% 120% at 85% 20%, oklch(0.70 0.210 350 / 0.30) 0%, transparent 55%),
+    radial-gradient(120% 120% at 55% 95%, oklch(0.80 0.120 232 / 0.28) 0%, transparent 55%);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  /* Glass / elevation surfaces (glassmorphism, brand doc §5) */
+  --glass-bg: oklch(0.19 0.018 300 / 0.55);
+  --glass-border: oklch(0.89 0.090 298 / 0.10);
+  --glass-blur: 16px;
+
+  /* ── Elevation (shadows tuned for dark surfaces) ─────────────────────────── */
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.4);
+  --shadow-md: 0 4px 16px oklch(0 0 0 / 0.45);
+  --shadow-lg: 0 12px 40px oklch(0 0 0 / 0.5);
+  --shadow-accent-glow: 0 0 0 1px var(--color-accent-muted), 0 8px 32px oklch(0.67 0.235 295 / 0.28);
+
+  /* ── Radius ──────────────────────────────────────────────────────────────── */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-full: 9999px;
+
+  /* ── Spacing scale (4px base) ────────────────────────────────────────────── */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+  --space-9: 4rem;
+  --space-10: 6rem;
+  --space-11: 8rem;
+  --space-12: 12rem;
+
+  /* ── Typography ──────────────────────────────────────────────────────────── */
+  --font-latin: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", "Cascadia Code", monospace;
+  /* the active UI font is swapped by [dir]/[lang] in globals.css */
+  --font-sans: var(--font-latin);
+
+  /* Fluid type scale (clamp: min, preferred, max) — 1.20 minor-third-ish, tightened at top */
+  --text-xs: clamp(0.75rem, 0.73rem + 0.10vw, 0.8125rem);
+  --text-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem);
+  --text-base: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --text-lg: clamp(1.125rem, 1.08rem + 0.22vw, 1.25rem);
+  --text-xl: clamp(1.375rem, 1.30rem + 0.36vw, 1.625rem);
+  --text-2xl: clamp(1.75rem, 1.60rem + 0.75vw, 2.25rem);
+  --text-3xl: clamp(2.25rem, 2.00rem + 1.25vw, 3rem);
+  --text-4xl: clamp(2.75rem, 2.30rem + 2.25vw, 4rem);
+  --text-5xl: clamp(3.25rem, 2.50rem + 3.75vw, 5.5rem);
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.7;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ── Motion (referenced by Framer/GSAP configs, doc 05) ──────────────────── */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --duration-instant: 80ms;
+  --duration-fast: 140ms;
+  --duration-base: 220ms;
+  --duration-slow: 380ms;
+  --duration-cinematic: 720ms;
+
+  /* ── Layout ──────────────────────────────────────────────────────────────── */
+  --container-max: 76rem; /* 1216px content max */
+  --container-prose: 42rem;
+  --z-base: 0;
+  --z-sticky: 100;
+  --z-overlay: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+}
+
+/* ── Semantic (LIGHT theme) ────────────────────────────────────────────────── */
+:root[data-theme="light"] {
+  --color-bg: var(--ink-000);
+  --color-bg-subtle: var(--ink-050);
+  --color-surface: var(--ink-000);
+  --color-surface-raised: var(--ink-000);
+  --color-surface-overlay: oklch(0.99 0.002 240 / 0.8);
+  --color-border: oklch(0.32 0.016 250 / 0.14);
+  --color-border-strong: var(--ink-300);
+
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-600);
+  --text-tertiary: var(--ink-500);
+  --text-on-accent: var(--ink-000);
+  --text-link: var(--cipher-700);
+
+  --color-accent: var(--cipher-700);
+  --color-accent-hover: var(--cipher-800);
+  --color-accent-muted: oklch(0.52 0.200 295 / 0.10);
+  --color-focus-ring: var(--cipher-600);
+
+  --color-accent-2: var(--blush-600);
+  --color-accent-2-hover: var(--blush-700);
+  --color-accent-2-muted: oklch(0.61 0.215 350 / 0.10);
+  --color-accent-3: var(--sky-600);
+  --color-accent-3-hover: var(--sky-500);
+  --color-accent-3-muted: oklch(0.62 0.150 235 / 0.10);
+
+  --glass-bg: oklch(0.99 0.002 290 / 0.6);
+  --glass-border: oklch(0.52 0.200 295 / 0.10);
+
+  --shadow-sm: 0 1px 2px oklch(0.2 0.03 300 / 0.08);
+  --shadow-md: 0 4px 16px oklch(0.2 0.03 300 / 0.10);
+  --shadow-lg: 0 12px 40px oklch(0.2 0.03 300 / 0.14);
+  --shadow-accent-glow: 0 0 0 1px var(--color-accent-muted), 0 8px 24px oklch(0.52 0.200 295 / 0.18);
+}
+
+/* Respect OS preference when no explicit data-theme is set (theme-aware default). */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --color-bg: var(--ink-000);
+    --color-bg-subtle: var(--ink-050);
+    --color-surface: var(--ink-000);
+    --color-surface-raised: var(--ink-000);
+    --color-surface-overlay: oklch(0.99 0.002 240 / 0.8);
+    --color-border: oklch(0.32 0.016 250 / 0.14);
+    --color-border-strong: var(--ink-300);
+    --text-primary: var(--ink-900);
+    --text-secondary: var(--ink-600);
+    --text-tertiary: var(--ink-500);
+    --text-on-accent: var(--ink-000);
+    --text-link: var(--cipher-700);
+    --color-accent: var(--cipher-700);
+    --color-accent-hover: var(--cipher-800);
+    --color-accent-muted: oklch(0.52 0.200 295 / 0.10);
+    --color-focus-ring: var(--cipher-600);
+    --color-accent-2: var(--blush-600);
+    --color-accent-2-hover: var(--blush-700);
+    --color-accent-2-muted: oklch(0.61 0.215 350 / 0.10);
+    --color-accent-3: var(--sky-600);
+    --color-accent-3-hover: var(--sky-500);
+    --color-accent-3-muted: oklch(0.62 0.150 235 / 0.10);
+    --glass-bg: oklch(0.99 0.002 290 / 0.6);
+    --glass-border: oklch(0.52 0.200 295 / 0.10);
+  }
+}
