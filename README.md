@@ -10,7 +10,8 @@ A full-stack cybersecurity learning platform with courses, hacking labs, CTF cha
 > - [Phase 4 — Design System](docs/phase-4-design-system/README.md) — with real tokens in [`packages/ui/tokens/`](packages/ui/tokens/) and a [Tailwind preset](packages/config/tailwind-preset.ts)
 > - [Phase 5 — Core Platform Build](docs/phase-5-core-platform/README.md) — monorepo scaffold, [`@infoenc/contracts`](packages/contracts/), [core-api skeleton](services/core-api/) with RLS tenant isolation, and [RLS migrations](prisma/migrations/)
 > - [Phase 6 — Academy Build](docs/phase-6-academy/README.md) — identity/auth, the idempotent [XP engine](services/core-api/src/modules/gamification/), catalog, labs lifecycle (dynamic flags, envelope crypto, orchestrator), commerce/billing, [`@infoenc/i18n`](packages/i18n/) with a passing parity gate, and the [`academy`](apps/academy/) Next.js app
-> - [Phase 7 — Company Platform](docs/phase-7-company-platform/README.md) — CRM lead intake + scoring, and the crown-jewel [engagements module](services/core-api/src/modules/engagements/) (field-level encryption + four-layer defense in depth)
+> - [Phase 7 — Company Platform](docs/phase-7-company-platform/README.md) — CRM lead intake + scoring, proposals + the won→engagement flywheel, and the crown-jewel [engagements module](services/core-api/src/modules/engagements/) (field-level encryption + four-layer defense in depth)
+> - [Phase 8 — Automation Layer](docs/phase-8-automation/README.md) — the [LLM gateway + workflow engine](services/core-api/src/modules/automation/) (Claude, per-workflow data boundaries, human-approval gate, earned autonomy) with the FR-AU-050 pentest-report generator as showcase
 
 ## Tech Stack
 

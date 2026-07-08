@@ -12,6 +12,7 @@ import { CommerceModule } from "./modules/commerce/commerce.module.js";
 import { LabsModule } from "./modules/labs/labs.module.js";
 import { CrmModule } from "./modules/crm/crm.module.js";
 import { EngagementsModule } from "./modules/engagements/engagements.module.js";
+import { AutomationModule } from "./modules/automation/automation.module.js";
 
 /**
  * Root module. Domain modules register here as they land (Phases 6–8); boundaries between them are
@@ -33,6 +34,7 @@ import { EngagementsModule } from "./modules/engagements/engagements.module.js";
     LabsModule,
     CrmModule,
     EngagementsModule,
+    AutomationModule,
   ],
   controllers: [HealthController],
   providers: [
