@@ -5,3 +5,5 @@
  */
 export { tokens, severity, color, motion } from "../tokens/tokens.js";
 export type { SeverityKey, Tokens } from "../tokens/tokens.js";
+export { SeverityBadge } from "./components/severity-badge.js";
+export type { Severity } from "./components/severity-badge.js";

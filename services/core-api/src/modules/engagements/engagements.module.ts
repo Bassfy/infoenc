@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { EngagementService } from "./engagement.service.js";
 import { FindingService } from "./finding.service.js";
+import { FindingStatusService } from "./finding-status.service.js";
 import { EvidenceService } from "./evidence.service.js";
 
 /**
@@ -10,7 +11,7 @@ import { EvidenceService } from "./evidence.service.js";
  * StorageSigner binding (S3 presigner) provided at app composition.
  */
 @Module({
-  providers: [EngagementService, FindingService, EvidenceService],
-  exports: [EngagementService, FindingService, EvidenceService],
+  providers: [EngagementService, FindingService, FindingStatusService, EvidenceService],
+  exports: [EngagementService, FindingService, FindingStatusService, EvidenceService],
 })
 export class EngagementsModule {}

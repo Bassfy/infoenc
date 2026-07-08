@@ -21,7 +21,10 @@ existential-brand event (Phase 1 R3), so this phase is where every security cont
 | **engagements — evidence** | ✅ | Attributed, watermarked, ≤72h presigned downloads; **every issuance logged immutably** (who/when/ip); step-up required; bulk-export rate limit that raises a security event (NFR-023); envelope-wrapped data keys (crypto-shred on delete). |
 | **engagements — management** | ✅ | RLS-scoped engagement list + the **portal findings feed** with severity rollup (FR-CO-032). |
 | **CRM — lead intake** | ✅ | Scoping-form → lead with source attribution → **qualification scoring** (pure, verified) → routing (hot→consultant / warm→nurture / cold→newsletter) → `crm.lead.created` for the FR-AU-010 automation. |
-| proposals · report assembly · portal UI · retest workflow | 🔩 scaffolded | Schema + module boundaries in place; report assembly is a Phase 8 automation (FR-AU-050); portal UI rides the `web` app. |
+| **CRM — proposals + flywheel** | ✅ | Proposal lifecycle (draft→sent→viewed→signed); the **won→engagement conversion** — a signed proposal atomically creates the client org, makes the contact its owner, and opens the engagement (doc 04 J3, the business flywheel). |
+| **engagements — retest workflow** | ✅ | Finding status state machine with **role-guarded transitions** — a client can remediate/request-retest/accept-risk, but only a consultant verifies `resolved` (you can't close your own finding); status notes encrypted like bodies (FR-CO-035). |
+| **client portal UI** | ✅ scaffold | The `web` Next.js app (company site + `/portal`), bilingual, with the **findings-feed page** — severity rollup + list using the shared `SeverityBadge` (color + icon + label, never color-only). RLS scopes the API read to the client org. |
+| report assembly | 🔩 scaffolded | Report assembly is a Phase 8 automation (FR-AU-050, human-approved). |
 
 ## The crown-jewel security model (why this is the phase that matters)
 
