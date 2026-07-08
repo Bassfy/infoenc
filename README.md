@@ -13,6 +13,7 @@ A full-stack cybersecurity learning platform with courses, hacking labs, CTF cha
 > - [Phase 7 — Company Platform](docs/phase-7-company-platform/README.md) — CRM lead intake + scoring, proposals + the won→engagement flywheel, and the crown-jewel [engagements module](services/core-api/src/modules/engagements/) (field-level encryption + four-layer defense in depth)
 > - [Phase 8 — Automation Layer](docs/phase-8-automation/README.md) — the [LLM gateway + workflow engine](services/core-api/src/modules/automation/) (Claude, per-workflow data boundaries, human-approval gate, earned autonomy) with the FR-AU-050 pentest-report generator as showcase
 > - [Phase 9 — Hardening & Launch](docs/phase-9-hardening/README.md) — [load tests](infra/load/), [production deploy pipeline](.github/workflows/deploy-production.yml), SEO surfaces, and the DR/go-live/SLO runbooks
+> - [Phase 10 — Fast-Follows](docs/phase-10-fast-follows/README.md) — the [mobile app scaffold](apps/mobile/) (Expo, shared contracts + i18n) and the sequenced post-GA growth roadmap
 
 ## Tech Stack
 
