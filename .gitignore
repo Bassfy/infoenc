@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# Prisma generated client
+prisma/generated/
+node_modules/.prisma/
+
+# Turbo
+.turbo/
+
+# Env & secrets (never commit — Phase 2 NFR-015)
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Test output
+coverage/
+playwright-report/
+test-results/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Legacy MVP (archived reference, excluded from CI — Phase 1 doc 09)
+# (kept in-tree under legacy/ but not built)

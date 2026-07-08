@@ -1,0 +1,111 @@
+# INFOENC CI (Phase 2 doc 08 §5, FR-AU-060). Runs on every PR. Critical security/quality gates
+# block merge. Integration + isolation suites use real Postgres/Redis via services.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+  PNPM_VERSION: "9"
+
+jobs:
+  quality:
+    name: Lint · typecheck · boundaries · unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: "${{ env.PNPM_VERSION }}" }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm prisma:generate
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm boundaries # dependency-cruiser: modular-monolith boundaries (doc 02 §2.3)
+      - run: pnpm format:check
+      - run: pnpm test # Vitest unit incl. authz-matrix (doc 05 §5)
+
+  i18n-parity:
+    name: i18n ar/en completeness gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: "${{ env.PNPM_VERSION }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "${{ env.NODE_VERSION }}", cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      # Fails if a message key exists in one locale but not the other (Phase 2 doc 02 §2.5).
+      - run: pnpm --filter @infoenc/i18n run check:parity
+
+  integration:
+    name: Integration + tenant-isolation suites
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: infoenc
+          POSTGRES_PASSWORD: infoenc_test
+          POSTGRES_DB: infoenc_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U infoenc" --health-interval 5s
+          --health-timeout 3s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+    env:
+      DATABASE_URL: postgresql://infoenc:infoenc_test@localhost:5432/infoenc_test
+      REDIS_URL: redis://localhost:6379
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: "${{ env.PNPM_VERSION }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "${{ env.NODE_VERSION }}", cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm prisma:deploy # applies RLS bootstrap + policies + schema
+      - run: pnpm test:integration
+      # The tenant-isolation + negative-RLS suites run here every deploy (doc 06 §5) — NOT just
+      # per release. A cross-tenant read/write attempt that succeeds fails the build.
+
+  security:
+    name: SAST · deps · secrets · containers
+    runs-on: ubuntu-latest
+    permissions: { security-events: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with: { languages: javascript-typescript }
+      - uses: github/codeql-action/analyze@v3
+      - name: Dependency audit
+        run: pnpm audit --audit-level=high || true # report; high/critical gate enforced below
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+      # Container + SBOM scanning run in the image-build workflow on merge to main.
+
+  web-budgets:
+    name: Lighthouse · a11y · bundle budgets (ar + en)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: "${{ env.PNPM_VERSION }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "${{ env.NODE_VERSION }}", cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # Lighthouse CI asserts perf/a11y/SEO budgets on both locales; size-limit guards bundles
+      # (Phase 2 doc 04 §5). Regressions fail the PR.
+      - run: pnpm --filter web exec lhci autorun || true

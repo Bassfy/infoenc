@@ -8,6 +8,7 @@ A full-stack cybersecurity learning platform with courses, hacking labs, CTF cha
 > - [Phase 2 — System Architecture](docs/phase-2-architecture/README.md)
 > - [Phase 3 — Database Design](docs/phase-3-database/README.md) — with real Prisma schema in [`prisma/schema/`](prisma/schema/)
 > - [Phase 4 — Design System](docs/phase-4-design-system/README.md) — with real tokens in [`packages/ui/tokens/`](packages/ui/tokens/) and a [Tailwind preset](packages/config/tailwind-preset.ts)
+> - [Phase 5 — Core Platform Build](docs/phase-5-core-platform/README.md) — monorepo scaffold, [`@infoenc/contracts`](packages/contracts/), [core-api skeleton](services/core-api/) with RLS tenant isolation, and [RLS migrations](prisma/migrations/)
 
 ## Tech Stack
 
